@@ -6,3 +6,4 @@ export { default as OptionRegistration} from './OptionRegistration';
 export { default as MultiSelect} from './MultiSelect';
 export { default as ImportModal} from './ImportModal';
 export { default as ImportTable} from './ImportTable';
+export { default as Search} from './Search';

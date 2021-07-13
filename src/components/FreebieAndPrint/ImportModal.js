@@ -26,18 +26,32 @@ const ModalContainer = styled.div`
     width: 450px;
     height: 550px;
     border-radius: 10px;
+    overflow: scroll;
+    ::-webkit-scrollbar { display: none; }
 `
-const Input = styled.input`
-    margin: 20px 0;
-    width: 60%;
-    border: none;
-    border-bottom: 1px solid #d9d9d9;
-    outline: none;
+
+const Button = styled.button`
+    all: unset;
+    margin-left: 10px;
+    display: inline-block;
+    border: 1px solid #d9d9d9;
+    color: #000;
+    background-color: #fff;
+    padding: 0.5rem 1.2rem;
+    cursor: ${props => (props.disabled ? 'default' : 'pointer')};
     border-radius: 4px;
-    line-height: 2.5rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    box-sizing: border-box;
+    text-decoration: none;
+    font-size: 12px;
+    transition: .2s all;
+
+    &:hover {
+        background: #228be6;
+        color: white;
+    }
+`;
+const ButtonWrapper = styled.div`
+    padding-bottom: 35px;
+    float: right;
 `;
 
 function ImportModal(props) {
@@ -70,10 +84,12 @@ function ImportModal(props) {
         <Modal>
             <ModalContainer>
                 <h3>등록된 사은품 · 인쇄물 불러오기</h3>
-                <Input placeholder="검색어를 입력하세요"></Input>
                 <Table columns={columns} data={data} />
-                <br /><button className="close" onClick={props.close}> close </button>
-                <button className="close" onClick={props.importData}> 선택 </button>
+                <br />
+                <ButtonWrapper>
+                    <Button className="close" onClick={props.close}> 취소 </Button>
+                    <Button className="close" onClick={props.importData}> 선택 </Button>
+                </ButtonWrapper>
             </ModalContainer>
         </Modal>
     )
