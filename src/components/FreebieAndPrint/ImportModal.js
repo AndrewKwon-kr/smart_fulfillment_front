@@ -5,7 +5,7 @@ import faker from "faker/locale/ko";
 import Table from "./ImportTable";
 
 
-faker.seed(10);
+faker.seed(5);
 
 const Modal = styled.div`
     display: flex;
@@ -71,7 +71,7 @@ function ImportModal(props) {
 
     const data = useMemo(
         () =>
-            Array(10)
+            Array(5)
                 .fill()
                 .map(() => ({
                     category: faker.company.companyName(),
@@ -79,7 +79,6 @@ function ImportModal(props) {
                 })),
         []
     );
-    console.log(faker)
     return (
         <Modal>
             <ModalContainer>

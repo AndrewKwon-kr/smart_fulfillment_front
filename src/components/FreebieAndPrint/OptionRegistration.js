@@ -49,6 +49,7 @@ const ItemPreviewImage = styled.img`
     &.full-image {
         width: 100%;
         height: 100%;
+        border-radius: 4px;
     }
 `
 const ItemPreviewFileName = styled.div`
@@ -139,6 +140,13 @@ const OptionButton = styled.button`
         color: white;
     }
 `;
+const InputOptionName = styled.input`
+    all: unset;
+    width: 80%;
+    padding: 5px;
+    border-bottom: 1px solid #d9d9d9;
+    color: #000;
+`;
 
 function OptionRegistration(props) {
 
@@ -195,7 +203,7 @@ function OptionRegistration(props) {
     function Option() {
         return (
             <OptionBody>
-                <OptionOneWrapper><input type='checkbox'></input></OptionOneWrapper>
+                <OptionOneWrapper><input type='checkbox' name='option'></input></OptionOneWrapper>
                 <OptionTwoWrapper>
                     <input type='file'
                         accept='image/jpg, image/png, image/jpeg'
@@ -209,7 +217,7 @@ function OptionRegistration(props) {
                     </AddOptionImage>
                 </OptionTwoWrapper>
                 <OptionThreeWrapper>
-                    <input type='text'></input>
+                    <InputOptionName type='text' value={hasOptionName} onChange={(e) => {setHasOptionName(e.target.value)}}></InputOptionName>
                 </OptionThreeWrapper>
             </OptionBody>
         )
@@ -240,12 +248,12 @@ function OptionRegistration(props) {
             {props.optionStatus === 'has' && (
                 <Wrapper>
                     <OptionHeader>
-                        <OptionOneWrapper><input type='checkbox'></input></OptionOneWrapper>
+                        <OptionOneWrapper><input type='checkbox' name='option' value='all'></input></OptionOneWrapper>
                         <OptionTwoWrapper>이미지</OptionTwoWrapper>
                         <OptionThreeWrapper>옵션명</OptionThreeWrapper>
                     </OptionHeader>
                     <OptionBody>
-                        <OptionOneWrapper><input type='checkbox'></input></OptionOneWrapper>
+                        <OptionOneWrapper><input type='checkbox' name='option'></input></OptionOneWrapper>
                         <OptionTwoWrapper>
                             <input type='file'
                                 accept='image/jpg, image/png, image/jpeg'
@@ -260,7 +268,7 @@ function OptionRegistration(props) {
                             </AddOptionImage>
                         </OptionTwoWrapper>
                         <OptionThreeWrapper>
-                            <input type='text'></input>
+                            <InputOptionName type='text' value={hasOptionName} onChange={(e) => {setHasOptionName(e.target.value)}}></InputOptionName>
                         </OptionThreeWrapper>
                     </OptionBody>
                     {/* {hasOption.map((option, index) => (
