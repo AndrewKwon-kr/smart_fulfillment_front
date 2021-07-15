@@ -169,6 +169,7 @@ function OptionRegistration(props) {
             reader.onloadend = () => {
                 setFile(file);
                 setPreviewURL(reader.result);
+                props.setImage(reader.result);
                 setPreviewFileName(file.name);
             }
 
@@ -197,7 +198,6 @@ function OptionRegistration(props) {
                 <ItemPreviewFileName>{previewFileName}</ItemPreviewFileName>
                 <TrashIcon onClick={() => { removeFile() }}><VscIcon.VscTrash size='24' color='#a9a9a9' /></TrashIcon>
             </ItemPreviewWrap>
-        props.setImage(previewURL);
     }
 
     function Option() {
