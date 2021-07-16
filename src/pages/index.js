@@ -3,3 +3,4 @@ export { default as Auth} from './Auth';
 export { default as ItemRegistration} from './ItemRegistration';
 export { default as FreebieAndPrint} from './FreebieAndPrint';
 export { default as ERP} from './ERP';
+export { default as ExcelToJson} from './ExcelToJson';
