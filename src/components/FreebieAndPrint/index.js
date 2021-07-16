@@ -7,3 +7,4 @@ export { default as MultiSelect} from './MultiSelect';
 export { default as ImportModal} from './ImportModal';
 export { default as ImportTable} from './ImportTable';
 export { default as Search} from './Search';
+export { default as Option} from './Option';

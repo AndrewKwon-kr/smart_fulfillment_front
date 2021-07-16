@@ -54,15 +54,14 @@ function FreebieAndPrint() {
         }
     }
     const importData = () => {
-
         setTitle(importJSON.title);
         setCategoryValue(importJSON.category[1]);
         setBrandValues([importJSON.brand[2]]);
         closeModal();
     }
 
-    console.log('categoryValue : ', categoryValue);
-    console.log('brandValues : ', brandValues);
+    // console.log('categoryValue : ', categoryValue);
+    // console.log('brandValues : ', brandValues);
     // console.log('image : ', image);
     return (
         <Container>
@@ -93,7 +92,6 @@ function FreebieAndPrint() {
                             onChange={setBrandValues}
                         />
                     </InputWrap>
-
                 </div>
                 <SubTitle>옵션 등록</SubTitle>
                 <br />
