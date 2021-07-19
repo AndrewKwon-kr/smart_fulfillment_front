@@ -82,7 +82,7 @@ const rowSelection = {
     }),
 };
 
-const ImportTable = () => {
+function ImportTable() {
     return (
         <div>
             <Search />

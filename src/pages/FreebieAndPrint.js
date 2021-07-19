@@ -184,7 +184,7 @@ const FlexBox = styled.div`
     margin-top: 40px;
     display: flex;
     justify-content: space-between;
-`
+`;
 
 
 export default FreebieAndPrint;

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import oc from 'open-color';
 import faker from "faker/locale/ko";
-import Table from "./ImportTable";
+import ImportTable from "./ImportTable";
 
 
 faker.seed(5);
@@ -60,7 +60,7 @@ function ImportModal(props) {
         <Modal>
             <ModalContainer>
                 <h3>등록된 사은품 · 인쇄물 불러오기</h3>
-                <Table />
+                <ImportTable />
                 <br />
                 <ButtonWrapper>
                     <Button className="close" onClick={props.close}> 취소 </Button>
