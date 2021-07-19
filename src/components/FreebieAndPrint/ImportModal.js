@@ -55,35 +55,12 @@ const ButtonWrapper = styled.div`
 `;
 
 function ImportModal(props) {
-    const columns = useMemo(
-        () => [
-            {
-                accessor: "category",
-                Header: "분류",
-            },
-            {
-                accessor: "name",
-                Header: "이름",
-            },
-        ],
-        []
-    );
 
-    const data = useMemo(
-        () =>
-            Array(5)
-                .fill()
-                .map(() => ({
-                    category: faker.company.companyName(),
-                    name: faker.name.lastName() + faker.name.firstName()
-                })),
-        []
-    );
     return (
         <Modal>
             <ModalContainer>
                 <h3>등록된 사은품 · 인쇄물 불러오기</h3>
-                <Table columns={columns} data={data} />
+                <Table />
                 <br />
                 <ButtonWrapper>
                     <Button className="close" onClick={props.close}> 취소 </Button>

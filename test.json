@@ -1,38 +1,82 @@
-{
-    "id": 5,
-    "name": "스와들 속싸개",
-    "image": "https://www.malanghoney.com/",
-    "created": "2021-07-16",
-    "updated": "2021-07-16",
-    "group_id": 10,
-    "items": [
-        {
-            "id": 1,
-            "name": "스와들 속싸개 분홍 당근",
-            "code": "100000-0191",
-            "image": "https://www.malanghoney.com11231123231/",
-            "main_image": 1,
-            "created": "2021-07-17",
-            "updated": "2021-07-17",
-            "itemgroup_id": 5
-        },{
-            "id": 2,
-            "name": "스와들 속싸개 파랑 당근",
-            "code": "100000-0192",
-            "image": "https://www.malanghoney.com112323461231/",
-            "main_image": 0,
-            "created": "2021-07-17",
-            "updated": "2021-07-17",
-            "itemgroup_id": 5
-        },{
-            "id": 3,
-            "name": "스와들 속싸개 검정 당근",
-            "code": "100000-0193",
-            "image": "https://www.malanghoney.com112312321231/",
-            "main_image": 0,
-            "created": "2021-07-17",
-            "updated": "2021-07-17",
-            "itemgroup_id": 5
-        }
-    ]    
-}
+[
+    {
+        "id": 5,
+        "name": "스와들 속싸개",
+        "image": "https://www.malanghoney.com/",
+        "created": "2021-07-16",
+        "updated": "2021-07-16",
+        "group_id": 10,
+        "items": [
+            {
+                "id": 1,
+                "name": "메쉬 / 무지개 / S",
+                "code": "100000-0191",
+                "image": "https://www.malanghoney.com/11231123231/",
+                "main_image": 1,
+                "created": "2021-07-17",
+                "updated": "2021-07-17",
+                "itemgroup_id": 5
+            },
+            {
+                "id": 2,
+                "name": "메쉬 / 무지개 / M",
+                "code": "100000-0192",
+                "image": "https://www.malanghoney.com/112323461231/",
+                "main_image": 0,
+                "created": "2021-07-17",
+                "updated": "2021-07-17",
+                "itemgroup_id": 5
+            },
+            {
+                "id": 3,
+                "name": "메쉬 / 무지개 / L",
+                "code": "100000-0193",
+                "image": "https://www.malanghoney.com/112312321231/",
+                "main_image": 0,
+                "created": "2021-07-17",
+                "updated": "2021-07-17",
+                "itemgroup_id": 5
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "name": "펜받침대",
+        "image": "https://www.malanghoney.com/",
+        "created": "2021-07-19",
+        "updated": "2021-07-19",
+        "group_id": 11,
+        "items": [
+            {
+                "id": 1,
+                "name": "분홍 당근",
+                "code": "100000-0188",
+                "image": "https://www.malanghoney.com/11231123231/",
+                "main_image": 1,
+                "created": "2021-07-17",
+                "updated": "2021-07-17",
+                "itemgroup_id": 5
+            },
+            {
+                "id": 2,
+                "name": "파랑 당근",
+                "code": "100000-0189",
+                "image": "https://www.malanghoney.com/112323461231/",
+                "main_image": 0,
+                "created": "2021-07-17",
+                "updated": "2021-07-17",
+                "itemgroup_id": 5
+            },
+            {
+                "id": 3,
+                "name": "검정 당근",
+                "code": "100000-0190",
+                "image": "https://www.malanghoney.com/112312321231/",
+                "main_image": 0,
+                "created": "2021-07-17",
+                "updated": "2021-07-17",
+                "itemgroup_id": 5
+            }
+        ]
+    }
+]
