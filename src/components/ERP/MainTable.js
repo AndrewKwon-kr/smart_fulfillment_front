@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { Table } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Table, Input, Button } from 'antd';
 import SubTable from './SubTable';
-import Icon from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import 'antd/dist/antd.css';
+import Highlighter from 'react-highlight-words';
 
 const TableSection = styled(Table)`
     margin-top: 40px;
@@ -21,6 +22,66 @@ const TableSection = styled(Table)`
 `;
 
 function MainTable(props) {
+    const list = props.data;
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
+    
+    const getColumnSearchProps = dataIndex => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+            <div style={{ padding: 8 }}>
+                <Input
+                    placeholder={`${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                    style={{ width: 188, marginBottom: 8, display: 'block' }}
+                />
+                <Button
+                    type="primary"
+                    onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                    icon={<SearchOutlined />}
+                    size="small"
+                    style={{ width: 90, marginRight: 8 }}
+                >
+                    검색
+                </Button>
+                <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+                    초기화
+                </Button>
+            </div>
+        ),
+        filterIcon: filtered => (
+            <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex]
+                .toString()
+                .toLowerCase()
+                .includes(value.toLowerCase()),
+        render: text =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text.toString()}
+                />
+            ) : (
+                text
+            ),
+    });
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex)
+
+    };
+
+    const handleReset = clearFilters => {
+        clearFilters();
+        setSearchText('');
+    };
+
     const columns = [
         {
             title: '',
@@ -30,25 +91,27 @@ function MainTable(props) {
         {
             title: '품목그룹2명',
             dataIndex: 'name',
-            key: 'name'
+            key: 'name',
+            ...getColumnSearchProps('name')
         },
         {
             title: '품목그룹2코드',
             dataIndex: 'code',
-            key: 'code'
+            key: 'code',
+            ...getColumnSearchProps('code')
         },
         {
             title: '품목그룹1명',
             dataIndex: 'brand',
-            key: 'brand'
+            key: 'brand',
         },
         {
             title: '품목그룹3명',
             dataIndex: 'register',
-            key: 'register'
+            key: 'register',
+            ...getColumnSearchProps('register')
         },
     ];
-    const list = props.data;
 
     return (
         <TableSection

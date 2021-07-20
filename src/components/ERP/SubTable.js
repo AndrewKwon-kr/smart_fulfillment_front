@@ -12,7 +12,6 @@ const SubTableSection = styled(Table)`
 const OptionTwoWrapper = styled.div`
     display: inline-block;
     position: relative;
-    width: 30%;
 `;
 const ItemPreviewImage = styled.img`
     position: relative;
