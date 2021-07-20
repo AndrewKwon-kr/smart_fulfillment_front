@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 function useForm({ initialValues, onSubmit, validate }) {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const { name, value } = event.target;
     setValues({ ...values, [name]: value });
   };
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     setSubmitting(true);
     event.preventDefault();
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise((r) => setTimeout(r, 1000));
     setErrors(validate(values));
   };
 
@@ -31,7 +31,7 @@ function useForm({ initialValues, onSubmit, validate }) {
     errors,
     submitting,
     handleChange,
-    handleSubmit
+    handleSubmit,
   };
 }
 

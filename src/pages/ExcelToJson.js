@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import * as XLSX from "xlsx";
+import React from 'react';
+import * as XLSX from 'xlsx';
 
 class ExcelToJson extends React.Component {
   constructor(props) {
     super(props);
     this.handleClick = this.handleClick.bind(this);
     this.state = {
-      file: "",
+      file: '',
     };
   }
 
@@ -26,35 +26,34 @@ class ExcelToJson extends React.Component {
 
   readFile() {
     var f = this.state.file;
-    var name = f.name;
     const reader = new FileReader();
     reader.onload = (evt) => {
       // evt = on_file_select event
       /* Parse data */
       const bstr = evt.target.result;
-      const wb = XLSX.read(bstr, { type: "binary" });
+      const wb = XLSX.read(bstr, { type: 'binary' });
       /* Get first worksheet */
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       /* Convert array of arrays */
       const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
       /* Update state */
-    //   console.log("Data>>>" + data);// shows that excel data is read
+      //   console.log("Data>>>" + data);// shows that excel data is read
       console.log(this.convertToJson(data)); // shows data in json format
     };
     reader.readAsBinaryString(f);
   }
 
   convertToJson(csv) {
-    var lines = csv.split("\n");
+    var lines = csv.split('\n');
 
     var result = [];
 
-    var headers = lines[0].split(",");
+    var headers = lines[0].split(',');
 
     for (var i = 1; i < lines.length; i++) {
       var obj = {};
-      var currentline = lines[i].split(",");
+      var currentline = lines[i].split(',');
 
       for (var j = 0; j < headers.length; j++) {
         obj[headers[j]] = currentline[j];

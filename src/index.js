@@ -5,4 +5,4 @@ import configureStore from './redux/configureStore';
 
 const store = configureStore();
 
-ReactDOM.render(<Root store={store}/>, document.getElementById('root'));
+ReactDOM.render(<Root store={store} />, document.getElementById('root'));
