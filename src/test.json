@@ -55,9 +55,9 @@
         "items": [
             {
                 "id": 1,
-                "name": "분홍 당근",
+                "name": "아이보리",
                 "code": "100000-0188",
-                "image": "https://malanghoney.com/web/product/medium/202011/13ac82579860726d5a3c3cfd02386727.jpg",
+                "image": "https://malanghoney.com/web/product/medium/202010/7b458c1f18b935f43e3c02b6288713c6.jpg",
                 "main_image": 1,
                 "created": "2021-07-17",
                 "updated": "2021-07-17",
@@ -65,19 +65,9 @@
             },
             {
                 "id": 2,
-                "name": "파랑 당근",
+                "name": "그레이",
                 "code": "100000-0189",
                 "image": "",
-                "main_image": 0,
-                "created": "2021-07-17",
-                "updated": "2021-07-17",
-                "itemgroup_id": 5
-            },
-            {
-                "id": 3,
-                "name": "검정 당근",
-                "code": "100000-0190",
-                "image": "https://malanghoney.com/web/product/medium/202106/e8ec90e89e1d1406954a529c2b2a438a.jpg",
                 "main_image": 0,
                 "created": "2021-07-17",
                 "updated": "2021-07-17",
@@ -131,6 +121,39 @@
                 "name": "메쉬 / 무지개 / XL",
                 "code": "100000-0194",
                 "image": "",
+                "main_image": 0,
+                "created": "2021-07-17",
+                "updated": "2021-07-17",
+                "itemgroup_id": 5
+            }
+        ]
+    },
+    {
+        "key": 8,
+        "name": "오가닉 삼중직 겨울 수면조끼",
+        "image": "https://www.malanghoney.com/",
+        "created": "2021-07-16",
+        "updated": "2021-07-16",
+        "group_id": 10,
+        "code": "00010",
+        "brand": "말랑하니",
+        "register": "권혁진",
+        "items": [
+            {
+                "id": 1,
+                "name": "반팔형",
+                "code": "100000-0191",
+                "image": "https://malanghoney.com/web/product/medium/20191119/072bded586509593f960bf64ffcfce08.jpg",
+                "main_image": 1,
+                "created": "2021-07-17",
+                "updated": "2021-07-17",
+                "itemgroup_id": 5
+            },
+            {
+                "id": 2,
+                "name": "조끼형",
+                "code": "100000-0192",
+                "image": "https://malanghoney.com/web/product/extra/big/20191119/4867e1bff4cfcfebe0c8ae3b0cbc4e60.jpg",
                 "main_image": 0,
                 "created": "2021-07-17",
                 "updated": "2021-07-17",

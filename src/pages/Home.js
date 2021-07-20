@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import styled from 'styled-components';
 import backgroundImg from '../assets/home_bg.png'
 import { Login } from 'containers/Auth';
@@ -20,7 +20,7 @@ const Container = styled.div`
     left: 0;
     width: 100%;
     height: calc(100% - 80px);
-    z-index: -1;
+    /* z-index: -1; */
 `
 const BackgroundImage = styled.div`
     position: relative;

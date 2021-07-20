@@ -25,7 +25,13 @@ function MainTable(props) {
     const list = props.data;
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-    
+    const [filteredInfo, setFilteredInfo] = useState(null);
+
+    const handleChange = (pagination, filters) => {
+        console.log('Various parameters', pagination, filters);
+        setFilteredInfo(filters)
+    };
+
     const getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div style={{ padding: 8 }}>
@@ -104,6 +110,8 @@ function MainTable(props) {
             title: '품목그룹1명',
             dataIndex: 'brand',
             key: 'brand',
+            filters: [{ text: '말랑하니', value: '말랑하니' }, { text: '루미레브', value: '루미레브' }, { text: '모우모우', value: '모우모우' }, { text: '아이블린', value: '아이블린' }],
+            onFilter: (value, record) => record.brand.includes(value)
         },
         {
             title: '품목그룹3명',
@@ -125,6 +133,7 @@ function MainTable(props) {
                     list={list}
                 />
             )}
+            onChange={handleChange}
         />
     )
 }
