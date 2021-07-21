@@ -21,7 +21,7 @@ const ItemPreviewImage = styled.img`
   &.full-image {
     width: 100%;
     height: 100%;
-    border-radius: 4px;
+    border-radius: 3px;
   }
 `;
 const AddOptionImage = styled.label`
@@ -33,7 +33,6 @@ const AddOptionImage = styled.label`
   border: 1px solid #a9a9a9;
   border-radius: 5px;
   text-align: center;
-  line-height: 80px;
   font-size: 12px;
   cursor: pointer;
   &.mark {
