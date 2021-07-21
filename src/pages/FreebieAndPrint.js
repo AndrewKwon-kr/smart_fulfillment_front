@@ -193,6 +193,7 @@ function FreebieAndPrint() {
             close={closeModal}
           />
         )}
+        <br />
         <Description>
           이미 등록된 사은품 또는 인쇄물 정보를 수정하고 싶다면 우측 상단의
           '불러오기'를 클릭하세요.
@@ -273,7 +274,6 @@ const SubTitle = styled.h2`
   display: inline-block;
 `;
 const Description = styled.div`
-  margin-top: 10px;
   position: relative;
   display: inline-block;
   color: #a9a9a9;

@@ -18,7 +18,7 @@ function Login() {
   return (
     <LoginWrap>
       <LogoWrap>
-        <img alt="로고" src={logo} />
+        <Logo alt="로고" src={logo} />
       </LogoWrap>
       <form onSubmit={handleSubmit} noValidate>
         <InputWithLabel
@@ -64,6 +64,9 @@ const LogoWrap = styled.div`
   margin-bottom: 10px;
   width: 100%;
   text-align: center;
+`;
+const Logo = styled.img`
+  width: 70%;
 `;
 
 export default Login;

@@ -30,6 +30,7 @@ const AddOptionImage = styled.label`
   display: inline-block;
   width: 80px;
   height: 80px;
+  box-sizing: border-box;
   border: 1px solid #a9a9a9;
   border-radius: 5px;
   text-align: center;
@@ -56,7 +57,18 @@ const Mark = styled.div`
 
 function SubTable({ record, index }) {
   const [items, setItems] = useState(record.items);
-  console.log(items);
+
+  const data = [];
+  for (let i = 0; i < items.length; i++) {
+    data.push({
+      key: items[i].id,
+      name: items[i].name,
+      code: items[i].code,
+      image: items[i].image,
+      mainImage: items[i].main_image,
+    });
+  }
+
   const columns = [
     {
       title: '이미지',
@@ -73,9 +85,9 @@ function SubTable({ record, index }) {
             }}
             style={{ display: 'none' }}
           ></input>
-          {option.key === 1 && <Mark>대표</Mark>}
+          {option.mainImage === 1 && <Mark>대표</Mark>}
           <AddOptionImage
-            className={option.key === 1 && 'mark'}
+            className={option.mainImage === 1 && 'mark'}
             htmlFor={'markImage' + index + option.key}
           >
             {option.image ? (
@@ -100,19 +112,22 @@ function SubTable({ record, index }) {
       key: 'code',
       dataIndex: 'code',
     },
+    {
+      title: '대표',
+      key: 'mainImage',
+      render: (item) => (
+        <input
+          type="radio"
+          name={'mainImage' + index}
+          id={'mainImage' + index}
+          checked={item.mainImage === 1}
+          onChange={(e) => {
+            handleRadioChange(e, item.key, item);
+          }}
+        />
+      ),
+    },
   ];
-
-  const data = [];
-  for (let i = 0; i < items.length; i++) {
-    // console.log(list[i].items[i])
-    // console.log('data : ', data)
-    data.push({
-      key: items[i].id,
-      name: items[i].name,
-      code: items[i].code,
-      image: items[i].image,
-    });
-  }
 
   function handleFileOnChange(event, id) {
     event.preventDefault();
@@ -120,7 +135,6 @@ function SubTable({ record, index }) {
     let file = event.target.files[0];
 
     reader.onloadend = () => {
-      console.log(id);
       setItems(
         items.map((item) => {
           if (item.id !== id) {
@@ -135,6 +149,18 @@ function SubTable({ record, index }) {
     if (file) {
       reader.readAsDataURL(file);
     }
+  }
+
+  function handleRadioChange(e, id) {
+    setItems(
+      items.map((item) => {
+        if (item.id !== id) {
+          return { ...item, main_image: 0 };
+        } else {
+          return { ...item, main_image: e.target.checked === true && 1 };
+        }
+      })
+    );
   }
 
   return (

@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 const Logo = styled.img`
   width: 166px;
-  height: 40px;
+  height: 73px;
   position: absolute;
   left: 50%;
 `;

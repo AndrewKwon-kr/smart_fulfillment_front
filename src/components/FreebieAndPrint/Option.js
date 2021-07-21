@@ -15,6 +15,7 @@ const AddOptionImage = styled.label`
   display: inline-block;
   width: 80px;
   height: 80px;
+  box-sizing: border-box;
   border: 1px solid #a9a9a9;
   border-radius: 5px;
   text-align: center;
