@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
-import {
-  Home,
-  ItemRegistration,
-  FreebieAndPrint,
-  ERP,
-  ExcelToJson,
-} from './pages';
+import { Home, ItemRegistration, FreebieAndPrint, ERP } from './pages';
 import Navigator from 'components/Base/SideMenu/Navigator';
 import './App.css';
 

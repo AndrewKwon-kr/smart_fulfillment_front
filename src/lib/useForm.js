@@ -24,7 +24,7 @@ function useForm({ initialValues, onSubmit, validate }) {
       }
       setSubmitting(false);
     }
-  }, [errors]);
+  }, [errors, values, submitting, onSubmit]);
 
   return {
     values,

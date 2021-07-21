@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Table, Radio, Divider } from 'antd';
+import React from 'react';
+import { Table } from 'antd';
 import 'antd/dist/antd.css';
 import Search from './Search';
 
