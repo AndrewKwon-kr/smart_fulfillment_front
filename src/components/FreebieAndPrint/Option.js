@@ -18,12 +18,14 @@ const AddOptionImage = styled.label`
   border: 1px solid #a9a9a9;
   border-radius: 5px;
   text-align: center;
-  line-height: 80px;
   font-size: 12px;
   cursor: pointer;
   &.mark {
     border: 2px solid #228be6;
   }
+`;
+const Register = styled.div`
+  line-height: 80px;
 `;
 const Mark = styled.div`
   position: absolute;
@@ -101,7 +103,7 @@ function Option({
           id={'markImage' + option.id}
           name="image"
           onChange={(e) => {
-            handleFileOnChange(e, 'has', option.id);
+            handleFileOnChange(e, option.id);
           }}
           style={{ display: 'none' }}
         ></input>
@@ -113,7 +115,7 @@ function Option({
           {option.image ? (
             <ItemPreviewImage className="full-image" src={option.image} />
           ) : (
-            '등록'
+            <Register>등록</Register>
           )}
         </AddOptionImage>
       </OptionTwoWrapper>

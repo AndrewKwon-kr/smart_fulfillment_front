@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Table } from 'antd';
-import Icon from '@ant-design/icons';
 import styled from 'styled-components';
 import 'antd/dist/antd.css';
 
 const SubTableSection = styled(Table)`
-  .ant-table-tbody > tr {
+  .ant-table-tbody > tr > td {
     font-weight: normal;
   }
 `;
@@ -40,6 +39,9 @@ const AddOptionImage = styled.label`
   &.mark {
     border: 2px solid #228be6;
   }
+`;
+const Register = styled.div`
+  line-height: 80px;
 `;
 const Mark = styled.div`
   position: absolute;
@@ -83,7 +85,7 @@ function SubTable({ record, index }) {
                 src={items[option.key - 1].image}
               />
             ) : (
-              '등록'
+              <Register>등록</Register>
             )}
           </AddOptionImage>
         </OptionTwoWrapper>

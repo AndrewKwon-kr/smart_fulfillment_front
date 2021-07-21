@@ -30,6 +30,7 @@ function MainTable(props) {
   const handleChange = (pagination, filters) => {
     console.log('Various parameters', pagination, filters);
     setFilteredInfo(filters);
+    localStorage.setItem('testFilter', filteredInfo);
   };
 
   const getColumnSearchProps = (dataIndex) => ({

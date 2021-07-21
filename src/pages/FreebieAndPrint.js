@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import Select from 'react-select';
 import {
@@ -31,12 +31,137 @@ const importJSON = {
 
 function FreebieAndPrint() {
   const [title, setTitle] = useState('');
-  const [optionStatus, setOptionStatus] = useState('');
+  // const [optionStatus, setOptionStatus] = useState('');
   const [categoryValue, setCategoryValue] = useState('');
   const [brandValues, setBrandValues] = useState([]);
-  const [image, setImage] = useState('');
+  // const [image, setImage] = useState('');
 
   const [modalVisible, setModalVisible] = useState(false);
+
+  const [isAllChecked, setIsAllChecked] = useState(false);
+  const [inputs, setInputs] = useState({
+    image: '',
+    optionName: '',
+    mark: false,
+    checked: false,
+  });
+  const { image, optionName, mark, checked } = inputs;
+
+  const [options, setOptions] = useState([
+    {
+      id: 1,
+      image: '',
+      optionName: '',
+      mark: true,
+      checked: false,
+    },
+  ]);
+
+  const nextId = useRef(2);
+
+  useEffect(() => {
+    if (options.length === 0) {
+      // props.setImage('');
+    }
+  });
+
+  const onCreate = () => {
+    const option = {
+      id: nextId.current,
+      image,
+      optionName,
+      mark,
+      checked,
+    };
+    setOptions(options.concat(option));
+
+    setInputs({
+      image: '',
+      optionName: '',
+      mark: false,
+      checked: false,
+    });
+    nextId.current += 1;
+  };
+
+  function onChecked(e, id) {
+    setOptions(
+      options.map((option) => {
+        if (option.id !== id) {
+          return option;
+        } else {
+          return { ...option, checked: e.target.checked };
+        }
+      })
+    );
+  }
+  function onMarked(e, id) {
+    setOptions(
+      options.map((option) => {
+        if (option.id !== id) {
+          return { ...option, mark: false };
+        } else {
+          return { ...option, mark: e.target.checked };
+        }
+      })
+    );
+  }
+  function allChecked() {
+    if (isAllChecked) {
+      setOptions(
+        options.map((option) => {
+          return { ...option, checked: false };
+        })
+      );
+      setIsAllChecked(false);
+    } else {
+      setOptions(
+        options.map((option) => {
+          return { ...option, checked: true };
+        })
+      );
+      setIsAllChecked(true);
+    }
+  }
+
+  function onChangeOptionName(e, id) {
+    e.preventDefault();
+    setOptions(
+      options.map((option) => {
+        if (option.id !== id) {
+          return option;
+        } else {
+          return { ...option, optionName: e.target.value };
+        }
+      })
+    );
+  }
+
+  function handleFileOnChange(event, id) {
+    event.preventDefault();
+    let reader = new FileReader();
+    let file = event.target.files[0];
+
+    reader.onloadend = () => {
+      setOptions(
+        options.map((option) => {
+          if (option.id !== id) {
+            return option;
+          } else {
+            return { ...option, image: reader.result };
+          }
+        })
+      );
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function onRemoveOption() {
+    setOptions(options.filter((option) => option.checked !== true));
+  }
 
   const openModal = () => {
     setModalVisible(true);
@@ -48,26 +173,14 @@ function FreebieAndPrint() {
   const onChange = (e) => {
     setTitle(e.target.value);
   };
-  const handleClickRadioButton = (radioBtnName) => {
-    setOptionStatus(radioBtnName);
-    if (radioBtnName === 'none') {
-      document.getElementsByName('none')[0].style.fontWeight = 'bold';
-      document.getElementsByName('has')[0].style.fontWeight = 'normal';
-    } else {
-      document.getElementsByName('has')[0].style.fontWeight = 'bold';
-      document.getElementsByName('none')[0].style.fontWeight = 'normal';
-    }
-  };
+
   const importData = () => {
     setTitle(importJSON.title);
     setCategoryValue(importJSON.category[1]);
     setBrandValues([importJSON.brand[2]]);
     closeModal();
   };
-
-  // console.log('categoryValue : ', categoryValue);
-  // console.log('brandValues : ', brandValues);
-  // console.log('image : ', image);
+  console.log(options);
   return (
     <Container>
       <Wrapper>
@@ -113,44 +226,24 @@ function FreebieAndPrint() {
           </InputWrap>
         </div>
         <SubTitle>옵션 등록</SubTitle>
-        <br />
-        <RadioBox>
-          <input
-            type="radio"
-            id="none"
-            checked={optionStatus === 'none'}
-            onChange={() => {
-              handleClickRadioButton('none');
-            }}
-          />
-          <label htmlFor="none" name="none">
-            옵션 없음
-          </label>
-        </RadioBox>
-        <RadioBox>
-          <input
-            type="radio"
-            id="has"
-            checked={optionStatus === 'has'}
-            onChange={() => {
-              handleClickRadioButton('has');
-            }}
-          />
-          <label htmlFor="has" name="has">
-            옵션 있음
-          </label>
-        </RadioBox>
-        <br />
-        <OptionRegistration optionStatus={optionStatus} setImage={setImage} />
+        <OptionRegistration
+          onCreate={onCreate}
+          onChecked={onChecked}
+          onMarked={onMarked}
+          allChecked={allChecked}
+          onChangeOptionName={onChangeOptionName}
+          handleFileOnChange={handleFileOnChange}
+          onRemoveOption={onRemoveOption}
+          options={options}
+        />
         <FlexBox>
           <BackButton />
           <CompleteButton
             text="완료"
-            complete={title && brandValues.length && categoryValue && image}
             title={title}
             category={categoryValue}
             brand={brandValues}
-            image={image}
+            options={options}
           />
         </FlexBox>
       </Wrapper>
@@ -198,16 +291,6 @@ const InputWrap = styled.div`
 `;
 const Label = styled.div`
   margin-bottom: 10px;
-`;
-const RadioBox = styled.div`
-  position: relative;
-  display: inline-block;
-  margin-top: 20px;
-  margin-right: 60px;
-
-  label {
-    margin-left: 20px;
-  }
 `;
 const FlexBox = styled.div`
   margin-top: 40px;
