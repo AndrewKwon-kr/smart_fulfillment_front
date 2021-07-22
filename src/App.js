@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
-import { Home, ItemRegistration, FreebieAndPrint, ERP } from './pages';
+import {
+  Home,
+  ItemRegistration,
+  FreebieAndPrint,
+  ERP,
+  ItemInquiry,
+} from './pages';
 import Navigator from 'components/Base/SideMenu/Navigator';
 import './App.css';
 
@@ -14,6 +20,7 @@ class App extends Component {
           <Route path="/registitem" component={ItemRegistration} />
           <Route path="/freebie" component={FreebieAndPrint} />
           <Route path="/erp" component={ERP} />
+          <Route path="/inquiryitem" component={ItemInquiry} />
         </Switch>
       </BrowserRouter>
     );

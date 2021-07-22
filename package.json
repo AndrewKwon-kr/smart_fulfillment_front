@@ -11,6 +11,7 @@
     "axios": "^0.21.1",
     "babel-plugin-import": "^1.13.3",
     "eslint-config-react-app": "^6.0.0",
+    "export-from-json": "^1.4.0",
     "faker": "^5.5.3",
     "global": "^4.4.0",
     "prettier": "^2.3.2",
@@ -26,6 +27,7 @@
     "react-table": "^7.7.0",
     "redux-pender": "^2.0.12",
     "rodal": "^1.8.1",
+    "sweetalert": "^2.1.2",
     "web-vitals": "^1.0.1",
     "xlsx": "^0.17.0"
   },

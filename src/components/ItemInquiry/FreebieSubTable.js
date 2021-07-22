@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Table } from 'antd';
 import styled from 'styled-components';
 import 'antd/dist/antd.css';
@@ -35,7 +35,6 @@ const AddOptionImage = styled.label`
   border-radius: 5px;
   text-align: center;
   font-size: 12px;
-  cursor: pointer;
   &.mark {
     border: 2px solid #228be6;
   }
@@ -55,8 +54,8 @@ const Mark = styled.div`
   z-index: 1;
 `;
 
-function SubTable({ record, index }) {
-  const [items, setItems] = useState(record.items);
+function FreebieSubTable({ record, index }) {
+  const items = record.items;
 
   const data = [];
   for (let i = 0; i < items.length; i++) {
@@ -75,16 +74,6 @@ function SubTable({ record, index }) {
       key: 'image',
       render: (option) => (
         <OptionTwoWrapper>
-          <input
-            type="file"
-            accept="image/jpg, image/png, image/jpeg"
-            id={'markImage' + index + option.key}
-            name="image"
-            onChange={(e) => {
-              handleFileOnChange(e, option.key);
-            }}
-            style={{ display: 'none' }}
-          ></input>
           {option.mainImage === 1 && <Mark>대표</Mark>}
           <AddOptionImage
             className={option.mainImage === 1 && 'mark'}
@@ -96,14 +85,14 @@ function SubTable({ record, index }) {
                 src={items[option.key - 1].image}
               />
             ) : (
-              <Register>등록</Register>
+              <Register>이미지 없음</Register>
             )}
           </AddOptionImage>
         </OptionTwoWrapper>
       ),
     },
     {
-      title: 'SKU명',
+      title: '옵션명',
       dataIndex: 'name',
       key: 'name',
     },
@@ -112,60 +101,11 @@ function SubTable({ record, index }) {
       key: 'code',
       dataIndex: 'code',
     },
-    {
-      title: '대표',
-      key: 'mainImage',
-      render: (item) => (
-        <input
-          type="checkbox"
-          name={'mainImage' + index}
-          id={'mainImage' + index}
-          checked={item.mainImage === 1}
-          onChange={(e) => {
-            handleRadioChange(e, item.key, item);
-          }}
-        />
-      ),
-    },
   ];
-
-  function handleFileOnChange(event, id) {
-    event.preventDefault();
-    let reader = new FileReader();
-    let file = event.target.files[0];
-
-    reader.onloadend = () => {
-      setItems(
-        items.map((item) => {
-          if (item.id !== id) {
-            return item;
-          } else {
-            return { ...item, image: reader.result };
-          }
-        })
-      );
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  }
-
-  function handleRadioChange(e, id) {
-    setItems(
-      items.map((item) => {
-        if (item.id !== id) {
-          return { ...item, main_image: 0 };
-        } else {
-          return { ...item, main_image: e.target.checked === true && 1 };
-        }
-      })
-    );
-  }
 
   return (
     <SubTableSection columns={columns} dataSource={data} pagination={false} />
   );
 }
 
-export default SubTable;
+export default FreebieSubTable;

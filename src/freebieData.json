@@ -8,7 +8,7 @@
     "group_id": 10,
     "code": "00010",
     "brand": "말랑하니",
-    "register": "박성준",
+    "category": "사은품(비매품)",
     "items": [
       {
         "id": 1,
@@ -24,7 +24,7 @@
         "id": 2,
         "name": "메쉬 / 무지개 / M",
         "code": "100000-0192",
-        "image": "",
+        "image": "https://malanghoney.com/web/product/medium/202107/3f2f853703c7bfb1add3f42a2b95c180.jpg",
         "main_image": 0,
         "created": "2021-07-17",
         "updated": "2021-07-17",
@@ -34,7 +34,7 @@
         "id": 3,
         "name": "메쉬 / 무지개 / L",
         "code": "100000-0193",
-        "image": "",
+        "image": "https://malanghoney.com/web/product/medium/202107/3f2f853703c7bfb1add3f42a2b95c180.jpg",
         "main_image": 0,
         "created": "2021-07-17",
         "updated": "2021-07-17",
@@ -51,7 +51,7 @@
     "group_id": 11,
     "code": "00010",
     "brand": "루미레브",
-    "register": "권혁진",
+    "category": "사은품(비매품)",
     "items": [
       {
         "id": 1,
@@ -84,7 +84,7 @@
     "group_id": 10,
     "code": "00010",
     "brand": "말랑하니",
-    "register": "박성준",
+    "category": "인쇄물",
     "items": [
       {
         "id": 1,
@@ -137,7 +137,7 @@
     "group_id": 10,
     "code": "00010",
     "brand": "말랑하니",
-    "register": "권혁진",
+    "category": "인쇄물",
     "items": [
       {
         "id": 1,

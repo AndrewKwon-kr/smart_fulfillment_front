@@ -19,7 +19,7 @@ export const SideBarData = [
   },
   {
     title: '아이템 조회',
-    path: '/products',
+    path: '/inquiryitem',
     icons: <MdIcons.MdPlaylistAddCheck />,
     cName: 'nav-text',
   },

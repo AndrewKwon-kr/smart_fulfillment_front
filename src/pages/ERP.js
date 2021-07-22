@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { MainTable, BackButton, CompleteButton } from 'components/ERP';
-import data from '../test.json';
+import erpData from '../erpData.json';
 
 function ERP() {
   return (
@@ -13,7 +13,7 @@ function ERP() {
           이미지 항목에 있는 사각형을 누르면 제품 사진을 등록 및 수정 할 수
           있습니다.
         </Description>
-        <MainTable data={data} />
+        <MainTable data={erpData} />
         <FlexBox>
           <BackButton />
           <CompleteButton text="완료" />
