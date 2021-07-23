@@ -27,16 +27,8 @@ const ExcelIcon = styled.img`
 `;
 
 function ExportExcelButton(props) {
-  const data = props.excelData;
-  const fileName = '테스트 파일';
-  const exportType = 'xls';
-
   return (
-    <BorderedButton
-      onClick={() => {
-        props.exportFromJSON({ data, fileName, exportType });
-      }}
-    >
+    <BorderedButton onClick={props.onClick}>
       <ExcelIcon src={excelIcon} />
       {props.text}
     </BorderedButton>

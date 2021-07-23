@@ -4,25 +4,64 @@ import {
   ERPMainTable,
   FreebieMainTable,
   ExportExcelButton,
+  FreebieExcel,
+  ERPExcel,
 } from 'components/ItemInquiry';
 import erpData from '../erpData.json';
 import freebieData from '../freebieData.json';
-import exportFromJSON from 'export-from-json';
+import swal from 'sweetalert';
 
 function ItemInquiry() {
   const [tabStatus, setTabStatus] = useState('freebie');
-  const excelData = freebieData;
+  const [isConfirm, setIsConfirm] = useState(false); // Excel 다운로드 Yes or No
+  const [freebieExcelData, setFreebieExcelData] = useState(freebieData);
+  const [erpExcelData, setErpExcelData] = useState(erpData);
+  const [testData, setTestData] = useState([]);
 
   useEffect(() => {
     if (tabStatus === 'freebie') {
       document.getElementById('freebie').style.background = '#f9fbff';
       document.getElementById('erp').style.background = '';
+      setIsConfirm(false);
     } else if (tabStatus === 'erp') {
       setTabStatus('erp');
       document.getElementById('freebie').style.background = '';
       document.getElementById('erp').style.background = '#f9fbff';
+      setIsConfirm(false);
     }
   }, [tabStatus]);
+
+  useEffect(() => {
+    let itemArray = [];
+    for (let i = 0; i < freebieExcelData.length; i++) {
+      let itemGroup = freebieExcelData[i];
+      for (let j = 0; j < itemGroup.items.length; j++) {
+        let item = itemGroup.items[j];
+        let itemObject = {};
+        itemObject.category = itemGroup.category;
+        itemObject.brand = itemGroup.brand;
+        itemObject.groupName = itemGroup.name;
+        itemObject.optionName = item.name;
+        itemObject.skuCode = item.code;
+        itemArray.push(itemObject);
+      }
+    }
+    setTestData(itemArray);
+  }, [freebieExcelData]);
+
+  console.log(testData);
+  const onClickExcel = () => {
+    swal({
+      text: 'Excel 파일을 다운로드 하시겠습니까?',
+      buttons: { confirm: '확인', cancel: '취소' },
+    }).then((value) => {
+      if (value === true) {
+        setIsConfirm(true);
+      } else if (value === null) {
+        setIsConfirm(false);
+      }
+    });
+  };
 
   return (
     <Container>
@@ -32,7 +71,6 @@ function ItemInquiry() {
         <Description>
           아이템 등록 페이지에 입력한 아이템 정보를 조회할 수 있습니다.
         </Description>
-
         <br />
         <FreebieAndPrintTab
           id="freebie"
@@ -50,11 +88,23 @@ function ItemInquiry() {
         >
           ERP 등록제품
         </ErpTab>
-        <ExportExcelButton
-          text="엑셀 파일 받기"
-          exportFromJSON={exportFromJSON}
-          excelData={excelData}
-        />
+        <ExportExcelButton text="엑셀 파일 받기" onClick={onClickExcel} />
+        {isConfirm && tabStatus === 'freebie' && (
+          <FreebieExcel
+            data={testData}
+            setIsConfirm={() => {
+              setIsConfirm(false);
+            }}
+          />
+        )}
+        {isConfirm && tabStatus === 'erp' && (
+          <ERPExcel
+            data={erpExcelData}
+            setIsConfirm={() => {
+              setIsConfirm(false);
+            }}
+          />
+        )}
         {tabStatus === 'freebie' && <FreebieMainTable data={freebieData} />}
         {tabStatus === 'erp' && <ERPMainTable data={erpData} />}
       </Wrapper>
