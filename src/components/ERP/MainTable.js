@@ -71,8 +71,12 @@ function MainTable(props) {
     filterIcon: (filtered) => (
       <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
-    onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilter: (value, record) => {
+      return record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase());
+    },
     render: (text) =>
       searchedColumn === dataIndex ? (
         <Highlighter
@@ -104,33 +108,33 @@ function MainTable(props) {
     },
     {
       title: '품목그룹2명',
-      dataIndex: 'name',
-      key: 'name',
-      ...getColumnSearchProps('name'),
+      dataIndex: 'itemGroupName',
+      key: 'itemGroupName',
+      ...getColumnSearchProps('itemGroupName'),
     },
     {
       title: '품목그룹2코드',
-      dataIndex: 'code',
-      key: 'code',
-      ...getColumnSearchProps('code'),
+      dataIndex: 'itemGroupCode',
+      key: 'itemGroupCode',
+      ...getColumnSearchProps('itemGroupCode'),
     },
     {
       title: '품목그룹1명',
-      dataIndex: 'brand',
-      key: 'brand',
+      dataIndex: 'brandName',
+      key: 'brandName',
       filters: [
         { text: '말랑하니', value: '말랑하니' },
         { text: '루미레브', value: '루미레브' },
         { text: '모우모우', value: '모우모우' },
         { text: '아이블린', value: '아이블린' },
       ],
-      onFilter: (value, record) => record.brand.includes(value),
+      onFilter: (value, record) => record.brandName.includes(value),
     },
     {
       title: '품목그룹3명',
-      dataIndex: 'register',
-      key: 'register',
-      ...getColumnSearchProps('register'),
+      dataIndex: 'representativeName',
+      key: 'representativeName',
+      ...getColumnSearchProps('representativeName'),
     },
   ];
 
