@@ -53,12 +53,15 @@ function Navigator() {
 export default Navigator;
 
 const Navbar = styled.div`
+  position: sticky;
+  top: 0;
   background-color: #fff;
   height: 80px;
   display: flex;
   justify-content: start;
   align-items: center;
   border-bottom: 1px solid #d9d9d9;
+  z-index: 1;
 `;
 
 const Menubars = styled(Link)`
@@ -97,6 +100,9 @@ const NavMenuWrap = styled.nav`
     padding: 8px 0px 8px 16px;
     list-style: none;
     height: 60px;
+    &:last-of-type {
+      border-top: 1px solid #d9d9d9;
+    }
   }
 
   .nav-text a {
