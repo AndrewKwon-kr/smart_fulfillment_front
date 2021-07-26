@@ -7,16 +7,17 @@ import {
   FreebieExcel,
   ERPExcel,
 } from 'components/ItemInquiry';
-import erpData from '../erpData.json';
-import freebieData from '../freebieData.json';
+import erpJson from '../erpData.json';
+import freebieJson from '../freebieData.json';
 import swal from 'sweetalert';
 
 function ItemInquiry() {
   const [tabStatus, setTabStatus] = useState('freebie');
   const [isConfirm, setIsConfirm] = useState(false); // Excel 다운로드 Yes or No
-  const [freebieExcelData, setFreebieExcelData] = useState(freebieData);
-  const [erpExcelData, setErpExcelData] = useState(erpData);
-  const [testData, setTestData] = useState([]);
+  const freebieData = freebieJson;
+  const erpData = erpJson;
+  const [freebieExcelData, setFreebieExcelData] = useState([]);
+  const [erpExcelData, setErpExcelData] = useState([]);
 
   useEffect(() => {
     if (tabStatus === 'freebie') {
@@ -32,27 +33,37 @@ function ItemInquiry() {
   }, [tabStatus]);
 
   useEffect(() => {
-    let itemArray = [];
-    for (let i = 0; i < freebieExcelData.length; i++) {
-      let itemGroup = freebieExcelData[i];
-      for (let j = 0; j < itemGroup.items.length; j++) {
-        let item = itemGroup.items[j];
-        let itemObject = {};
-        itemObject.category = itemGroup.category;
-        itemObject.brand = itemGroup.brand;
-        itemObject.groupName = itemGroup.name;
-        itemObject.optionName = item.name;
-        itemObject.skuCode = item.code;
-        itemArray.push(itemObject);
+    function createExcelData(data) {
+      let itemArray = [];
+      for (let i = 0; i < data.length; i++) {
+        let itemGroup = data[i];
+        for (let j = 0; j < itemGroup.items.length; j++) {
+          let item = itemGroup.items[j];
+          let itemObject = {};
+          itemObject.category = itemGroup.category;
+          itemObject.brand = itemGroup.brand;
+          itemObject.groupName = itemGroup.name;
+          itemObject.code = itemGroup.code;
+          itemObject.register = itemGroup.register;
+          itemObject.optionName = item.name;
+          itemObject.skuCode = item.code;
+          itemArray.push(itemObject);
+        }
       }
+      return itemArray;
     }
-    setTestData(itemArray);
-  }, [freebieExcelData]);
 
-  console.log(testData);
+    if (tabStatus === 'freebie') {
+      setFreebieExcelData(createExcelData(freebieData));
+    } else if (tabStatus === 'erp') {
+      setErpExcelData(createExcelData(erpData));
+    }
+  }, [freebieData, erpData, tabStatus]);
+
   const onClickExcel = () => {
+    let status = tabStatus === 'freebie' ? '사은품 · 인쇄물' : 'ERP 등록제품';
     swal({
-      text: 'Excel 파일을 다운로드 하시겠습니까?',
+      text: status + ' Excel 파일을 다운로드 하시겠습니까?',
       buttons: { confirm: '확인', cancel: '취소' },
     }).then((value) => {
       if (value === true) {
@@ -91,7 +102,7 @@ function ItemInquiry() {
         <ExportExcelButton text="엑셀 파일 받기" onClick={onClickExcel} />
         {isConfirm && tabStatus === 'freebie' && (
           <FreebieExcel
-            data={testData}
+            data={freebieExcelData}
             setIsConfirm={() => {
               setIsConfirm(false);
             }}

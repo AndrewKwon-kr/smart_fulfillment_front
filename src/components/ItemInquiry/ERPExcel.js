@@ -13,10 +13,12 @@ function ERPExcel({ data, setIsConfirm }) {
     <ExcelFile hideElement={true} filename="ERP 등록제품">
       <ExcelSheet data={data} name="ERP 등록제품">
         {/* <ExcelColumn label="key" value="key" /> */}
-        <ExcelColumn label="품목그룹2명" value="name" />
+        <ExcelColumn label="품목그룹2명" value="groupName" />
         <ExcelColumn label="품목그룹2코드" value="code" />
         <ExcelColumn label="품목그룹1명" value="brand" />
         <ExcelColumn label="품목그룹3명" value="register" />
+        <ExcelColumn label="옵션명" value="optionName" />
+        <ExcelColumn label="SKU코드" value="skuCode" />
       </ExcelSheet>
     </ExcelFile>
   );
