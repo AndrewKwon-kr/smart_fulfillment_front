@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import { MainTable, BackButton, CompleteButton } from 'components/ERP';
 import excelIcon from 'assets/icon_excel.png';
 import { ExcelRenderer } from 'react-excel-renderer';
-import erpData from '../testData.json';
+// import erpData from '../testData.json';
 import { Button, Upload } from 'antd';
 
 function ERP() {
-  console.log(erpData);
+  // console.log(erpData);
   const [rows, setRows] = useState([]);
   // const [cols, setCols] = useState([]);
   // const [errorMessage, setErrorMessage] = useState(null);
@@ -68,7 +68,7 @@ function ERP() {
     });
     return false;
   };
-  console.log(rows);
+  // console.log(rows);
   return (
     <Container>
       <Wrapper>
