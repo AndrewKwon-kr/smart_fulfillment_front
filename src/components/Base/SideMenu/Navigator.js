@@ -61,7 +61,7 @@ const Navbar = styled.div`
   justify-content: start;
   align-items: center;
   border-bottom: 1px solid #d9d9d9;
-  z-index: 1;
+  z-index: 2;
 `;
 
 const Menubars = styled(Link)`
@@ -84,7 +84,7 @@ const NavMenuWrap = styled.nav`
     transition: 850ms;
     border: 1px solid #d9d9d9;
     border-top: 0;
-    z-index: 1;
+    z-index: 2;
   }
   .nav-menu.active {
     left: 0;
