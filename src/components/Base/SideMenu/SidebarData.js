@@ -25,7 +25,7 @@ export const SideBarData = [
   },
   {
     title: '이벤트 등록',
-    path: '/team',
+    path: '/registevent',
     icons: <MdIcons.MdEventAvailable />,
     cName: 'nav-text',
   },

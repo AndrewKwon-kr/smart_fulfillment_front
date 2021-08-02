@@ -6,6 +6,7 @@ import {
   FreebieAndPrint,
   ERP,
   ItemInquiry,
+  EventRegistration,
 } from './pages';
 import Navigator from 'components/Base/SideMenu/Navigator';
 import './App.css';
@@ -21,6 +22,7 @@ class App extends Component {
           <Route path="/freebie" component={FreebieAndPrint} />
           <Route path="/erp" component={ERP} />
           <Route path="/inquiryitem" component={ItemInquiry} />
+          <Route path="/registevent" component={EventRegistration} />
         </Switch>
       </BrowserRouter>
     );
