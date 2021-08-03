@@ -108,7 +108,6 @@ function EventRegistration() {
               </LabelWrapper>
               <ItemWrapper>
                 <Item>+ 아이템 추가하기</Item>
-                <Item>+ 아이템 추가하기</Item>
               </ItemWrapper>
             </ContentWrapper>
           </>

@@ -1,4 +1,3 @@
-import { PresetColorTypes } from 'antd/lib/_util/colors';
 import React from 'react';
 
 function Board(props) {

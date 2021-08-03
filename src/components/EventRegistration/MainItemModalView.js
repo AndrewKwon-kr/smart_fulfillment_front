@@ -1,7 +1,112 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { MainItemSearch, Board, Card } from 'components/EventRegistration';
 import Select from 'react-select';
+
+function MainItemModalView(props) {
+  const [categoryValue, setCategoryValue] = useState({ value: 'group' });
+  const categoryOptions = [
+    { value: 'group', label: '그룹별' },
+    { value: 'product', label: '제품별' },
+  ];
+  const [groupList, setGroupList] = useState([
+    { key: 'all', label: '전체 제품' },
+    { key: 'malanghoney', label: '말랑하니 전체 제품' },
+    { key: 'mowmow', label: '모우모우 전체 제품' },
+    { key: 'roomireve', label: '루미레브 전체 제품' },
+    { key: 'margemarket', label: '마지마켓 전체 제품' },
+    { key: 'iblyn', label: '아이블린 전체 제품' },
+    { key: 'bonboon', label: '본분 전체 제품' },
+  ]);
+  const [productList, setProductList] = useState([
+    { key: 'a', label: '방수매트' },
+    { key: 'b', label: '스와들속싸개' },
+    { key: 'c', label: '원형러그' },
+    { key: 'd', label: '수면조끼' },
+    { key: 'd', label: '수유등' },
+    { key: 'e', label: '자석받침대' },
+    { key: 'f', label: '키즈빈백' },
+    { key: 'g', label: '연필꽂이' },
+    { key: 'h', label: '색연필' },
+  ]);
+
+  // const resetGroupList = () => {
+  //   const cards = document.getElementById('board-3').childNodes;
+  //   console.log(cards);
+
+  //   // cards.forEach((card) => card.remove());
+
+  //   for (let i = 0; i < cards.length; i++) {
+  //     const card = cards[i];
+  //     console.log('cards.length ---> ', cards.length, i);
+  //     card.parentElement.removeChild(card);
+  //   }
+  // };
+
+  return (
+    <Modal>
+      <ModalContainer>
+        <Title>본품 찾기</Title>
+        <MainItemSearch />
+        <InputWrap>
+          <Select
+            options={categoryOptions}
+            defaultValue={categoryOptions[0]}
+            onChange={setCategoryValue}
+          />
+        </InputWrap>
+        {categoryValue.value === 'group' && (
+          <div className="flexbox">
+            <Board id="board-1" className="board">
+              {groupList.map((group) => (
+                <Card
+                  key={group.key}
+                  id={group.key}
+                  className="card"
+                  draggable="true"
+                >
+                  {group.label}
+                </Card>
+              ))}
+            </Board>
+          </div>
+        )}
+        {categoryValue.value === 'product' && (
+          <div className="flexbox">
+            <Board id="board-2" className="board">
+              {productList.map((group) => (
+                <Card
+                  // key={group.key}
+                  id={group.key}
+                  className="card"
+                  draggable="true"
+                >
+                  {group.label}
+                </Card>
+              ))}
+            </Board>
+          </div>
+        )}
+      </ModalContainer>
+      <BoardContainer>
+        <div className="flexbox2">
+          {categoryValue.value === 'group' && (
+            <Board id="board-3" className="board"></Board>
+          )}
+          {categoryValue.value === 'product' && (
+            <Board id="board-4" className="board"></Board>
+          )}
+        </div>
+        <ButtonWrapper>
+          <Button className="close" onClick={props.close}>
+            취소
+          </Button>
+          <Button className="close">선택</Button>
+        </ButtonWrapper>
+      </BoardContainer>
+    </Modal>
+  );
+}
 
 const Modal = styled.div`
   display: flex;
@@ -22,23 +127,35 @@ const Modal = styled.div`
     width: 100%;
     height: 75%;
 
-    /* overflow: hidden; */
+    overflow: scroll;
 
     margin: 10px auto;
+
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #a9a9a9;
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-track {
+      /* background-color: grey; */
+      border-radius: 10px;
+      box-shadow: inset 0px 0px 5px white;
+    }
   }
   .flexbox .board {
     display: flex;
     flex-direction: column;
 
-    width: 100%;
-    /* background-color: #313131; */
+    width: 90%;
     padding: 15px 0;
   }
   .flexbox .board .card {
     padding: 10px 25px;
     border: 1px solid #f3f3f3;
     border-radius: 5px;
-    box-shadow: 1px 1px 1px 0px;
+    box-shadow: rgb(235 235 235) 3px 3px 5px;
 
     cursor: pointer;
     margin-bottom: 15px;
@@ -68,7 +185,7 @@ const Modal = styled.div`
     padding: 10px 25px;
     border: 1px solid #f3f3f3;
     border-radius: 5px;
-    box-shadow: 1px 1px 1px 0px;
+    box-shadow: rgb(235 235 235) 3px 3px 5px;
     background-color: #fff;
 
     cursor: pointer;
@@ -125,67 +242,5 @@ const InputWrap = styled.div`
   display: inline-block;
   width: 100px;
 `;
-
-function MainItemModalView(props) {
-  const [categoryValue, setCategoryValue] = useState('group');
-  const categoryOptions = [
-    { value: 'group', label: '그룹별' },
-    { value: 'product', label: '제품별' },
-  ];
-
-  console.log(categoryValue);
-
-  return (
-    <Modal>
-      <ModalContainer>
-        <Title>본품 찾기</Title>
-        <MainItemSearch />
-        <InputWrap>
-          <Select
-            options={categoryOptions}
-            defaultValue={categoryOptions[0]}
-            onChange={setCategoryValue}
-          />
-        </InputWrap>
-        <div className="flexbox">
-          <Board id="board-1" className="board">
-            <Card id="card-1" className="card" draggable="true">
-              전체 제품
-            </Card>
-            <Card id="card-2" className="card" draggable="true">
-              말랑하니 전체 제품
-            </Card>
-            <Card id="card-3" className="card" draggable="true">
-              모우모우 전체 제품
-            </Card>
-            <Card id="card-4" className="card" draggable="true">
-              루미레브 전체 제품
-            </Card>
-            <Card id="card-5" className="card" draggable="true">
-              마지마켓 전체 제품
-            </Card>
-            <Card id="card-6" className="card" draggable="true">
-              아이블린 전체 제품
-            </Card>
-            <Card id="card-7" className="card" draggable="true">
-              본분 전체 제품
-            </Card>
-          </Board>
-        </div>
-      </ModalContainer>
-      <BoardContainer>
-        <div className="flexbox2">
-          <Board id="board-2" className="board"></Board>
-        </div>
-        <ButtonWrapper>
-          <Button className="close" onClick={props.close}>
-            취소
-          </Button>
-          <Button className="close">선택</Button>
-        </ButtonWrapper>
-      </BoardContainer>
-    </Modal>
-  );
-}
 
 export default MainItemModalView;
