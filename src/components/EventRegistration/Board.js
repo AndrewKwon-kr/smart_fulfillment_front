@@ -9,6 +9,11 @@ function Board(props) {
     card.style.display = 'block';
 
     e.target.appendChild(card);
+
+    const cards = document.getElementById('board-3').childNodes;
+    cards.forEach((card) => {
+      console.log(card.innerText);
+    });
   };
 
   const dragOver = (e) => {

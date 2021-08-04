@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { MainItemSearch, Board, Card } from 'components/EventRegistration';
 import Select from 'react-select';
 
-function MainItemModalView(props) {
+function FreebieModalView(props) {
   const [categoryValue, setCategoryValue] = useState({ value: 'group' });
   const categoryOptions = [
     { value: 'group', label: '그룹별' },
@@ -53,7 +53,7 @@ function MainItemModalView(props) {
   return (
     <Modal>
       <ModalContainer>
-        <Title>본품 찾기</Title>
+        <Title>사은품 찾기</Title>
         <MainItemSearch />
         <InputWrap>
           <Select
@@ -250,4 +250,4 @@ const InputWrap = styled.div`
   width: 100px;
 `;
 
-export default MainItemModalView;
+export default FreebieModalView;

@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import * as AiIcons from 'react-icons/ai';
-import { MainItemModalView } from 'components/EventRegistration';
+import {
+  MainItemModalView,
+  FreebieModalView,
+  PrintModalView,
+} from 'components/EventRegistration';
 
 function EventRegistration() {
   const [title, setTitle] = useState('');
   const [stepStatus, setStepStatus] = useState(2);
   const [count, setCount] = useState(0);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [mainItemModalVisible, setMainItemModalVisible] = useState(false);
+  const [freebieModalVisible, setFreebieModalVisible] = useState(false);
+  const [printModalVisible, setPrintModalVisible] = useState(false);
 
   const onChange = (e) => {
     setTitle(e.target.value);
@@ -15,13 +21,26 @@ function EventRegistration() {
   const setNextStep = () => {
     setStepStatus(2);
   };
-  const openModal = () => {
-    setModalVisible(true);
+  const openModal = (type) => {
+    console.log(type);
+    if (type === 'main') {
+      setMainItemModalVisible(true);
+    } else if (type === 'freebie') {
+      setFreebieModalVisible(true);
+    } else if (type === 'print') {
+      setPrintModalVisible(true);
+    }
   };
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
+  function closeModal(type) {
+    if (type === 'main') {
+      setMainItemModalVisible(false);
+    } else if (type === 'freebie') {
+      setFreebieModalVisible(false);
+    } else if (type === 'print') {
+      setPrintModalVisible(false);
+    }
+  }
+  console.log(mainItemModalVisible);
   return (
     <Container>
       <StepWrapper>
@@ -82,9 +101,21 @@ function EventRegistration() {
                 </ReloadButton>
               </LabelWrapper>
               <ItemWrapper>
-                <Item onClick={openModal}>+ 아이템 추가하기</Item>
+                <Item
+                  onClick={() => {
+                    openModal('main');
+                  }}
+                >
+                  + 아이템 추가하기
+                </Item>
               </ItemWrapper>
-              {modalVisible && <MainItemModalView close={closeModal} />}
+              {mainItemModalVisible && (
+                <MainItemModalView
+                  close={() => {
+                    closeModal('main');
+                  }}
+                />
+              )}
             </ContentWrapper>
             <ContentWrapper>
               <LabelWrapper>
@@ -95,8 +126,21 @@ function EventRegistration() {
                 </ReloadButton>
               </LabelWrapper>
               <ItemWrapper>
-                <Item>+ 아이템 추가하기</Item>
+                <Item
+                  onClick={() => {
+                    openModal('freebie');
+                  }}
+                >
+                  + 아이템 추가하기
+                </Item>
               </ItemWrapper>
+              {freebieModalVisible && (
+                <FreebieModalView
+                  close={() => {
+                    closeModal('freebie');
+                  }}
+                />
+              )}
             </ContentWrapper>
             <ContentWrapper>
               <LabelWrapper>
@@ -107,8 +151,21 @@ function EventRegistration() {
                 </ReloadButton>
               </LabelWrapper>
               <ItemWrapper>
-                <Item>+ 아이템 추가하기</Item>
+                <Item
+                  onClick={() => {
+                    openModal('print');
+                  }}
+                >
+                  + 아이템 추가하기
+                </Item>
               </ItemWrapper>
+              {printModalVisible && (
+                <PrintModalView
+                  close={() => {
+                    closeModal('print');
+                  }}
+                />
+              )}
             </ContentWrapper>
           </>
         )}
