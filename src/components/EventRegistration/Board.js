@@ -10,15 +10,21 @@ function Board(props) {
 
     e.target.appendChild(card);
 
-    const cards = document.getElementById('board-3').childNodes;
-    cards.forEach((card) => {
-      console.log(card.innerText);
-    });
+    const cards = document.getElementsByClassName('board')[1].childNodes;
+    setItems(cards);
   };
 
   const dragOver = (e) => {
     e.preventDefault();
   };
+
+  function setItems(cards) {
+    const items = [];
+    cards.forEach((card) => {
+      items.push(card.innerText);
+    });
+    props.setSelectedItems(items);
+  }
 
   return (
     <div

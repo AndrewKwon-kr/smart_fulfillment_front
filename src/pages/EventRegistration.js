@@ -1,25 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import * as AiIcons from 'react-icons/ai';
+import * as BsIcons from 'react-icons/bs';
 import {
   MainItemModalView,
   FreebieModalView,
   PrintModalView,
 } from 'components/EventRegistration';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import ko from 'date-fns/locale/ko';
+registerLocale('ko', ko);
 
 function EventRegistration() {
   const [title, setTitle] = useState('');
-  const [stepStatus, setStepStatus] = useState(2);
-  const [count, setCount] = useState(0);
+  const [stepStatus, setStepStatus] = useState(1);
+
+  const [countMainItem, setCountMainItem] = useState(0);
+  const [countFreebie, setCountFreebie] = useState(0);
+  const [countPrint, setCountPrint] = useState(0);
+
   const [mainItemModalVisible, setMainItemModalVisible] = useState(false);
   const [freebieModalVisible, setFreebieModalVisible] = useState(false);
   const [printModalVisible, setPrintModalVisible] = useState(false);
+
+  const [mainItems, setMainItems] = useState([]);
+  const [freebies, setFreebies] = useState([]);
+  const [prints, setPrints] = useState([]);
+
+  const [minBuyNumber, setMinBuyNumber] = useState(0);
+  const [minBuyPrice, setMinBuyPrice] = useState({
+    price: '',
+    check: false,
+  });
+  const [limitNumber, setLimitNumber] = useState({
+    number: '',
+    check: false,
+  });
+
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(null);
+  const [isInfinited, setIsInfinited] = useState(false);
+  registerLocale('ko', ko);
+
+  console.log(startDate, endDate);
 
   const onChange = (e) => {
     setTitle(e.target.value);
   };
   const setNextStep = () => {
-    setStepStatus(2);
+    setStepStatus(stepStatus + 1);
+  };
+  const setBackStep = () => {
+    setStepStatus(stepStatus - 1);
   };
   const openModal = (type) => {
     console.log(type);
@@ -40,7 +73,69 @@ function EventRegistration() {
       setPrintModalVisible(false);
     }
   }
-  console.log(mainItemModalVisible);
+  const reload = (type) => {
+    if (type === 'main') {
+      setMainItems([]);
+    } else if (type === 'freebie') {
+      setFreebies([]);
+    } else if (type === 'print') {
+      setPrints([]);
+    }
+  };
+  const removeItem = (index, type) => {
+    if (type === 'main') {
+      setMainItems(mainItems.filter((item) => item !== mainItems[index]));
+    } else if (type === 'freebie') {
+      setFreebies(freebies.filter((item) => item !== freebies[index]));
+    } else if (type === 'print') {
+      setPrints(prints.filter((item) => item !== prints[index]));
+    }
+  };
+
+  useEffect(() => {
+    numberCheck(minBuyNumber);
+  }, [minBuyNumber]);
+
+  function onChangeNumber(e, type) {
+    numberCheck(e.target.value, type);
+  }
+
+  const numberCheck = (v, type) => {
+    let num = v || 0;
+    if (!isFinite(num)) return;
+    num = num.toString();
+
+    if (num !== '0' && !num.includes('.')) {
+      num = num.replace(/^0+/, '');
+    }
+
+    num = Number(num);
+
+    if (type === 'minBuyNumber') {
+      setMinBuyNumber(num);
+    } else if (type === 'minBuyPrice') {
+      setMinBuyPrice({ price: num });
+    } else if (type === 'limitNumber') {
+      setLimitNumber({ number: num });
+    }
+  };
+
+  useEffect(() => {
+    if (isInfinited === true) {
+      setEndDate(null);
+    }
+  }, [isInfinited]);
+
+  useEffect(() => {
+    setCountMainItem(mainItems.length);
+  }, [mainItems]);
+  useEffect(() => {
+    setCountFreebie(freebies.length);
+  }, [freebies]);
+  useEffect(() => {
+    setCountPrint(prints.length);
+  }, [prints]);
+
   return (
     <Container>
       <StepWrapper>
@@ -53,22 +148,42 @@ function EventRegistration() {
             stepStatus === 4
           }
         >
-          1
+          {stepStatus > 1 ? '✔' : '1'}
         </StepOneLabel>
         <br />
         <StepTwoLabel
           activate={stepStatus === 2 || stepStatus === 3 || stepStatus === 4}
         >
-          2
+          {stepStatus > 2 ? '✔' : '2'}
         </StepTwoLabel>
         <br />
         <StepThreeLabel activate={stepStatus === 3 || stepStatus === 4}>
-          3
+          {stepStatus > 3 ? '✔' : '3'}
         </StepThreeLabel>
         <br />
-        <StepFourLabel activate={stepStatus === 4}>4</StepFourLabel>
+        <StepFourLabel activate={stepStatus === 4}>
+          {stepStatus > 4 ? '✔' : '4'}
+        </StepFourLabel>
       </StepWrapper>
       <Wrapper>
+        <EventInfomationWrapper visible={stepStatus > 2}>
+          <EventInfomation>
+            <EventInfomationText>이벤트명</EventInfomationText>
+            {title && title}
+          </EventInfomation>
+          <EventInfomation>
+            <EventInfomationText>본품</EventInfomationText>
+            {mainItems && mainItems.join(', ')}
+          </EventInfomation>
+          <EventInfomation>
+            <EventInfomationText>사은품</EventInfomationText>
+            {freebies && freebies.join(', ')}
+          </EventInfomation>
+          <EventInfomation>
+            <EventInfomationText>인쇄물</EventInfomationText>
+            {prints && prints.join(', ')}
+          </EventInfomation>
+        </EventInfomationWrapper>
         {stepStatus === 1 && (
           <>
             <SubTitle>이벤트 이름을 입력해주세요</SubTitle>
@@ -85,9 +200,11 @@ function EventRegistration() {
               value={title}
               placeholder="ex) 어린이날 행사 이벤트"
             />
-            <Step1NextButton onClick={setNextStep} disabled={!title}>
-              다음
-            </Step1NextButton>
+            <StepButtonWrapper>
+              <StepNextButton onClick={setNextStep} disabled={!title}>
+                다음
+              </StepNextButton>
+            </StepButtonWrapper>
           </>
         )}
         {stepStatus === 2 && (
@@ -95,79 +212,257 @@ function EventRegistration() {
             <ContentWrapper>
               <LabelWrapper>
                 <TextLabel>본품</TextLabel>
-                <CountLabel>{count}</CountLabel>
-                <ReloadButton>
+                <CountLabel>{countMainItem}</CountLabel>
+                <ReloadButton onClick={() => reload('main')}>
                   <AiIcons.AiOutlineReload size="24" color="#a9a9a9" />
                 </ReloadButton>
               </LabelWrapper>
               <ItemWrapper>
-                <Item
+                {mainItems &&
+                  mainItems.map((item, index) => (
+                    <Item key={index}>
+                      {item}
+                      <BsIcons.BsTrash
+                        color="#a9a9a9"
+                        style={{ float: 'right', cursor: 'pointer' }}
+                        onClick={() => removeItem(index, 'main')}
+                      />
+                    </Item>
+                  ))}
+                <AddItem
                   onClick={() => {
                     openModal('main');
                   }}
                 >
                   + 아이템 추가하기
-                </Item>
+                </AddItem>
               </ItemWrapper>
               {mainItemModalVisible && (
                 <MainItemModalView
                   close={() => {
                     closeModal('main');
                   }}
+                  setMainItems={setMainItems}
                 />
               )}
             </ContentWrapper>
             <ContentWrapper>
               <LabelWrapper>
                 <TextLabel>사은품</TextLabel>
-                <CountLabel>{count}</CountLabel>
-                <ReloadButton>
+                <CountLabel>{countFreebie}</CountLabel>
+                <ReloadButton onClick={() => reload('freebie')}>
                   <AiIcons.AiOutlineReload size="24" color="#a9a9a9" />
                 </ReloadButton>
               </LabelWrapper>
               <ItemWrapper>
-                <Item
+                {freebies &&
+                  freebies.map((item, index) => (
+                    <Item key={index}>
+                      {item}
+                      <BsIcons.BsTrash
+                        color="#a9a9a9"
+                        style={{ float: 'right', cursor: 'pointer' }}
+                        onClick={() => removeItem(index, 'freebie')}
+                      />
+                    </Item>
+                  ))}
+                <AddItem
                   onClick={() => {
                     openModal('freebie');
                   }}
                 >
                   + 아이템 추가하기
-                </Item>
+                </AddItem>
               </ItemWrapper>
               {freebieModalVisible && (
                 <FreebieModalView
                   close={() => {
                     closeModal('freebie');
                   }}
+                  setFreebies={setFreebies}
                 />
               )}
             </ContentWrapper>
             <ContentWrapper>
               <LabelWrapper>
                 <TextLabel>인쇄물</TextLabel>
-                <CountLabel>{count}</CountLabel>
-                <ReloadButton>
+                <CountLabel>{countPrint}</CountLabel>
+                <ReloadButton onClick={() => reload('print')}>
                   <AiIcons.AiOutlineReload size="24" color="#a9a9a9" />
                 </ReloadButton>
               </LabelWrapper>
               <ItemWrapper>
-                <Item
+                {prints &&
+                  prints.map((item, index) => (
+                    <Item key={index}>
+                      {item}
+                      <BsIcons.BsTrash
+                        color="#a9a9a9"
+                        style={{ float: 'right', cursor: 'pointer' }}
+                        onClick={() => removeItem(index, 'print')}
+                      />
+                    </Item>
+                  ))}
+                <AddItem
                   onClick={() => {
                     openModal('print');
                   }}
                 >
                   + 아이템 추가하기
-                </Item>
+                </AddItem>
               </ItemWrapper>
               {printModalVisible && (
                 <PrintModalView
                   close={() => {
                     closeModal('print');
                   }}
+                  setPrints={setPrints}
                 />
               )}
             </ContentWrapper>
+            <StepButtonWrapper>
+              <StepBackButton onClick={setBackStep}>이전</StepBackButton>
+              <StepNextButton
+                onClick={setNextStep}
+                disabled={
+                  !(
+                    mainItems.length !== 0 &&
+                    freebies.length !== 0 &&
+                    prints.length !== 0
+                  )
+                }
+              >
+                다음
+              </StepNextButton>
+            </StepButtonWrapper>
           </>
+        )}
+        {stepStatus === 3 && (
+          <>
+            <SubTitle>이벤트 방식</SubTitle>
+            <EventWayList>
+              <Way>
+                <WayText>최소구매개수</WayText>
+                <InputNumber
+                  type="text"
+                  value={minBuyNumber}
+                  onChange={(e) => {
+                    onChangeNumber(e, 'minBuyNumber');
+                  }}
+                />
+                개
+                <WayOption className="placeholder">
+                  2개 이상부터 입력해주세요
+                </WayOption>
+              </Way>
+              <Way>
+                <WayText>최소구매금액</WayText>
+                <InputNumber
+                  type="text"
+                  value={minBuyPrice.price || ''}
+                  onChange={(e) => {
+                    onChangeNumber(e, 'minBuyPrice');
+                  }}
+                  disabled={minBuyPrice.check}
+                />
+                원
+                <WayOption className="checkbox">
+                  <input
+                    type="checkbox"
+                    style={{ marginRight: '10px' }}
+                    value={minBuyPrice.check}
+                    onChange={() =>
+                      setMinBuyPrice({ check: !minBuyPrice.check })
+                    }
+                  />
+                  해당없음
+                </WayOption>
+              </Way>
+              <Way>
+                <WayText>한정수량</WayText>
+                <InputNumber
+                  type="text"
+                  value={limitNumber.number || ''}
+                  onChange={(e) => {
+                    onChangeNumber(e, 'limitNumber');
+                  }}
+                  disabled={limitNumber.check}
+                />
+                개
+                <WayOption className="checkbox">
+                  <input
+                    type="checkbox"
+                    style={{ marginRight: '10px' }}
+                    value={limitNumber.check}
+                    onChange={() =>
+                      setLimitNumber({ check: !limitNumber.check })
+                    }
+                  />
+                  제한없음
+                </WayOption>
+              </Way>
+            </EventWayList>
+            <SubTitle>증정 기간</SubTitle>
+            <br />
+            <Description>
+              설정된 날짜부터 사은품 또는 인쇄물이 제공됩니다.
+            </Description>
+            <CalenderWrapper>
+              <Calender
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                dateFormat={'yyyy-MM-dd'}
+                locale={ko}
+              />
+              ~
+              <Calender
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+                dateFormat={'yyyy-MM-dd'}
+                locale={ko}
+                disabled={isInfinited}
+              />
+              <WayOption className="checkbox">
+                <input
+                  type="checkbox"
+                  style={{ marginRight: '10px' }}
+                  value={isInfinited}
+                  onChange={() => setIsInfinited(!isInfinited)}
+                />
+                제한없음
+              </WayOption>
+            </CalenderWrapper>
+            <StepButtonWrapper>
+              <StepBackButton onClick={setBackStep}>이전</StepBackButton>
+              <StepNextButton
+                onClick={setNextStep}
+                disabled={
+                  !(
+                    mainItems.length !== 0 &&
+                    freebies.length !== 0 &&
+                    prints.length !== 0
+                  )
+                }
+              >
+                다음
+              </StepNextButton>
+            </StepButtonWrapper>
+          </>
+        )}
+        {stepStatus === 4 && (
+          <StepButtonWrapper>
+            <StepBackButton onClick={setBackStep}>이전</StepBackButton>
+            <StepNextButton onClick={setNextStep} disabled={true}>
+              완료
+            </StepNextButton>
+          </StepButtonWrapper>
         )}
       </Wrapper>
     </Container>
@@ -254,9 +549,11 @@ const Wrapper = styled.div`
   text-align: start;
   padding-bottom: 40px;
 `;
-const SubTitle = styled.h2`
+const SubTitle = styled.div`
   position: relative;
   display: inline-block;
+  font-weight: 1000;
+  font-size: 25px;
 `;
 const Description = styled.div`
   position: relative;
@@ -274,20 +571,33 @@ const InputText = styled.input`
   font-size: 1rem;
   font-weight: bold;
 `;
-const Step1NextButton = styled.button`
-  all: unset;
-  margin-top: 80px;
+const StepButtonWrapper = styled.div`
   float: right;
-  width: 40px;
+  margin-top: 80px;
   font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: 0.2s all;
+`;
+const StepNextButton = styled.button`
+  all: unset;
+  width: 40px;
   color: #fff;
   background-color: ${(props) => (props.disabled ? '#d9d9d9' : '#228be6')};
   padding: 0.5rem 2rem;
   cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
   border-radius: 2px;
-  text-align: center;
-  text-decoration: none;
-  transition: 0.2s all;
+`;
+const StepBackButton = styled.button`
+  all: unset;
+  margin-right: 20px;
+  width: 40px;
+  border: 1px solid #a9a9a9;
+  color: #000;
+  background-color: #fff;
+  padding: 0.5rem 2rem;
+  cursor: pointer;
+  border-radius: 2px;
 `;
 const ContentWrapper = styled.div`
   position: relative;
@@ -330,7 +640,7 @@ const ItemWrapper = styled.ul`
   text-align: center;
   list-style: none;
 `;
-const Item = styled.li`
+const AddItem = styled.li`
   width: 100%;
   height: 40px;
   line-height: 40px;
@@ -341,9 +651,108 @@ const Item = styled.li`
   margin-bottom: 10px;
   cursor: pointer;
 `;
+const Item = styled.li`
+  width: 100%;
+  height: 40px;
+  /* line-height: 40px; */
+  border-radius: 5px;
+  background-color: #fff;
+  color: #000;
+  margin-bottom: 10px;
+  border: 1px solid #f3f3f3;
+  border-radius: 5px;
+  box-shadow: rgb(235 235 235) 3px 3px 5px;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px;
+`;
 const ReloadButton = styled.div`
   position: relative;
   float: right;
+  cursor: pointer;
 `;
 
+const EventWayList = styled.ul`
+  margin: 30px 0 100px;
+  list-style: none;
+`;
+const Way = styled.li`
+  margin-bottom: 15px;
+  padding-left: 15px;
+  font-size: 15px;
+  font-weight: bold;
+`;
+const WayText = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 150px;
+`;
+const InputNumber = styled.input`
+  all: unset;
+  position: relative;
+  display: inline-block;
+  margin: 0 10px 0 40px;
+  width: 120px;
+  height: 1rem;
+  background-color: #e9e9e9;
+  padding: 10px 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: right;
+`;
+const WayOption = styled.div`
+  position: relative;
+  display: inline-block;
+  margin-left: 20px;
+  &.placeholder {
+    color: #a9a9a9;
+    font-size: 14px;
+    font-weight: normal;
+  }
+  &.checkbox {
+    font-size: 14px;
+    font-weight: normal;
+  }
+`;
+const CalenderWrapper = styled.div`
+  position: relative;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  .react-datepicker-wrapper {
+    margin: 0 15px;
+    display: inline-block;
+  }
+`;
+const Calender = styled(DatePicker)`
+  all: unset;
+  padding: 5px 10px;
+  border: 1px solid #d9d9d9;
+`;
+const EventInfomationWrapper = styled.ul`
+  position: absolute;
+  display: ${(props) => (props.visible ? 'block' : 'none')};
+  top: -5vw;
+  left: 50vw;
+  width: 300px;
+  border-radius: 5px;
+  border: 1px solid #a9a9a9;
+  list-style: none;
+  padding: 20px;
+`;
+const EventInfomation = styled.li`
+  padding: 5px 0;
+  font-size: 15px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
+const EventInfomationText = styled.div`
+  position: relative;
+  display: inline-block;
+  width: 100px;
+  font-weight: bold;
+`;
 export default EventRegistration;

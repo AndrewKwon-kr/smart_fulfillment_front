@@ -5,6 +5,7 @@ import Select from 'react-select';
 
 function PrintModalView(props) {
   const [categoryValue, setCategoryValue] = useState({ value: 'group' });
+  const [selectedItems, setSelectedItems] = useState([]);
   const categoryOptions = [
     { value: 'group', label: '그룹별' },
     { value: 'product', label: '제품별' },
@@ -42,13 +43,11 @@ function PrintModalView(props) {
   //     card.parentElement.removeChild(card);
   //   }
   // };
-  useEffect(() => {
-    const cards = document.getElementById('board-3').childNodes;
-
-    cards.forEach((card) => {
-      console.log(card);
-    });
-  }, []);
+  console.log(selectedItems);
+  const setPrints = () => {
+    props.setPrints(selectedItems);
+    props.close();
+  };
 
   return (
     <Modal>
@@ -98,17 +97,25 @@ function PrintModalView(props) {
       <BoardContainer>
         <div className="flexbox2">
           {categoryValue.value === 'group' && (
-            <Board id="board-3" className="board"></Board>
+            <Board
+              id="board-3"
+              className="board"
+              setSelectedItems={setSelectedItems}
+            ></Board>
           )}
           {categoryValue.value === 'product' && (
-            <Board id="board-4" className="board"></Board>
+            <Board
+              id="board-4"
+              className="board"
+              setSelectedItems={setSelectedItems}
+            ></Board>
           )}
         </div>
         <ButtonWrapper>
           <Button className="close" onClick={props.close}>
             취소
           </Button>
-          <Button className="close">선택</Button>
+          <Button className="close" onClick={setPrints}>선택</Button>
         </ButtonWrapper>
       </BoardContainer>
     </Modal>
