@@ -457,12 +457,17 @@ function EventRegistration() {
           </>
         )}
         {stepStatus === 4 && (
-          <StepButtonWrapper>
-            <StepBackButton onClick={setBackStep}>이전</StepBackButton>
-            <StepNextButton onClick={setNextStep} disabled={true}>
-              완료
-            </StepNextButton>
-          </StepButtonWrapper>
+          <>
+            <SubTitle>
+              이벤트를 진행할 채널을 선택해주세요 (복수선택 가능)
+            </SubTitle>
+            <StepButtonWrapper>
+              <StepBackButton onClick={setBackStep}>이전</StepBackButton>
+              <StepNextButton onClick={setNextStep} disabled={true}>
+                완료
+              </StepNextButton>
+            </StepButtonWrapper>
+          </>
         )}
       </Wrapper>
     </Container>

@@ -1,10 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
-
+/* @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap'); */
+@font-face {
+  font-family: 'NotoSansKR';
+  src: url('./font/NotoSansKR-Regular.otf');
+}
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Lato', sans-serif;
+  font-family: 'NotoSansKR';
 }
 
 .home,
