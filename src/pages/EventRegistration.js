@@ -18,7 +18,7 @@ import ko from 'date-fns/locale/ko';
 
 function EventRegistration() {
   const [title, setTitle] = useState('');
-  const [stepStatus, setStepStatus] = useState(4);
+  const [stepStatus, setStepStatus] = useState(1);
 
   const [countMainItem, setCountMainItem] = useState(0);
   const [countFreebie, setCountFreebie] = useState(0);
@@ -166,7 +166,7 @@ function EventRegistration() {
         return { ...store, checked: isAllChecked ? true : false };
       })
     );
-  }
+  };
 
   useEffect(() => {
     if (isInfinited === true) {
