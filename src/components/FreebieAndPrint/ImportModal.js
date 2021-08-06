@@ -63,12 +63,10 @@ function ImportModal(props) {
         <br />
         <ButtonWrapper>
           <Button className="close" onClick={props.close}>
-            {' '}
-            취소{' '}
+            취소
           </Button>
           <Button className="close" onClick={props.importData}>
-            {' '}
-            선택{' '}
+            선택
           </Button>
         </ButtonWrapper>
       </ModalContainer>

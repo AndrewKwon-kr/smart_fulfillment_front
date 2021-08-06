@@ -6,15 +6,19 @@ import {
   MainItemModalView,
   FreebieModalView,
   PrintModalView,
+  SelectChannelButton,
+  BesideStoreModalView,
 } from 'components/EventRegistration';
+import CompanyShopIcon from 'assets/icon_company_shop.png';
+import NaverIcon from 'assets/icon_naver.png';
+import BesideShopIcon from 'assets/icon_beside_shop.png';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
-registerLocale('ko', ko);
 
 function EventRegistration() {
   const [title, setTitle] = useState('');
-  const [stepStatus, setStepStatus] = useState(1);
+  const [stepStatus, setStepStatus] = useState(4);
 
   const [countMainItem, setCountMainItem] = useState(0);
   const [countFreebie, setCountFreebie] = useState(0);
@@ -43,7 +47,24 @@ function EventRegistration() {
   const [isInfinited, setIsInfinited] = useState(false);
   registerLocale('ko', ko);
 
-  console.log(startDate, endDate);
+  const [clickedCompanyStore, setClickedCompanyStore] = useState(false);
+  const [clickedSmartStore, setClickedSmartStore] = useState(false);
+  const [clickedBesideStore, setClickedBesideStore] = useState(false);
+  const [visibleBesideModal, setVisibleBesideModal] = useState(false);
+  const [besideStoreList, setBesideStoreList] = useState([
+    { id: 0, store: '지마켓', checked: false },
+    { id: 1, store: '옥션', checked: false },
+    { id: 2, store: '11번가', checked: false },
+    { id: 3, store: '위메프', checked: false },
+    { id: 4, store: 'SSG', checked: false },
+    { id: 5, store: '롯데마트', checked: false },
+    { id: 6, store: '지마켓', checked: false },
+    { id: 7, store: '옥션', checked: false },
+    { id: 8, store: '11번가sfsadfasdfs', checked: false },
+    { id: 9, store: '위메프', checked: false },
+    { id: 10, store: 'SSG', checked: false },
+    { id: 11, store: '롯데마트', checked: false },
+  ]);
 
   const onChange = (e) => {
     setTitle(e.target.value);
@@ -55,7 +76,6 @@ function EventRegistration() {
     setStepStatus(stepStatus - 1);
   };
   const openModal = (type) => {
-    console.log(type);
     if (type === 'main') {
       setMainItemModalVisible(true);
     } else if (type === 'freebie') {
@@ -119,6 +139,34 @@ function EventRegistration() {
       setLimitNumber({ number: num });
     }
   };
+
+  const onChangeBesideStore = (e, index) => {
+    setBesideStoreList(
+      besideStoreList.map((store) => {
+        if (store.id !== index) {
+          return store;
+        } else {
+          return { ...store, checked: e.target.checked };
+        }
+      })
+    );
+  };
+  const selectedBesideStore = () => {
+    const selectedBesideStore = besideStoreList.filter(
+      (store) => store.checked === true
+    );
+    setClickedBesideStore(!clickedBesideStore);
+
+    const flag = selectedBesideStore.length !== 0;
+    setVisibleBesideModal(flag);
+  };
+  const allSelectedBesideStore = (isAllChecked) => {
+    setBesideStoreList(
+      besideStoreList.map((store) => {
+        return { ...store, checked: isAllChecked ? true : false };
+      })
+    );
+  }
 
   useEffect(() => {
     if (isInfinited === true) {
@@ -461,6 +509,36 @@ function EventRegistration() {
             <SubTitle>
               이벤트를 진행할 채널을 선택해주세요 (복수선택 가능)
             </SubTitle>
+            <br />
+            <SelectChannelButtonWrapper>
+              <SelectChannelButton
+                icon={CompanyShopIcon}
+                label="자사몰"
+                test={() => setClickedCompanyStore(!clickedCompanyStore)}
+                show={clickedCompanyStore}
+              />
+              <SelectChannelButton
+                icon={NaverIcon}
+                label="스마트스토어"
+                test={() => setClickedSmartStore(!clickedSmartStore)}
+                show={clickedSmartStore}
+              />
+              <SelectChannelButton
+                icon={BesideShopIcon}
+                label="그 외"
+                test={() => setClickedBesideStore(!clickedBesideStore)}
+                show={visibleBesideModal}
+              />
+              {clickedBesideStore && (
+                <BesideStoreModalView
+                  close={() => setClickedBesideStore(!clickedBesideStore)}
+                  besideStoreList={besideStoreList}
+                  onChange={onChangeBesideStore}
+                  selectedBesideStore={selectedBesideStore}
+                  allSelectedBesideStore={allSelectedBesideStore}
+                />
+              )}
+            </SelectChannelButtonWrapper>
             <StepButtonWrapper>
               <StepBackButton onClick={setBackStep}>이전</StepBackButton>
               <StepNextButton onClick={setNextStep} disabled={true}>
@@ -759,5 +837,12 @@ const EventInfomationText = styled.div`
   display: inline-block;
   width: 100px;
   font-weight: bold;
+`;
+const SelectChannelButtonWrapper = styled.div`
+  margin-top: 150px;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 export default EventRegistration;
