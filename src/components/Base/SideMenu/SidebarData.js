@@ -31,7 +31,7 @@ export const SideBarData = [
   },
   {
     title: '이벤트 내역',
-    path: '/messages',
+    path: '/historyevent',
     icons: <MdIcons.MdEventNote />,
     cName: 'nav-text',
   },

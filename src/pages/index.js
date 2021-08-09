@@ -6,3 +6,4 @@ export { default as ERP } from './ERP';
 export { default as ExcelToJson } from './ExcelToJson';
 export { default as ItemInquiry } from './ItemInquiry';
 export { default as EventRegistration } from './EventRegistration';
+export { default as EventHistory } from './EventHistory';

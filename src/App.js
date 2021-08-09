@@ -7,6 +7,7 @@ import {
   ERP,
   ItemInquiry,
   EventRegistration,
+  EventHistory,
 } from './pages';
 import Navigator from 'components/Base/SideMenu/Navigator';
 import './App.css';
@@ -23,6 +24,7 @@ class App extends Component {
           <Route path="/erp" component={ERP} />
           <Route path="/inquiryitem" component={ItemInquiry} />
           <Route path="/registevent" component={EventRegistration} />
+          <Route path="/historyevent" component={EventHistory} />
         </Switch>
       </BrowserRouter>
     );
