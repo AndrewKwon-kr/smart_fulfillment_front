@@ -5,13 +5,15 @@ import * as MdIcons from 'react-icons/md';
 
 function SituationView(props) {
   const eventData = props.eventData;
-
   const todayDate = new window.Date();
+
   const [countBefore, setCountBefore] = useState(0);
   const [countOngoing, setCountOngoing] = useState(0);
   const [countAfter, setCountAfter] = useState(0);
 
   useEffect(() => {
+    const todayDate = new window.Date();
+
     setCountBefore(
       eventData.filter((event) => new window.Date(event.startDate) > todayDate)
         .length

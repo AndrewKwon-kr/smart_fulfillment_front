@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { MainItemSearch, Board, Card } from 'components/EventRegistration';
 import Select from 'react-select';
@@ -10,7 +10,7 @@ function PrintModalView(props) {
     { value: 'group', label: '그룹별' },
     { value: 'product', label: '제품별' },
   ];
-  const [groupList, setGroupList] = useState([
+  const groupList = [
     { key: 'all', label: '전체 제품' },
     { key: 'malanghoney', label: '말랑하니 전체 제품' },
     { key: 'mowmow', label: '모우모우 전체 제품' },
@@ -18,8 +18,8 @@ function PrintModalView(props) {
     { key: 'margemarket', label: '마지마켓 전체 제품' },
     { key: 'iblyn', label: '아이블린 전체 제품' },
     { key: 'bonboon', label: '본분 전체 제품' },
-  ]);
-  const [productList, setProductList] = useState([
+  ];
+  const productList = [
     { key: 'a', label: '방수매트' },
     { key: 'b', label: '스와들속싸개' },
     { key: 'c', label: '원형러그' },
@@ -29,7 +29,7 @@ function PrintModalView(props) {
     { key: 'f', label: '키즈빈백' },
     { key: 'g', label: '연필꽂이' },
     { key: 'h', label: '색연필' },
-  ]);
+  ];
 
   // const resetGroupList = () => {
   //   const cards = document.getElementById('board-3').childNodes;
@@ -115,7 +115,9 @@ function PrintModalView(props) {
           <Button className="close" onClick={props.close}>
             취소
           </Button>
-          <Button className="close" onClick={setPrints}>선택</Button>
+          <Button className="close" onClick={setPrints}>
+            선택
+          </Button>
         </ButtonWrapper>
       </BoardContainer>
     </Modal>
