@@ -1,37 +1,38 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { PromotionView } from 'components/EventHistory';
+import eventData from '../eventData';
 
 function EventHistory() {
   const [categoryValue, setCategoryValue] = useState('promotion');
 
-  const handleChangeCategory = (category) => {
-    setCategoryValue(category);
-  };
   return (
     <Container>
       <CategoryHeader>
         <Category
           className="first"
-          onClick={() => handleChangeCategory('promotion')}
+          onClick={() => setCategoryValue('promotion')}
           clickedCategory={categoryValue === 'promotion'}
         >
           프로모션별
         </Category>
         <Category
-          onClick={() => handleChangeCategory('period')}
+          onClick={() => setCategoryValue('period')}
           clickedCategory={categoryValue === 'period'}
         >
           기간별
         </Category>
         <Category
-          onClick={() => handleChangeCategory('situation')}
+          onClick={() => setCategoryValue('situation')}
           clickedCategory={categoryValue === 'situation'}
         >
           현황별
         </Category>
       </CategoryHeader>
       <Wrapper>
-        {categoryValue === 'promotion' && '프로모션'}
+        {categoryValue === 'promotion' && (
+          <PromotionView eventData={eventData} />
+        )}
         {categoryValue === 'period' && '기간'}
         {categoryValue === 'situation' && '현황'}
       </Wrapper>
@@ -46,7 +47,6 @@ const Container = styled.div`
   width: 100%;
   height: calc(100% - 56px);
   text-align: center;
-  /* z-index: -1; */
 `;
 const CategoryHeader = styled.div`
   position: relative;
@@ -84,4 +84,5 @@ const Wrapper = styled.div`
   text-align: start;
   padding-bottom: 40px;
 `;
+
 export default EventHistory;
