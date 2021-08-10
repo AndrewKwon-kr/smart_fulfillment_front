@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { PromotionView } from 'components/EventHistory';
+import { PromotionView, SituationView } from 'components/EventHistory';
 import eventData from '../eventData';
 
 function EventHistory() {
@@ -34,7 +34,9 @@ function EventHistory() {
           <PromotionView eventData={eventData} />
         )}
         {categoryValue === 'period' && '기간'}
-        {categoryValue === 'situation' && '현황'}
+        {categoryValue === 'situation' && (
+          <SituationView eventData={eventData} />
+        )}
       </Wrapper>
     </Container>
   );
