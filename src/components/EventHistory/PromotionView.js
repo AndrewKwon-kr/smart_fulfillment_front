@@ -19,7 +19,7 @@ function PromotionView(props) {
   };
 
   return (
-    <EventInfomationWrapper>
+    <Wrapper>
       <PromotionSearch handleChange={handleChange} handleClick={handleClick} />
       {filteredEventData.map((event, index) => (
         <EventInfomation key={index}>
@@ -74,11 +74,11 @@ function PromotionView(props) {
           </ItemInfo>
         </EventInfomation>
       ))}
-    </EventInfomationWrapper>
+    </Wrapper>
   );
 }
 
-const EventInfomationWrapper = styled.div`
+const Wrapper = styled.div`
   align-items: center;
 `;
 const EventInfomation = styled.div`

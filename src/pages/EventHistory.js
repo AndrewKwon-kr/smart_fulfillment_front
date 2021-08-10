@@ -49,11 +49,14 @@ const Container = styled.div`
   text-align: center;
 `;
 const CategoryHeader = styled.div`
-  position: relative;
+  position: sticky;
+  top: 80px;
   width: 100%;
   height: 80px;
   text-align: start;
   border-bottom: 1px solid #d9d9d9;
+  background-color: #fff;
+  z-index: 1;
 `;
 const Category = styled.div`
   position: relative;
