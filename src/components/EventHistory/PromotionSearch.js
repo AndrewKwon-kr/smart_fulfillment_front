@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import * as BiIcons from 'react-icons/bi';
+// import * as MdIcons from 'react-icons/md';
 
 const InputWrap = styled.div`
   margin: 20px 10px;
   width: 30%;
+  display: flex;
 `;
 const Input = styled.input`
   width: 90%;
@@ -17,12 +19,22 @@ const Input = styled.input`
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   box-sizing: border-box;
+
+  font-size: 1rem;
 `;
-const Button = styled.button`
+const SearchButton = styled(BiIcons.BiSearch)`
   all: unset;
   cursor: pointer;
   display: inline-block;
+  position: relative;
 `;
+// const ClearButton = styled(MdIcons.MdClear)`
+//   all: unset;
+//   cursor: pointer;
+//   display: inline-block;
+//   position: relative;
+//   left: -20px;
+// `;
 
 function PromotionSearch(props) {
   return (
@@ -37,9 +49,8 @@ function PromotionSearch(props) {
         name="filter"
         placeholder="검색어를 입력하세요"
       />
-      <Button onClick={props.handleClick}>
-        <BiIcons.BiSearch />
-      </Button>
+      {/* <ClearButton size="24" color="#a9a9a9" /> */}
+      <SearchButton size="24" onClick={props.handleClick} />
     </InputWrap>
   );
 }

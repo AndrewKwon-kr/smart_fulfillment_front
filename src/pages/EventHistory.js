@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { PromotionView, SituationView } from 'components/EventHistory';
+import {
+  PromotionView,
+  PeriodView,
+  SituationView,
+} from 'components/EventHistory';
 import eventData from '../eventData';
 
 function EventHistory() {
@@ -33,7 +37,7 @@ function EventHistory() {
         {categoryValue === 'promotion' && (
           <PromotionView eventData={eventData} />
         )}
-        {categoryValue === 'period' && '기간'}
+        {categoryValue === 'period' && <PeriodView eventData={eventData} />}
         {categoryValue === 'situation' && (
           <SituationView eventData={eventData} />
         )}
@@ -52,13 +56,13 @@ const Container = styled.div`
 `;
 const CategoryHeader = styled.div`
   position: sticky;
-  top: 80px;
+  top: 0;
   width: 100%;
   height: 80px;
   text-align: start;
   border-bottom: 1px solid #d9d9d9;
   background-color: #fff;
-  z-index: 1;
+  z-index: 3;
 `;
 const Category = styled.div`
   position: relative;

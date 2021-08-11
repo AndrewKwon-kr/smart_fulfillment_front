@@ -84,7 +84,7 @@ const NavMenuWrap = styled.nav`
     transition: 850ms;
     border: 1px solid #d9d9d9;
     border-top: 0;
-    z-index: 2;
+    z-index: 4;
   }
   .nav-menu.active {
     left: 0;

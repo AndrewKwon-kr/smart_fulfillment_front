@@ -21,59 +21,61 @@ function PromotionView(props) {
   return (
     <Wrapper>
       <PromotionSearch handleChange={handleChange} handleClick={handleClick} />
-      {filteredEventData.map((event, index) => (
-        <EventInfomation key={index}>
-          <Title>{event.title}</Title>
-          <Date>
-            <ClockIcon />
-            {event.startDate} ~ {event.endDate}
-          </Date>
-          <Infomation>
-            <div className="info">
-              최소구매개수
-              <span>
-                {event.minBuyNumber
-                  ? event.minBuyNumber.toLocaleString('ko-KR')
-                  : '-'}
-                개
-              </span>
-            </div>
-            <div className="info">
-              최소구매금액
-              <span>
-                {event.minBuyPrice
-                  ? event.minBuyPrice.toLocaleString('ko-KR')
-                  : '-'}
-                원
-              </span>
-            </div>
-          </Infomation>
-          <Brand>
-            <BrandIcon />
-            {event.brand}
-          </Brand>
-          <ItemInfo>
-            <div className="info">
-              <span className="label">본품</span>
-              <span className="content">
-                {event.mainItem ? event.mainItem : '-'}
-              </span>
-            </div>
-            <div className="info">
-              <span className="label">사은품</span>
-              <span className="content">
-                {event.freebies ? event.freebies.join(', ') : '-'}
-              </span>
-            </div>
-            <div className="info">
-              <span className="label">인쇄물</span>
-              <span className="content">
-                {event.prints ? event.prints : '-'}
-              </span>
-            </div>
-          </ItemInfo>
-        </EventInfomation>
-      ))}
+      <CardContainer>
+        {filteredEventData.map((event, index) => (
+          <EventInfomationCard key={index}>
+            <Title>{event.title}</Title>
+            <Date>
+              <ClockIcon />
+              {event.startDate} ~ {event.endDate}
+            </Date>
+            <Infomation>
+              <div className="info">
+                최소구매개수
+                <span>
+                  {event.minBuyNumber
+                    ? event.minBuyNumber.toLocaleString('ko-KR')
+                    : '-'}
+                  개
+                </span>
+              </div>
+              <div className="info">
+                최소구매금액
+                <span>
+                  {event.minBuyPrice
+                    ? event.minBuyPrice.toLocaleString('ko-KR')
+                    : '-'}
+                  원
+                </span>
+              </div>
+            </Infomation>
+            <Brand>
+              <BrandIcon />
+              {event.brand}
+            </Brand>
+            <ItemInfo>
+              <div className="info">
+                <span className="label">본품</span>
+                <span className="content">
+                  {event.mainItem ? event.mainItem : '-'}
+                </span>
+              </div>
+              <div className="info">
+                <span className="label">사은품</span>
+                <span className="content">
+                  {event.freebies ? event.freebies.join(', ') : '-'}
+                </span>
+              </div>
+              <div className="info">
+                <span className="label">인쇄물</span>
+                <span className="content">
+                  {event.prints ? event.prints : '-'}
+                </span>
+              </div>
+            </ItemInfo>
+          </EventInfomationCard>
+        ))}
+      </CardContainer>
     </Wrapper>
   );
 }
@@ -81,10 +83,16 @@ function PromotionView(props) {
 const Wrapper = styled.div`
   align-items: center;
 `;
-const EventInfomation = styled.div`
+const CardContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+`;
+const EventInfomationCard = styled.div`
   margin: 10px 1%;
   display: inline-block;
-  width: 30%;
+  width: 31%;
   height: 350px;
   border: 1px solid #a9a9a9;
   border-radius: 10px;
