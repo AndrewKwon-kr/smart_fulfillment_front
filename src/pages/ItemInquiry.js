@@ -8,26 +8,54 @@ import {
   ERPExcel,
 } from 'components/ItemInquiry';
 import erpJson from '../erpData.json';
-import freebieJson from '../freebieData.json';
 import swal from 'sweetalert';
 import axios from 'axios';
 
 function ItemInquiry() {
   const [tabStatus, setTabStatus] = useState('freebie');
   const [isConfirm, setIsConfirm] = useState(false); // Excel 다운로드 Yes or No
-  const freebieData = freebieJson;
-  const [freebieDatas, setFreebieDatas] = useState([]);
+  const [freebieData, setFreebieData] = useState([]);
+  const [printData, setPrintData] = useState([]);
+  const [freebieAndPrintData, setFreebieAndPrintData] = useState([]);
   const erpData = erpJson;
   const [freebieExcelData, setFreebieExcelData] = useState([]);
   const [erpExcelData, setErpExcelData] = useState([]);
 
+  const getFreebieData = () => {
+    const url = `${process.env.REACT_APP_URL}/freebiegroup/freebies/`;
+
+    axios.get(url).then((response) =>
+      setFreebieData(
+        response.data.result.map((data) => {
+          return { ...data, category: response.data.category };
+        })
+      )
+    );
+  };
+  const getPrintData = () => {
+    const url = `${process.env.REACT_APP_URL}/printgroup/prints/`;
+
+    axios.get(url).then((response) =>
+      setPrintData(
+        response.data.result.map((data) => {
+          return { ...data, category: response.data.category };
+        })
+      )
+    );
+  };
+
   useEffect(() => {
-    const url = `${process.env.REACT_APP_URL}/freebiegroup/`;
-    function getFreebiegroup(url) {
-      return axios.get(url).then((response) => response.data);
-    }
-    setFreebieDatas(getFreebiegroup(url));
+    getFreebieData();
+    getPrintData();
   }, []);
+
+  useEffect(() => {
+    setFreebieAndPrintData(
+      [...freebieData, ...printData].map((data, index) => {
+        return { ...data, key: index };
+      })
+    );
+  }, [freebieData, printData]);
   useEffect(() => {
     if (tabStatus === 'freebie') {
       document.getElementById('freebie').style.background = '#f9fbff';
@@ -63,11 +91,11 @@ function ItemInquiry() {
     }
 
     if (tabStatus === 'freebie') {
-      setFreebieExcelData(createExcelData(freebieData));
+      setFreebieExcelData(createExcelData(freebieAndPrintData));
     } else if (tabStatus === 'erp') {
       setErpExcelData(createExcelData(erpData));
     }
-  }, [freebieData, erpData, tabStatus]);
+  }, [freebieAndPrintData, erpData, tabStatus]);
 
   const onClickExcel = () => {
     let status = tabStatus === 'freebie' ? '사은품 · 인쇄물' : 'ERP 등록제품';
@@ -88,7 +116,6 @@ function ItemInquiry() {
       <Wrapper>
         <SubTitle>등록한 아이템 조회하기</SubTitle>
         <br />
-        <button onClick={() => console.log(freebieDatas)}>dfdfdfdf</button>
         <Description>
           아이템 등록 페이지에 입력한 아이템 정보를 조회할 수 있습니다.
         </Description>
@@ -126,7 +153,9 @@ function ItemInquiry() {
             }}
           />
         )}
-        {tabStatus === 'freebie' && <FreebieMainTable data={freebieData} />}
+        {tabStatus === 'freebie' && (
+          <FreebieMainTable data={freebieAndPrintData} />
+        )}
         {tabStatus === 'erp' && <ERPMainTable data={erpData} />}
       </Wrapper>
     </Container>

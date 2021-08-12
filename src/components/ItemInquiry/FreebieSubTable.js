@@ -62,7 +62,6 @@ function FreebieSubTable({ record, index }) {
     data.push({
       key: items[i].id,
       name: items[i].name,
-      code: items[i].code,
       image: items[i].image,
       mainImage: items[i].main_image,
     });
@@ -74,16 +73,13 @@ function FreebieSubTable({ record, index }) {
       key: 'image',
       render: (option) => (
         <OptionTwoWrapper>
-          {option.mainImage === 1 && <Mark>대표</Mark>}
+          {option.mainImage && <Mark>대표</Mark>}
           <AddOptionImage
-            className={option.mainImage === 1 && 'mark'}
+            className={option.mainImage && 'mark'}
             htmlFor={'markImage' + index + option.key}
           >
             {option.image ? (
-              <ItemPreviewImage
-                className="full-image"
-                src={items[option.key - 1].image}
-              />
+              <ItemPreviewImage className="full-image" src={option.image} />
             ) : (
               <Register>이미지 없음</Register>
             )}
@@ -95,11 +91,6 @@ function FreebieSubTable({ record, index }) {
       title: '옵션명',
       dataIndex: 'name',
       key: 'name',
-    },
-    {
-      title: 'SKU코드',
-      key: 'code',
-      dataIndex: 'code',
     },
   ];
 

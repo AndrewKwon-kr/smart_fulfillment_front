@@ -120,15 +120,16 @@ function FreebieMainTable(props) {
     },
     {
       title: '브랜드',
-      dataIndex: 'brand',
-      key: 'brand',
+      dataIndex: 'brands',
+      key: 'brands',
       filters: [
         { text: '말랑하니', value: '말랑하니' },
         { text: '루미레브', value: '루미레브' },
         { text: '모우모우', value: '모우모우' },
         { text: '아이블린', value: '아이블린' },
       ],
-      onFilter: (value, record) => record.brand.includes(value),
+      onFilter: (value, record) => record.brands.includes(value),
+      render: (brands) => brands.join(', '),
     },
   ];
 
@@ -138,7 +139,7 @@ function FreebieMainTable(props) {
       columns={columns}
       dataSource={list}
       expandedRowRender={(record, index) => (
-        <SubTable record={record} index={index} list={list} />
+        <SubTable record={record} index={index} />
       )}
       onChange={handleChange}
     />
