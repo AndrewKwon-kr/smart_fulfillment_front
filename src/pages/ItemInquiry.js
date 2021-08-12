@@ -10,15 +10,24 @@ import {
 import erpJson from '../erpData.json';
 import freebieJson from '../freebieData.json';
 import swal from 'sweetalert';
+import axios from 'axios';
 
 function ItemInquiry() {
   const [tabStatus, setTabStatus] = useState('freebie');
   const [isConfirm, setIsConfirm] = useState(false); // Excel 다운로드 Yes or No
   const freebieData = freebieJson;
+  const [freebieDatas, setFreebieDatas] = useState([]);
   const erpData = erpJson;
   const [freebieExcelData, setFreebieExcelData] = useState([]);
   const [erpExcelData, setErpExcelData] = useState([]);
 
+  useEffect(() => {
+    const url = `${process.env.REACT_APP_URL}/freebiegroup/`;
+    function getFreebiegroup(url) {
+      return axios.get(url).then((response) => response.data);
+    }
+    setFreebieDatas(getFreebiegroup(url));
+  }, []);
   useEffect(() => {
     if (tabStatus === 'freebie') {
       document.getElementById('freebie').style.background = '#f9fbff';
@@ -79,6 +88,7 @@ function ItemInquiry() {
       <Wrapper>
         <SubTitle>등록한 아이템 조회하기</SubTitle>
         <br />
+        <button onClick={() => console.log(freebieDatas)}>dfdfdfdf</button>
         <Description>
           아이템 등록 페이지에 입력한 아이템 정보를 조회할 수 있습니다.
         </Description>
