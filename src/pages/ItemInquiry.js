@@ -7,23 +7,25 @@ import {
   FreebieExcel,
   ERPExcel,
 } from 'components/ItemInquiry';
-import erpJson from '../erpData.json';
+// import erpJson from '../erpData.json';
 import swal from 'sweetalert';
 import axios from 'axios';
 
 function ItemInquiry() {
   const [tabStatus, setTabStatus] = useState('freebie');
   const [isConfirm, setIsConfirm] = useState(false); // Excel 다운로드 Yes or No
+
   const [freebieData, setFreebieData] = useState([]);
   const [printData, setPrintData] = useState([]);
   const [freebieAndPrintData, setFreebieAndPrintData] = useState([]);
-  const erpData = erpJson;
+
+  const [erpData, setErpData] = useState([]);
+  // const erpData = erpJson;
   const [freebieExcelData, setFreebieExcelData] = useState([]);
   const [erpExcelData, setErpExcelData] = useState([]);
 
   const getFreebieData = () => {
     const url = `${process.env.REACT_APP_URL}/freebiegroup/freebies/`;
-
     axios.get(url).then((response) =>
       setFreebieData(
         response.data.result.map((data) => {
@@ -34,7 +36,6 @@ function ItemInquiry() {
   };
   const getPrintData = () => {
     const url = `${process.env.REACT_APP_URL}/printgroup/prints/`;
-
     axios.get(url).then((response) =>
       setPrintData(
         response.data.result.map((data) => {
@@ -43,10 +44,15 @@ function ItemInquiry() {
       )
     );
   };
+  const getErpDatas = () => {
+    const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
+    axios.get(url).then((response) => setErpData(response.data.result));
+  };
 
   useEffect(() => {
     getFreebieData();
     getPrintData();
+    getErpDatas();
   }, []);
 
   useEffect(() => {
@@ -56,6 +62,7 @@ function ItemInquiry() {
       })
     );
   }, [freebieData, printData]);
+
   useEffect(() => {
     if (tabStatus === 'freebie') {
       document.getElementById('freebie').style.background = '#f9fbff';
@@ -70,7 +77,8 @@ function ItemInquiry() {
   }, [tabStatus]);
 
   useEffect(() => {
-    function createExcelData(data) {
+    function createExcelData(data, type) {
+      console.log(data);
       let itemArray = [];
       for (let i = 0; i < data.length; i++) {
         let itemGroup = data[i];
@@ -78,7 +86,14 @@ function ItemInquiry() {
           let item = itemGroup.items[j];
           let itemObject = {};
           itemObject.category = itemGroup.category;
-          itemObject.brand = itemGroup.brand;
+          if (type === 'freebie') {
+            itemObject.brands = itemGroup.brands
+              .map((brand) => brand.name)
+              .join(', ');
+          } else if (type === 'erp') {
+            itemObject.brand = itemGroup.brands;
+          }
+
           itemObject.groupName = itemGroup.name;
           itemObject.code = itemGroup.code;
           itemObject.register = itemGroup.register;
@@ -87,13 +102,14 @@ function ItemInquiry() {
           itemArray.push(itemObject);
         }
       }
+      console.log(itemArray);
       return itemArray;
     }
 
     if (tabStatus === 'freebie') {
-      setFreebieExcelData(createExcelData(freebieAndPrintData));
+      setFreebieExcelData(createExcelData(freebieAndPrintData, 'freebie'));
     } else if (tabStatus === 'erp') {
-      setErpExcelData(createExcelData(erpData));
+      setErpExcelData(createExcelData(erpData, 'erp'));
     }
   }, [freebieAndPrintData, erpData, tabStatus]);
 

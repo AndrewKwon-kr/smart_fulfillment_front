@@ -15,9 +15,9 @@ function FreebieExcel({ data, setIsConfirm }) {
         {/* <ExcelColumn label="key" value="key" /> */}
         <ExcelColumn label="이름" value="groupName" />
         <ExcelColumn label="분류" value="category" />
-        <ExcelColumn label="브랜드" value="brand" />
+        <ExcelColumn label="브랜드" value="brands" />
         <ExcelColumn label="옵션명" value="optionName" />
-        <ExcelColumn label="SKU코드" value="skuCode" />
+        {/* <ExcelColumn label="SKU코드" value="skuCode" /> */}
       </ExcelSheet>
     </ExcelFile>
   );

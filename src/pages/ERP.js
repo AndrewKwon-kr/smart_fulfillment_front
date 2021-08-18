@@ -1,17 +1,102 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { MainTable, BackButton, CompleteButton } from 'components/ERP';
 import excelIcon from 'assets/icon_excel.png';
 import { ExcelRenderer } from 'react-excel-renderer';
-// import erpData from '../testData.json';
 import { Button, Upload } from 'antd';
+import axios from 'axios';
+import swal from 'sweetalert';
 
 function ERP() {
   // console.log(erpData);
   const [rows, setRows] = useState([]);
+  const [excelRows, setExcelRows] = useState([]);
+  const [isErpData, setIsErpData] = useState(false);
+  const [loading, setLoading] = useState(true);
   // const [cols, setCols] = useState([]);
   // const [errorMessage, setErrorMessage] = useState(null);
 
+  const createErpData = (row) => {
+    console.log(row);
+    console.log('create---> ', row.length);
+    const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items/`;
+    const data = {
+      messageType: 'create',
+      groupId: 1,
+      erpDatas: row,
+    };
+    if (row.length !== 0) {
+      axios.post(url, data).then((response) => setRows(response.data.result));
+    }
+  };
+  const updateErpData = (row) => {
+    // console.log(row);
+    console.log('update ---> ', row.length);
+    const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items/`;
+    const data = {
+      messageType: 'update',
+      groupId: 1,
+      erpDatas: row,
+    };
+    if (row.length !== 0) {
+      axios
+        .post(url, data)
+        .then((response) => console.log(response.data.result));
+    }
+  };
+  // const getErpData = async () => {
+  //   const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
+  //   // const ret = await axios.get(url);
+  //   return await axios.get(url);
+  // };
+  useEffect(() => {
+    const getErpData = () => {
+      const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
+
+      axios
+        .get(url)
+        .then((response) => {
+          console.log(response.status);
+          try {
+            if (response.data) {
+              setRows(response.data.result);
+              setLoading(false);
+            } else {
+              console.log(response.status);
+              alert('데이터를 등록해주세요');
+              setLoading(false);
+            }
+          } catch (err) {
+            alert('데이터를 불러올 수 없습니다.');
+          }
+        })
+        .catch(() => {
+          alert('error');
+          setLoading(false);
+        });
+    };
+    getErpData();
+  }, []);
+
+  // useEffect(() => {
+  //   isErpData ? updateErpData(excelRows) : createErpData(excelRows);
+  // }, [excelRows, isErpData]);
+
+  const uploadExcel = () => {
+    swal({
+      text: 'Excel 파일을 등록 하시겠습니까?',
+      buttons: { confirm: '확인', cancel: '취소' },
+    }).then((value) => {
+      if (value === true) {
+        document.getElementById('upload').click();
+      }
+    });
+  };
+  const complete = () => {
+    console.log(isErpData);
+    isErpData ? createErpData(rows) : updateErpData(rows);
+    // isErpData ? updateErpData() : createErpData();
+  };
   const fileHandler = (fileList) => {
     let fileObj = fileList;
     if (!fileObj) {
@@ -35,7 +120,7 @@ function ERP() {
         console.log(err);
       } else {
         let newRows = [];
-        resp.rows.slice(1).map((row, index) => {
+        resp.rows.slice(2, -1).map((row, index) => {
           if (row && row !== 'undefined') {
             newRows.push({
               key: index,
@@ -60,15 +145,17 @@ function ERP() {
 
           return false;
         } else {
-          // setCols(resp.cols);
-          setRows(newRows);
+          // console.log(isErpData);
+          setExcelRows(newRows);
+          isErpData ? updateErpData(newRows) : createErpData(newRows);
+
           // setErrorMessage(null);
         }
       }
     });
     return false;
   };
-  // console.log(rows);
+  console.log('rows --->', rows);
   return (
     <Container>
       <Wrapper>
@@ -80,23 +167,26 @@ function ERP() {
         </Description>
         {/* <ImportExcelButton text="엑셀 파일 등록" fileHandler={fileHandler} /> */}
         <ExcelButtonWrapper>
+          <ExcelButton onClick={() => uploadExcel()}>
+            <ExcelIcon src={excelIcon} />
+            엑셀 파일 등록
+          </ExcelButton>
           <Upload
             name="file"
+            id="upload"
             accept=".xlsx, .xls"
             beforeUpload={fileHandler}
             onRemove={() => setRows([])}
             multiple={false}
           >
-            <ExcelButton>
-              <ExcelIcon src={excelIcon} />
-              엑셀 파일 등록
-            </ExcelButton>
+            <button></button>
           </Upload>
         </ExcelButtonWrapper>
-        <MainTable data={rows} />
+        <MainTable data={rows} loading={loading} />
         <FlexBox>
+          {/* <button onClick={() => console.log(rows)}>콘솔</button> */}
           <BackButton />
-          <CompleteButton text="완료" />
+          <CompleteButton text="완료" complete={complete} />
         </FlexBox>
       </Wrapper>
     </Container>

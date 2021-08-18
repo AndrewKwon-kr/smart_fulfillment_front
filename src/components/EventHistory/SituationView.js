@@ -194,8 +194,6 @@ const ItemWrapper = styled.ul`
 `;
 const Item = styled.li`
   width: 100%;
-  height: 120px;
-  /* line-height: 40px; */
   border-radius: 5px;
   background-color: #fff;
   color: #000;

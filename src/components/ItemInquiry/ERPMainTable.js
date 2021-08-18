@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Input, Button } from 'antd';
-import SubTable from './FreebieSubTable';
+import SubTable from './ERPSubTable';
 import { SearchOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import 'antd/dist/antd.css';
@@ -116,21 +116,15 @@ function ERPMainTable(props) {
     },
     {
       title: '품목그룹1명',
-      dataIndex: 'brand',
-      key: 'brand',
+      dataIndex: 'brands',
+      key: 'brands',
       filters: [
         { text: '말랑하니', value: '말랑하니' },
         { text: '루미레브', value: '루미레브' },
         { text: '모우모우', value: '모우모우' },
         { text: '아이블린', value: '아이블린' },
       ],
-      onFilter: (value, record) => record.brand.includes(value),
-    },
-    {
-      title: '품목그룹3명',
-      dataIndex: 'register',
-      key: 'register',
-      ...getColumnSearchProps('register'),
+      onFilter: (value, record) => record.brand_id.includes(value),
     },
   ];
 

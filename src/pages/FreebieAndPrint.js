@@ -10,10 +10,11 @@ import {
   MultiSelect,
   ImportModal,
 } from 'components/FreebieAndPrint';
+import axios from 'axios';
 
 const categoryOptions = [
-  { value: 'freebie', label: '사은품 (비매품만)' },
-  { value: 'print', label: '인쇄물' },
+  { value: 'freebiegroup/freebies', label: '사은품 (비매품만)' },
+  { value: 'printgroup/prints', label: '인쇄물' },
 ];
 const brandOptions = [
   { value: 'malang', label: '말랑하니' },
@@ -30,29 +31,31 @@ const importJSON = {
 };
 
 function FreebieAndPrint() {
+  const [getData, setGetData] = useState([]);
   const [title, setTitle] = useState('');
   // const [optionStatus, setOptionStatus] = useState('');
   const [categoryValue, setCategoryValue] = useState('');
   const [brandValues, setBrandValues] = useState([]);
   // const [image, setImage] = useState('');
+  const [brandOptions, setBrandOPtions] = useState([]);
 
   const [modalVisible, setModalVisible] = useState(false);
 
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [inputs, setInputs] = useState({
     image: '',
-    optionName: '',
-    mark: false,
+    name: '',
+    mainImage: false,
     checked: false,
   });
-  const { image, optionName, mark, checked } = inputs;
+  const { image, name, mainImage, checked } = inputs;
 
   const [options, setOptions] = useState([
     {
       id: 1,
       image: '',
-      optionName: '',
-      mark: true,
+      name: '',
+      mainImage: true,
       checked: false,
     },
   ]);
@@ -64,21 +67,36 @@ function FreebieAndPrint() {
       // props.setImage('');
     }
   });
-
+  useEffect(() => {
+    const getData = () => {
+      const url = `${process.env.REACT_APP_URL}/brand/`;
+      axios.get(url).then((response) => {
+        setGetData(response.data);
+      });
+    };
+    getData();
+  }, []);
+  useEffect(() => {
+    setBrandOPtions(
+      getData.map((data) => {
+        return { value: data.id, label: data.name };
+      })
+    );
+  }, [getData]);
   const onCreate = () => {
     const option = {
       id: nextId.current,
       image,
-      optionName,
-      mark,
+      name,
+      mainImage,
       checked,
     };
     setOptions(options.concat(option));
 
     setInputs({
       image: '',
-      optionName: '',
-      mark: false,
+      name: '',
+      mainImage: false,
       checked: false,
     });
     nextId.current += 1;
@@ -99,9 +117,9 @@ function FreebieAndPrint() {
     setOptions(
       options.map((option) => {
         if (option.id !== id) {
-          return { ...option, mark: false };
+          return { ...option, mainImage: false };
         } else {
-          return { ...option, mark: e.target.checked };
+          return { ...option, mainImage: e.target.checked };
         }
       })
     );
@@ -131,7 +149,7 @@ function FreebieAndPrint() {
         if (option.id !== id) {
           return option;
         } else {
-          return { ...option, optionName: e.target.value };
+          return { ...option, name: e.target.value };
         }
       })
     );
@@ -180,7 +198,7 @@ function FreebieAndPrint() {
     setBrandValues([importJSON.brand[2]]);
     closeModal();
   };
-  console.log(options);
+
   return (
     <Container>
       <Wrapper>

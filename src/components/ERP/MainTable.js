@@ -108,39 +108,40 @@ function MainTable(props) {
     },
     {
       title: '품목그룹2명',
-      dataIndex: 'itemGroupName',
-      key: 'itemGroupName',
-      ...getColumnSearchProps('itemGroupName'),
+      dataIndex: 'name',
+      key: 'name',
+      ...getColumnSearchProps('name'),
     },
     {
       title: '품목그룹2코드',
-      dataIndex: 'itemGroupCode',
-      key: 'itemGroupCode',
-      ...getColumnSearchProps('itemGroupCode'),
+      dataIndex: 'code',
+      key: 'code',
+      ...getColumnSearchProps('code'),
     },
     {
       title: '품목그룹1명',
-      dataIndex: 'brandName',
-      key: 'brandName',
+      dataIndex: 'brand',
+      key: 'brand',
       filters: [
         { text: '말랑하니', value: '말랑하니' },
         { text: '루미레브', value: '루미레브' },
         { text: '모우모우', value: '모우모우' },
         { text: '아이블린', value: '아이블린' },
       ],
-      onFilter: (value, record) => record.brandName.includes(value),
+      onFilter: (value, record) => record.brand_id.includes(value),
     },
-    {
-      title: '품목그룹3명',
-      dataIndex: 'representativeName',
-      key: 'representativeName',
-      ...getColumnSearchProps('representativeName'),
-    },
+    // {
+    //   title: '품목그룹3명',
+    //   dataIndex: 'representativeName',
+    //   key: 'representativeName',
+    //   ...getColumnSearchProps('representativeName'),
+    // },
   ];
 
   return (
     <TableSection
       className="components-table-demo-nested"
+      loading={props.loading}
       columns={columns}
       dataSource={list}
       expandedRowRender={(record, index) => (

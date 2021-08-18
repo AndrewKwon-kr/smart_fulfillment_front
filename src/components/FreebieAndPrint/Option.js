@@ -108,9 +108,9 @@ function Option({
           }}
           style={{ display: 'none' }}
         ></input>
-        {option.mark && <Mark>대표</Mark>}
+        {option.mainImage && <Mark>대표</Mark>}
         <AddOptionImage
-          className={option.mark && 'mark'}
+          className={option.mainImage && 'mark'}
           htmlFor={'markImage' + option.id}
         >
           {option.image ? (
@@ -133,7 +133,7 @@ function Option({
         <input
           type="checkbox"
           name="mark"
-          checked={option.mark}
+          checked={option.mainImage}
           onChange={(e) => onMarked(e, option.id)}
         ></input>
       </OptionFourWrapper>

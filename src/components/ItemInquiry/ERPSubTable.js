@@ -35,7 +35,6 @@ const AddOptionImage = styled.label`
   border-radius: 5px;
   text-align: center;
   font-size: 12px;
-  cursor: pointer;
   &.mark {
     border: 2px solid #228be6;
   }
@@ -81,12 +80,9 @@ function ERPSubTable({ record, index }) {
             htmlFor={'markImage' + index + option.key}
           >
             {option.image ? (
-              <ItemPreviewImage
-                className="full-image"
-                src={items[option.key - 1].image}
-              />
+              <ItemPreviewImage className="full-image" src={option.image} />
             ) : (
-              <Register>등록</Register>
+              <Register>이미지 없음</Register>
             )}
           </AddOptionImage>
         </OptionTwoWrapper>

@@ -20,19 +20,21 @@ const BorderedButton = styled.button`
 
 function CompleteButton(props) {
   function onClick() {
-    // let jsonData = {};
-    // jsonData.title = props.title;
-    // jsonData.category = props.category;
-    // jsonData.brand = props.brand;
-    // jsonData.image = props.image;
-    // console.log(jsonData);
-    // localStorage.setItem('test', JSON.stringify(jsonData));
-    window.location.href = '/registitem';
+    let jsonData = {};
+    jsonData.title = props.title;
+    jsonData.category = props.category;
+    jsonData.brand = props.brand;
+    jsonData.image = props.image;
+    console.log(jsonData);
+    localStorage.setItem('test', JSON.stringify(jsonData));
+    console.log('!!!');
+    // window.location.href = '/registitem';
   }
+
   return (
     <BorderedButton
       // disabled={!props.complete}
-      onClick={() => onClick()}
+      onClick={() => props.complete()}
     >
       완료
     </BorderedButton>

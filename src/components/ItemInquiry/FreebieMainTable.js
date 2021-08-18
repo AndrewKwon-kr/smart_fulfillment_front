@@ -20,13 +20,25 @@ const TableSection = styled(Table)`
     font-weight: bold;
   }
 `;
+const BrandWrapper = styled.div`
+  .brand {
+    display: inline-block;
+  }
+  .brand::after {
+    content: ', ';
+    margin-right: 5px;
+  }
+  .brand:last-child::after {
+    content: '';
+    margin-right: 0;
+  }
+`;
 
 function FreebieMainTable(props) {
   const list = props.data;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [filteredInfo, setFilteredInfo] = useState(null);
-
   const handleChange = (pagination, filters) => {
     console.log('Various parameters', pagination, filters);
     setFilteredInfo(filters);
@@ -128,8 +140,21 @@ function FreebieMainTable(props) {
         { text: '모우모우', value: '모우모우' },
         { text: '아이블린', value: '아이블린' },
       ],
-      onFilter: (value, record) => record.brands.includes(value),
-      render: (brands) => brands.join(', '),
+      // onFilter: (value, record) =>
+      //   record.brands_in_freebiegroups.includes(value),
+      render: (brands) => {
+        return (
+          <BrandWrapper>
+            {brands.map((brand) => {
+              return (
+                <div key={brand.id} className="brand">
+                  {brand.name}
+                </div>
+              );
+            })}
+          </BrandWrapper>
+        );
+      },
     },
   ];
 

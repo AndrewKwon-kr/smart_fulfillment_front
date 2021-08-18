@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 
 const BorderedButton = styled.button`
   all: unset;
@@ -19,6 +20,16 @@ const BorderedButton = styled.button`
 `;
 
 function CompleteButton(props) {
+  const createData = (row, category) => {
+    console.log(category);
+    const url = `${process.env.REACT_APP_URL}/${category}/`;
+    const data = {
+      groupId: 1,
+      data: row,
+    };
+
+    axios.post(url, data).then((response) => console.log(response.data.result));
+  };
   function onClick() {
     if (!props.title) {
       alert('사은품 또는 인쇄물의 이름을 입력해주세요');
@@ -38,23 +49,20 @@ function CompleteButton(props) {
         if (!option.image) {
           alert('옵션의 이미지를 등록해주세요');
           return false;
-        } else if (!option.optionName) {
+        }
+        if (!option.name) {
           alert('옵션의 옵션명을 입력해주세요');
-          return false;
-        } else if (!option.mark) {
-          alert('대표 이미지를 선택해주세요');
           return false;
         }
       }
     }
-    console.log(props.options);
 
     let jsonData = {};
-    jsonData.title = props.title;
-    jsonData.category = props.category;
-    jsonData.brand = props.brand;
-    jsonData.options = props.options;
-    localStorage.setItem('test', JSON.stringify(jsonData));
+    jsonData.name = props.title;
+    // jsonData.category = props.category;
+    jsonData.brands = props.brand.map((brand) => brand.value);
+    jsonData.items = props.options;
+    createData(jsonData, props.category.value);
     // window.location.href = '/registitem';
   }
   return <BorderedButton onClick={() => onClick()}>완료</BorderedButton>;

@@ -116,10 +116,13 @@ const ClockIcon = styled(FiIcons.FiClock)`
   margin-right: 5px;
 `;
 const Infomation = styled.div`
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  font-size: 13px;
+
   .info {
-    margin-bottom: 10px;
     margin-right: 10px;
-    display: inline-block;
     color: #a9a9a9;
     span {
       color: #000;

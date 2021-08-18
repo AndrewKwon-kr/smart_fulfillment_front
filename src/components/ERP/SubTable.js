@@ -91,10 +91,7 @@ function SubTable({ record, index }) {
             htmlFor={'markImage' + index + option.key}
           >
             {option.image ? (
-              <ItemPreviewImage
-                className="full-image"
-                src={items[option.key - 1].image}
-              />
+              <ItemPreviewImage className="full-image" src={option.image} />
             ) : (
               <Register>등록</Register>
             )}

@@ -28,7 +28,7 @@
     "title": "하니박스 증정 행사",
     "startDate": "2021.09.19",
     "endDate": "2021.09.20",
-    "minBuyNumber": 1,
+    "minBuyNumber": 10,
     "minBuyPrice": 80000,
     "brand": "말랑하니",
     "mainItem": "전체제품",
