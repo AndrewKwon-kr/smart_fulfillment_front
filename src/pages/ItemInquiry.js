@@ -24,15 +24,35 @@ function ItemInquiry() {
   const [freebieExcelData, setFreebieExcelData] = useState([]);
   const [erpExcelData, setErpExcelData] = useState([]);
 
+  const [freebieAndPrintLoading, setFreebieAndPrintLoading] = useState(true);
+  const [erpLoading, setErpLoading] = useState(true);
+
   const getFreebieData = () => {
     const url = `${process.env.REACT_APP_URL}/freebiegroup/freebies/`;
-    axios.get(url).then((response) =>
-      setFreebieData(
-        response.data.result.map((data) => {
-          return { ...data, category: response.data.category };
-        })
-      )
-    );
+    axios
+      .get(url)
+      .then((response) => {
+        try {
+          if (response.data) {
+            setFreebieData(
+              response.data.result.map((data) => {
+                return { ...data, category: response.data.category };
+              })
+            );
+            setFreebieAndPrintLoading(false);
+          } else {
+            console.log(response.status);
+            alert('데이터를 등록해주세요');
+            setFreebieAndPrintLoading(false);
+          }
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+        }
+      })
+      .catch(() => {
+        alert('error');
+        setFreebieAndPrintLoading(false);
+      });
   };
   const getPrintData = () => {
     const url = `${process.env.REACT_APP_URL}/printgroup/prints/`;
@@ -46,7 +66,26 @@ function ItemInquiry() {
   };
   const getErpDatas = () => {
     const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
-    axios.get(url).then((response) => setErpData(response.data.result));
+    axios
+      .get(url)
+      .then((response) => {
+        try {
+          if (response.data) {
+            setErpData(response.data.result);
+            setErpLoading(false);
+          } else {
+            console.log(response.status);
+            alert('데이터를 등록해주세요');
+            setErpLoading(false);
+          }
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+        }
+      })
+      .catch(() => {
+        alert('error');
+        setErpLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -170,9 +209,14 @@ function ItemInquiry() {
           />
         )}
         {tabStatus === 'freebie' && (
-          <FreebieMainTable data={freebieAndPrintData} />
+          <FreebieMainTable
+            data={freebieAndPrintData}
+            loading={freebieAndPrintLoading}
+          />
         )}
-        {tabStatus === 'erp' && <ERPMainTable data={erpData} />}
+        {tabStatus === 'erp' && (
+          <ERPMainTable data={erpData} loading={erpLoading} />
+        )}
       </Wrapper>
     </Container>
   );

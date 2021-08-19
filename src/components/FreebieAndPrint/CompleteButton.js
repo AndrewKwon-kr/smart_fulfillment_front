@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { Button } from 'antd';
 
-const BorderedButton = styled.button`
+const BorderedButton = styled(Button)`
   all: unset;
   margin: 0 0 0 20px;
   position: relative;
@@ -11,6 +12,7 @@ const BorderedButton = styled.button`
   width: 100px;
   text-align: center;
   color: #fff;
+  border: 1px solid #d9d9d9;
   background-color: ${(props) => (props.disabled ? '#d9d9d9' : '#228be6')};
   padding: 0.5rem;
   cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
@@ -20,15 +22,72 @@ const BorderedButton = styled.button`
 `;
 
 function CompleteButton(props) {
+  const updateData = (row, category) => {
+    props.enterLoading();
+
+    const url = `${process.env.REACT_APP_URL}/${
+      category.split('/')[0] +
+      '/' +
+      props.dataKey +
+      '/' +
+      category.split('/')[1]
+    }/`;
+    const data = {
+      groupId: 1,
+      data: row,
+    };
+    console.log(row);
+    axios
+      .put(url, data)
+      .then((response) => {
+        try {
+          if (response.data.code === 201) {
+            window.location.href = '/registitem';
+            console.log(response.data);
+            // setErpLoading(false);
+          } else {
+            console.log(response.status);
+            alert('데이터를 등록해주세요');
+            // setErpLoading(false);
+          }
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+        }
+      })
+      .catch(() => {
+        alert('error');
+        // setErpLoading(false);
+      });
+  };
   const createData = (row, category) => {
-    console.log(category);
+    props.enterLoading();
     const url = `${process.env.REACT_APP_URL}/${category}/`;
     const data = {
       groupId: 1,
       data: row,
     };
-
-    axios.post(url, data).then((response) => console.log(response.data.result));
+    console.log(row);
+    axios
+      .post(url, data)
+      .then((response) => {
+        try {
+          if (response.data.code === 201) {
+            window.location.href = '/registitem';
+            console.log(response.data);
+            // setErpLoading(false);
+          } else {
+            console.log(response.status);
+            alert('데이터를 등록해주세요');
+            // setErpLoading(false);
+          }
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+        }
+      })
+      .catch(() => {
+        alert('error');
+        // setErpLoading(false);
+      });
   };
   function onClick() {
     if (!props.title) {
@@ -62,10 +121,22 @@ function CompleteButton(props) {
     // jsonData.category = props.category;
     jsonData.brands = props.brand.map((brand) => brand.value);
     jsonData.items = props.options;
-    createData(jsonData, props.category.value);
-    // window.location.href = '/registitem';
+    jsonData.key = props.key;
+    if (props.text === '등록') {
+      createData(jsonData, props.category.value);
+    } else {
+      updateData(jsonData, props.category.value);
+    }
   }
-  return <BorderedButton onClick={() => onClick()}>완료</BorderedButton>;
+  return (
+    <BorderedButton
+      type="primary"
+      loading={props.loading}
+      onClick={() => onClick()}
+    >
+      {props.loading ? '' : props.text}
+    </BorderedButton>
+  );
 }
 
 export default CompleteButton;

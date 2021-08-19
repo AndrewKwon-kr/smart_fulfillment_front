@@ -163,6 +163,7 @@ function FreebieMainTable(props) {
       className="components-table-demo-nested"
       columns={columns}
       dataSource={list}
+      loading={props.loading}
       expandedRowRender={(record, index) => (
         <SubTable record={record} index={index} />
       )}

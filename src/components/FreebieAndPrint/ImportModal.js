@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import faker from 'faker/locale/ko';
 import ImportTable from './ImportTable';
+import axios from 'axios';
 
 faker.seed(5);
 
@@ -55,11 +56,17 @@ const ButtonWrapper = styled.div`
 `;
 
 function ImportModal(props) {
+  console.log(props.data);
   return (
     <Modal>
       <ModalContainer>
         <h3>등록된 사은품 · 인쇄물 불러오기</h3>
-        <ImportTable />
+        <ImportTable
+          data={props.data}
+          loading={props.loading}
+          importData={props.importData}
+          setSelectedRow={props.setSelectedRow}
+        />
         <br />
         <ButtonWrapper>
           <Button className="close" onClick={props.close}>

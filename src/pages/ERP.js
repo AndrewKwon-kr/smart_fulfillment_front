@@ -17,8 +17,9 @@ function ERP() {
   // const [errorMessage, setErrorMessage] = useState(null);
 
   const createErpData = (row) => {
-    console.log(row);
-    console.log('create---> ', row.length);
+    // console.log(row);
+    console.log('create---> ', row);
+    setLoading(true);
     const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items/`;
     const data = {
       messageType: 'create',
@@ -26,12 +27,16 @@ function ERP() {
       erpDatas: row,
     };
     if (row.length !== 0) {
-      axios.post(url, data).then((response) => setRows(response.data.result));
+      axios.post(url, data).then((response) => {
+        if (response.data.code === 201) {
+          window.location.href = '/erp';
+        }
+      });
     }
   };
   const updateErpData = (row) => {
     // console.log(row);
-    console.log('update ---> ', row.length);
+    console.log('update ---> ', row);
     const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items/`;
     const data = {
       messageType: 'update',
@@ -56,14 +61,14 @@ function ERP() {
       axios
         .get(url)
         .then((response) => {
-          console.log(response.status);
           try {
-            if (response.data) {
+            if (response.data.result.length !== 0) {
+              console.log(response.data.result);
               setRows(response.data.result);
               setLoading(false);
             } else {
               console.log(response.status);
-              alert('데이터를 등록해주세요');
+              swal('데이터를 등록해주세요');
               setLoading(false);
             }
           } catch (err) {
@@ -77,10 +82,6 @@ function ERP() {
     };
     getErpData();
   }, []);
-
-  // useEffect(() => {
-  //   isErpData ? updateErpData(excelRows) : createErpData(excelRows);
-  // }, [excelRows, isErpData]);
 
   const uploadExcel = () => {
     swal({
@@ -155,7 +156,7 @@ function ERP() {
     });
     return false;
   };
-  console.log('rows --->', rows);
+  // console.log('rows --->', rows);
   return (
     <Container>
       <Wrapper>

@@ -11,24 +11,20 @@ import {
   ImportModal,
 } from 'components/FreebieAndPrint';
 import axios from 'axios';
+import swal from 'sweetalert';
 
 const categoryOptions = [
   { value: 'freebiegroup/freebies', label: '사은품 (비매품만)' },
   { value: 'printgroup/prints', label: '인쇄물' },
 ];
-const brandOptions = [
-  { value: 'malang', label: '말랑하니' },
-  { value: 'rumi', label: '루미레브' },
-  { value: 'mow', label: '모우모우' },
-  { value: 'iblyn', label: '아이블린' },
-  { value: 'bonbun', label: '본분' },
-  { value: 'marge', label: '마지마켓' },
-];
-const importJSON = {
-  title: '불러오기 테스트',
-  category: categoryOptions,
-  brand: brandOptions,
-};
+// const brandOptions = [
+//   { value: 'malang', label: '말랑하니' },
+//   { value: 'rumi', label: '루미레브' },
+//   { value: 'mow', label: '모우모우' },
+//   { value: 'iblyn', label: '아이블린' },
+//   { value: 'bonbun', label: '본분' },
+//   { value: 'marge', label: '마지마켓' },
+// ];
 
 function FreebieAndPrint() {
   const [getData, setGetData] = useState([]);
@@ -38,6 +34,7 @@ function FreebieAndPrint() {
   const [brandValues, setBrandValues] = useState([]);
   // const [image, setImage] = useState('');
   const [brandOptions, setBrandOPtions] = useState([]);
+  const [loading, setLoading] = useState();
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -59,6 +56,14 @@ function FreebieAndPrint() {
       checked: false,
     },
   ]);
+  const [freebieData, setFreebieData] = useState([]);
+  const [printData, setPrintData] = useState([]);
+  const [freebieAndPrintData, setFreebieAndPrintData] = useState([]);
+  const [freebieAndPrintLoading, setFreebieAndPrintLoading] = useState(true);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [dataKey, setDataKey] = useState();
+
+  const [selectedRow, setSelectedRow] = useState();
 
   const nextId = useRef(2);
 
@@ -193,22 +198,142 @@ function FreebieAndPrint() {
   };
 
   const importData = () => {
-    setTitle(importJSON.title);
-    setCategoryValue(importJSON.category[1]);
-    setBrandValues([importJSON.brand[2]]);
-    closeModal();
+    if (!selectedRow) {
+      swal('등록된 사은품 또는 인쇄물을 선택해주세요.');
+    } else {
+      setTitle(selectedRow[0].name);
+      if (selectedRow[0].category === '인쇄물') {
+        setCategoryValue({
+          value: 'printgroup/prints',
+          label: '인쇄물',
+        });
+      } else {
+        setCategoryValue({
+          value: 'freebiegroup/freebies',
+          label: '사은품 (비매품만)',
+        });
+      }
+      setBrandValues(
+        selectedRow[0].brands.map((brand) => ({
+          label: brand.name,
+          value: brand.id,
+        }))
+      );
+      setOptions(
+        selectedRow[0].items.map((item) => ({
+          ...item,
+          mainImage: item.main_image,
+        }))
+      );
+      console.log(selectedRow[0]);
+      setDataKey(selectedRow[0].id);
+      setIsUpdate(true);
+      closeModal();
+    }
+  };
+  console.log(dataKey);
+  const enterLoading = (type) => {
+    if (type === 'import') {
+      setFreebieAndPrintLoading(true);
+      setTimeout(() => {
+        setFreebieAndPrintLoading(false);
+      }, 4000);
+    } else if (type === 'complete') {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+      }, 4000);
+    }
+  };
+
+  const getFreebieData = () => {
+    const url = `${process.env.REACT_APP_URL}/freebiegroup/freebies/`;
+    const res = axios
+      .get(url)
+      .then((response) => {
+        try {
+          if (response.data) {
+            const fData = response.data.result.map((data) => {
+              return { ...data, category: response.data.category };
+            });
+            setFreebieData(fData);
+            return fData;
+          } else {
+            console.log(response.status);
+            alert('데이터를 등록해주세요');
+          }
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+        }
+      })
+      .catch(() => {
+        alert('error');
+      });
+    return res;
+  };
+  const getPrintData = () => {
+    const url = `${process.env.REACT_APP_URL}/printgroup/prints/`;
+    const res = axios
+      .get(url)
+      .then((response) => {
+        try {
+          if (response.data) {
+            const pData = response.data.result.map((data) => {
+              return { ...data, category: response.data.category };
+            });
+            setPrintData(pData);
+            return pData;
+          } else {
+            console.log(response.status);
+            alert('데이터를 등록해주세요');
+          }
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+        }
+      })
+      .catch(() => {
+        alert('error');
+      });
+    return res;
+  };
+  const getBothData = async () => {
+    let data = [];
+
+    try {
+      Promise.all([getPrintData(), getFreebieData()]).then((responses) => {
+        setFreebieAndPrintLoading(false);
+        responses.map((response) =>
+          response.map((ret) => (data = [...data, ret]))
+        );
+        setFreebieAndPrintData(
+          data.map((data, index) => {
+            return { ...data, key: index };
+          })
+        );
+        return data;
+      });
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
   };
 
   return (
     <Container>
       <Wrapper>
         <SubTitle>사은품 · 인쇄물 정보 등록(및 수정)</SubTitle>
-        <ImportButton text="불러오기" import={openModal} />
+        <ImportButton
+          text="불러오기"
+          getBothData={getBothData}
+          openModal={openModal}
+        />
         {modalVisible && (
           <ImportModal
-            importJSON={importJSON}
             importData={importData}
             close={closeModal}
+            data={freebieAndPrintData}
+            loading={freebieAndPrintLoading}
+            setSelectedRow={setSelectedRow}
           />
         )}
         <br />
@@ -258,11 +383,14 @@ function FreebieAndPrint() {
         <FlexBox>
           <BackButton />
           <CompleteButton
-            text="완료"
+            text={isUpdate ? '수정' : '등록'}
             title={title}
             category={categoryValue}
             brand={brandValues}
             options={options}
+            dataKey={dataKey}
+            loading={loading}
+            enterLoading={() => enterLoading('complete')}
           />
         </FlexBox>
       </Wrapper>

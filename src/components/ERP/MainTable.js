@@ -20,6 +20,19 @@ const TableSection = styled(Table)`
     font-weight: bold;
   }
 `;
+const BrandWrapper = styled.div`
+  .brand {
+    display: inline-block;
+  }
+  .brand::after {
+    content: ', ';
+    margin-right: 5px;
+  }
+  .brand:last-child::after {
+    content: '';
+    margin-right: 0;
+  }
+`;
 
 function MainTable(props) {
   const list = props.data;
@@ -120,15 +133,28 @@ function MainTable(props) {
     },
     {
       title: '품목그룹1명',
-      dataIndex: 'brand',
-      key: 'brand',
+      dataIndex: 'brands',
+      key: 'brands',
       filters: [
         { text: '말랑하니', value: '말랑하니' },
         { text: '루미레브', value: '루미레브' },
         { text: '모우모우', value: '모우모우' },
         { text: '아이블린', value: '아이블린' },
       ],
-      onFilter: (value, record) => record.brand_id.includes(value),
+      onFilter: (value, record) => record.brands.includes(value),
+      render: (brands) => {
+        return (
+          <BrandWrapper>
+            {brands.map((brand) => {
+              return (
+                <div key={brand.id} className="brand">
+                  {brand.name}
+                </div>
+              );
+            })}
+          </BrandWrapper>
+        );
+      },
     },
     // {
     //   title: '품목그룹3명',

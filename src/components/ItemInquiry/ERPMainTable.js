@@ -20,6 +20,19 @@ const TableSection = styled(Table)`
     font-weight: bold;
   }
 `;
+const BrandWrapper = styled.div`
+  .brand {
+    display: inline-block;
+  }
+  .brand::after {
+    content: ', ';
+    margin-right: 5px;
+  }
+  .brand:last-child::after {
+    content: '';
+    margin-right: 0;
+  }
+`;
 
 function ERPMainTable(props) {
   const list = props.data;
@@ -124,7 +137,20 @@ function ERPMainTable(props) {
         { text: '모우모우', value: '모우모우' },
         { text: '아이블린', value: '아이블린' },
       ],
-      onFilter: (value, record) => record.brand_id.includes(value),
+      onFilter: (value, record) => record.brands.includes(value),
+      render: (brands) => {
+        return (
+          <BrandWrapper>
+            {brands.map((brand) => {
+              return (
+                <div key={brand.id} className="brand">
+                  {brand.name}
+                </div>
+              );
+            })}
+          </BrandWrapper>
+        );
+      },
     },
   ];
 
@@ -133,6 +159,7 @@ function ERPMainTable(props) {
       className="components-table-demo-nested"
       columns={columns}
       dataSource={list}
+      loading={props.loading}
       expandedRowRender={(record, index) => (
         <SubTable record={record} index={index} list={list} />
       )}

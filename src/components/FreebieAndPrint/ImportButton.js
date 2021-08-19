@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Button } from 'antd';
 
-const BorderedButton = styled.button`
+const BorderedButton = styled(Button)`
   all: unset;
   position: relative;
   float: right;
@@ -26,7 +27,18 @@ const BorderedButton = styled.button`
 `;
 
 function ImportButton(props) {
-  return <BorderedButton onClick={props.import}>{props.text}</BorderedButton>;
+  return (
+    <BorderedButton
+      // loading={props.loading}
+      onClick={() => {
+        // props.enterLoading();
+        props.openModal();
+        props.getBothData();
+      }}
+    >
+      {props.text}
+    </BorderedButton>
+  );
 }
 
 export default ImportButton;

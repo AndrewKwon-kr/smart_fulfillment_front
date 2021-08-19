@@ -125,7 +125,7 @@ function Option({
           type="text"
           name="optionName"
           id={option.id}
-          value={option.optionName}
+          value={option.name}
           onChange={(e) => onChangeOptionName(e, option.id)}
         />
       </OptionThreeWrapper>
