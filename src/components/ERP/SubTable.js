@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table } from 'antd';
 import styled from 'styled-components';
 import 'antd/dist/antd.css';
@@ -55,8 +55,13 @@ const Mark = styled.div`
   z-index: 1;
 `;
 
-function SubTable({ record, index }) {
+function SubTable({ record, index, sendData, setSendData }) {
   const [items, setItems] = useState(record.items);
+  // const [sendData, setSendData] = useState([]);
+
+  useEffect(() => {
+    console.log('sendData -------->', sendData);
+  }, [sendData]);
 
   const data = [];
   for (let i = 0; i < items.length; i++) {
@@ -85,9 +90,9 @@ function SubTable({ record, index }) {
             }}
             style={{ display: 'none' }}
           ></input>
-          {option.mainImage === 1 && <Mark>대표</Mark>}
+          {option.mainImage && <Mark>대표</Mark>}
           <AddOptionImage
-            className={option.mainImage === 1 && 'mark'}
+            className={option.mainImage && 'mark'}
             htmlFor={'markImage' + index + option.key}
           >
             {option.image ? (
@@ -117,7 +122,7 @@ function SubTable({ record, index }) {
           type="checkbox"
           name={'mainImage' + index}
           id={'mainImage' + index}
-          checked={item.mainImage === 1}
+          checked={item.mainImage}
           onChange={(e) => {
             handleRadioChange(e, item.key, item);
           }}
@@ -137,7 +142,19 @@ function SubTable({ record, index }) {
           if (item.id !== id) {
             return item;
           } else {
-            return { ...item, image: reader.result };
+            item.image = reader.result;
+            let imageUpdated = false;
+            setSendData(
+              sendData.map((data) => {
+                if (data.id === item.id) {
+                  imageUpdated = true;
+                  return item;
+                }
+                return data;
+              })
+            );
+            if (!imageUpdated) setSendData([...sendData, item]);
+            return { ...item };
           }
         })
       );
@@ -152,14 +169,48 @@ function SubTable({ record, index }) {
     setItems(
       items.map((item) => {
         if (item.id !== id) {
-          return { ...item, main_image: 0 };
+          return { ...item, main_image: false };
         } else {
-          return { ...item, main_image: e.target.checked === true && 1 };
+          item.main_image = true;
+          let mainUpdated = false;
+          setSendData(
+            sendData.map((data) => {
+              if (data.id === item.id) {
+                mainUpdated = true;
+                return item;
+              } else {
+                return { ...data, main_image: false };
+              }
+            })
+          );
+          if (!mainUpdated) setSendData([...sendData, item]);
+          return { ...item, main_image: true };
         }
       })
     );
   }
-
+  // function handleRadioChange(e, id) {
+  //   setItems(
+  //     items.map((item) => {
+  //       if (item.id !== id) {
+  //         return { ...item, main_image: false };
+  //       } else {
+  //         item.main_image = true;
+  //         setSendData(
+  //           sendData.map((data) => {
+  //             if (data.id === item.id) {
+  //               return item;
+  //             } else {
+  //               return { ...data, main_image: false };
+  //             }
+  //           })
+  //         );
+  //         return { ...item, main_image: true };
+  //       }
+  //     })
+  //   );
+  // }
+  // console.log('setItems -------->', items);
   return (
     <SubTableSection columns={columns} dataSource={data} pagination={false} />
   );

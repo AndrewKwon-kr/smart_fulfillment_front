@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Button } from 'antd';
 
-const BorderedButton = styled.button`
+const BorderedButton = styled(Button)`
   all: unset;
   margin: 0 0 0 20px;
   position: relative;
@@ -10,6 +11,7 @@ const BorderedButton = styled.button`
   width: 100px;
   text-align: center;
   color: #fff;
+  border: 1px solid #d9d9d9;
   background-color: ${(props) => (props.disabled ? '#d9d9d9' : '#228be6')};
   padding: 0.5rem;
   cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
@@ -19,24 +21,13 @@ const BorderedButton = styled.button`
 `;
 
 function CompleteButton(props) {
-  function onClick() {
-    let jsonData = {};
-    jsonData.title = props.title;
-    jsonData.category = props.category;
-    jsonData.brand = props.brand;
-    jsonData.image = props.image;
-    console.log(jsonData);
-    localStorage.setItem('test', JSON.stringify(jsonData));
-    console.log('!!!');
-    // window.location.href = '/registitem';
-  }
-
   return (
     <BorderedButton
       // disabled={!props.complete}
+      loading={props.sendLoading}
       onClick={() => props.complete()}
     >
-      완료
+      {props.sendLoading ? '' : '수정'}
     </BorderedButton>
   );
 }

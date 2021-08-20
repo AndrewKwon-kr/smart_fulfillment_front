@@ -23,6 +23,7 @@ function ItemInquiry() {
   // const erpData = erpJson;
   const [freebieExcelData, setFreebieExcelData] = useState([]);
   const [erpExcelData, setErpExcelData] = useState([]);
+  const [brandData, setBrandData] = useState([]);
 
   const [freebieAndPrintLoading, setFreebieAndPrintLoading] = useState(true);
   const [erpLoading, setErpLoading] = useState(true);
@@ -87,11 +88,18 @@ function ItemInquiry() {
         setErpLoading(false);
       });
   };
+  const getBrandData = () => {
+    const url = `${process.env.REACT_APP_URL}/brand/`;
+    axios.get(url).then((response) => {
+      setBrandData(response.data);
+    });
+  };
 
   useEffect(() => {
     getFreebieData();
     getPrintData();
     getErpDatas();
+    getBrandData();
   }, []);
 
   useEffect(() => {
@@ -141,7 +149,6 @@ function ItemInquiry() {
           itemArray.push(itemObject);
         }
       }
-      console.log(itemArray);
       return itemArray;
     }
 
@@ -212,10 +219,15 @@ function ItemInquiry() {
           <FreebieMainTable
             data={freebieAndPrintData}
             loading={freebieAndPrintLoading}
+            brandData={brandData}
           />
         )}
         {tabStatus === 'erp' && (
-          <ERPMainTable data={erpData} loading={erpLoading} />
+          <ERPMainTable
+            data={erpData}
+            loading={erpLoading}
+            brandData={brandData}
+          />
         )}
       </Wrapper>
     </Container>

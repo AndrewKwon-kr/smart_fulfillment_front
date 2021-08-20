@@ -74,9 +74,9 @@ function ERPSubTable({ record, index }) {
       key: 'image',
       render: (option) => (
         <OptionTwoWrapper>
-          {option.mainImage === 1 && <Mark>대표</Mark>}
+          {option.mainImage && <Mark>대표</Mark>}
           <AddOptionImage
-            className={option.mainImage === 1 && 'mark'}
+            className={option.mainImage && 'mark'}
             htmlFor={'markImage' + index + option.key}
           >
             {option.image ? (

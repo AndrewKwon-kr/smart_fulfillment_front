@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
+import swal from 'sweetalert';
 
 const BorderedButton = styled.button`
   all: unset;
@@ -20,8 +22,20 @@ const BorderedButton = styled.button`
 function NextButton({ clickedFreebie, clickedERP }) {
   function onClick(clickedFreebie) {
     if (clickedFreebie) {
-      window.location.href = '/freebie';
+      getBrandData();
     } else window.location.href = '/erp';
+  }
+  function getBrandData() {
+    const url = `${process.env.REACT_APP_URL}/brand/`;
+
+    axios.get(url).then((response) => {
+      if (response.data.length === 0) {
+        swal('[ERP 등록제품] 단계를 먼저 해주세요');
+        return false;
+      } else {
+        window.location.href = '/freebie';
+      }
+    });
   }
   return (
     <BorderedButton

@@ -134,14 +134,11 @@ function FreebieMainTable(props) {
       title: '브랜드',
       dataIndex: 'brands',
       key: 'brands',
-      filters: [
-        { text: '말랑하니', value: '말랑하니' },
-        { text: '루미레브', value: '루미레브' },
-        { text: '모우모우', value: '모우모우' },
-        { text: '아이블린', value: '아이블린' },
-      ],
-      // onFilter: (value, record) =>
-      //   record.brands_in_freebiegroups.includes(value),
+      filters: props.brandData.map((data) => {
+        return { text: data.name, value: data.name };
+      }),
+      onFilter: (value, record) =>
+        record.brands.map((brand) => brand.name).includes(value),
       render: (brands) => {
         return (
           <BrandWrapper>

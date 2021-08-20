@@ -19,18 +19,19 @@ function PrintModalView(props) {
     { key: 'iblyn', label: '아이블린 전체 제품' },
     { key: 'bonboon', label: '본분 전체 제품' },
   ];
-  const productList = [
-    { key: 'a', label: '방수매트' },
-    { key: 'b', label: '스와들속싸개' },
-    { key: 'c', label: '원형러그' },
-    { key: 'd', label: '수면조끼' },
-    { key: 'd', label: '수유등' },
-    { key: 'e', label: '자석받침대' },
-    { key: 'f', label: '키즈빈백' },
-    { key: 'g', label: '연필꽂이' },
-    { key: 'h', label: '색연필' },
-  ];
-
+  // const productList = [
+  //   { key: 'a', label: '방수매트' },
+  //   { key: 'b', label: '스와들속싸개' },
+  //   { key: 'c', label: '원형러그' },
+  //   { key: 'd', label: '수면조끼' },
+  //   { key: 'e', label: '자석받침대' },
+  //   { key: 'f', label: '키즈빈백' },
+  //   { key: 'g', label: '연필꽂이' },
+  //   { key: 'h', label: '색연필' },
+  // ];
+  const productList = props.printsData.map((item) => {
+    return { key: item.id, label: item.name };
+  });
   // const resetGroupList = () => {
   //   const cards = document.getElementById('board-3').childNodes;
   //   console.log(cards);
@@ -43,7 +44,7 @@ function PrintModalView(props) {
   //     card.parentElement.removeChild(card);
   //   }
   // };
-  console.log(selectedItems);
+  console.log(props.printsData);
   const setPrints = () => {
     props.setPrints(selectedItems);
     props.close();
@@ -53,7 +54,7 @@ function PrintModalView(props) {
     <Modal>
       <ModalContainer>
         <Title>인쇄물 찾기</Title>
-        <MainItemSearch />
+        {/* <MainItemSearch /> */}
         <InputWrap>
           <Select
             options={categoryOptions}
@@ -82,7 +83,7 @@ function PrintModalView(props) {
             <Board id="board-2" className="board">
               {productList.map((group) => (
                 <Card
-                  // key={group.key}
+                  key={group.key}
                   id={group.key}
                   className="card"
                   draggable="true"
@@ -254,6 +255,7 @@ const ButtonWrapper = styled.div`
   float: right;
 `;
 const InputWrap = styled.div`
+  margin-top: 20px;
   position: relative;
   display: inline-block;
   width: 100px;

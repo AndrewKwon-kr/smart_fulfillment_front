@@ -17,14 +17,6 @@ const categoryOptions = [
   { value: 'freebiegroup/freebies', label: '사은품 (비매품만)' },
   { value: 'printgroup/prints', label: '인쇄물' },
 ];
-// const brandOptions = [
-//   { value: 'malang', label: '말랑하니' },
-//   { value: 'rumi', label: '루미레브' },
-//   { value: 'mow', label: '모우모우' },
-//   { value: 'iblyn', label: '아이블린' },
-//   { value: 'bonbun', label: '본분' },
-//   { value: 'marge', label: '마지마켓' },
-// ];
 
 function FreebieAndPrint() {
   const [getData, setGetData] = useState([]);

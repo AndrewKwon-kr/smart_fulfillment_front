@@ -15,6 +15,7 @@ import BesideShopIcon from 'assets/icon_beside_shop.png';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
+import axios from 'axios';
 
 function EventRegistration() {
   const [title, setTitle] = useState('');
@@ -31,6 +32,10 @@ function EventRegistration() {
   const [mainItems, setMainItems] = useState([]);
   const [freebies, setFreebies] = useState([]);
   const [prints, setPrints] = useState([]);
+
+  const [mainItemsData, setMainItemsData] = useState([]);
+  const [freebiesData, setFreebiesData] = useState([]);
+  const [printsData, setPrintsData] = useState([]);
 
   const [minBuyNumber, setMinBuyNumber] = useState(0);
   const [minBuyPrice, setMinBuyPrice] = useState({
@@ -65,6 +70,84 @@ function EventRegistration() {
     { id: 10, store: 'SSG', checked: false },
     { id: 11, store: '롯데마트', checked: false },
   ]);
+  useEffect(() => {
+    const getMainItemData = () => {
+      const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
+
+      axios
+        .get(url)
+        .then((response) => {
+          try {
+            if (response.data.result.length !== 0) {
+              setMainItemsData(response.data.result);
+              // setLoading(false);
+            } else {
+              console.log(response.status);
+              // setLoading(false);
+            }
+          } catch (err) {
+            alert('데이터를 불러올 수 없습니다.');
+          }
+        })
+        .catch(() => {
+          alert('error');
+          // setLoading(false);
+        });
+    };
+    getMainItemData();
+  }, []);
+  useEffect(() => {
+    const getFreebieData = () => {
+      const url = `${process.env.REACT_APP_URL}/freebiegroup/freebies/`;
+
+      axios
+        .get(url)
+        .then((response) => {
+          try {
+            if (response.data.result.length !== 0) {
+              setFreebiesData(response.data.result);
+              // setLoading(false);
+            } else {
+              console.log(response.status);
+              // setLoading(false);
+            }
+          } catch (err) {
+            alert('데이터를 불러올 수 없습니다.');
+          }
+        })
+        .catch(() => {
+          alert('error');
+          // setLoading(false);
+        });
+    };
+    getFreebieData();
+  }, []);
+  useEffect(() => {
+    const getPrintData = () => {
+      const url = `${process.env.REACT_APP_URL}/printgroup/prints/`;
+
+      axios
+        .get(url)
+        .then((response) => {
+          try {
+            if (response.data.result.length !== 0) {
+              setPrintsData(response.data.result);
+              // setLoading(false);
+            } else {
+              console.log(response.status);
+              // setLoading(false);
+            }
+          } catch (err) {
+            alert('데이터를 불러올 수 없습니다.');
+          }
+        })
+        .catch(() => {
+          alert('error');
+          // setLoading(false);
+        });
+    };
+    getPrintData();
+  }, []);
 
   const onChange = (e) => {
     setTitle(e.target.value);
@@ -291,6 +374,7 @@ function EventRegistration() {
                     closeModal('main');
                   }}
                   setMainItems={setMainItems}
+                  mainItemsData={mainItemsData}
                 />
               )}
             </ContentWrapper>
@@ -328,6 +412,7 @@ function EventRegistration() {
                     closeModal('freebie');
                   }}
                   setFreebies={setFreebies}
+                  freebiesData={freebiesData}
                 />
               )}
             </ContentWrapper>
@@ -365,6 +450,7 @@ function EventRegistration() {
                     closeModal('print');
                   }}
                   setPrints={setPrints}
+                  printsData={printsData}
                 />
               )}
             </ContentWrapper>

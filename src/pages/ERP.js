@@ -12,12 +12,15 @@ function ERP() {
   const [rows, setRows] = useState([]);
   const [excelRows, setExcelRows] = useState([]);
   const [isErpData, setIsErpData] = useState(false);
+  const [brandData, setBrandData] = useState([]);
   const [loading, setLoading] = useState(true);
   // const [cols, setCols] = useState([]);
   // const [errorMessage, setErrorMessage] = useState(null);
+  const [sendData, setSendData] = useState([]);
+  const [sendLoading, setSendLoading] = useState();
 
   const createErpData = (row) => {
-    // console.log(row);
+    console.log(row);
     console.log('create---> ', row);
     setLoading(true);
     const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items/`;
@@ -35,7 +38,6 @@ function ERP() {
     }
   };
   const updateErpData = (row) => {
-    // console.log(row);
     console.log('update ---> ', row);
     const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items/`;
     const data = {
@@ -44,6 +46,7 @@ function ERP() {
       erpDatas: row,
     };
     if (row.length !== 0) {
+      console.log(row);
       axios
         .post(url, data)
         .then((response) => console.log(response.data.result));
@@ -54,33 +57,48 @@ function ERP() {
   //   // const ret = await axios.get(url);
   //   return await axios.get(url);
   // };
-  useEffect(() => {
-    const getErpData = () => {
-      const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
 
-      axios
-        .get(url)
-        .then((response) => {
-          try {
-            if (response.data.result.length !== 0) {
-              console.log(response.data.result);
-              setRows(response.data.result);
-              setLoading(false);
-            } else {
-              console.log(response.status);
-              swal('데이터를 등록해주세요');
-              setLoading(false);
-            }
-          } catch (err) {
-            alert('데이터를 불러올 수 없습니다.');
+  const getErpData = () => {
+    const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
+
+    axios
+      .get(url)
+      .then((response) => {
+        try {
+          if (response.data.result.length !== 0) {
+            console.log(response.data.result);
+            setRows(response.data.result);
+            setLoading(false);
+          } else {
+            console.log(response.status);
+            swal({
+              text: 'Excel 파일을 등록 해주세요',
+              buttons: { confirm: '등록', cancel: '취소' },
+            }).then((value) => {
+              if (value === true) {
+                document.getElementById('upload').click();
+              }
+            });
+            setLoading(false);
           }
-        })
-        .catch(() => {
-          alert('error');
-          setLoading(false);
-        });
-    };
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+        }
+      })
+      .catch(() => {
+        alert('error');
+        setLoading(false);
+      });
+  };
+  const getBrandData = () => {
+    const url = `${process.env.REACT_APP_URL}/brand/`;
+    axios.get(url).then((response) => {
+      setBrandData(response.data);
+    });
+  };
+  useEffect(() => {
     getErpData();
+    getBrandData();
   }, []);
 
   const uploadExcel = () => {
@@ -94,10 +112,26 @@ function ERP() {
     });
   };
   const complete = () => {
-    console.log(isErpData);
-    isErpData ? createErpData(rows) : updateErpData(rows);
+    enterLoading();
+    const url = `${process.env.REACT_APP_URL}/itemgroup/imagestest/`;
+    const data = {
+      groupId: 1,
+      data: sendData,
+    };
+
+    axios.put(url, data).then((response) => console.log(response.data.result));
+
+    // isErpData ? createErpData(rows) : updateErpData(rows);
     // isErpData ? updateErpData() : createErpData();
   };
+  const enterLoading = () => {
+    setSendLoading(true);
+    setTimeout(() => {
+      setSendLoading(false);
+      window.location.reload();
+    }, 4000);
+  };
+
   const fileHandler = (fileList) => {
     let fileObj = fileList;
     if (!fileObj) {
@@ -183,11 +217,20 @@ function ERP() {
             <button></button>
           </Upload>
         </ExcelButtonWrapper>
-        <MainTable data={rows} loading={loading} />
+        <MainTable
+          data={rows}
+          loading={loading}
+          sendData={sendData}
+          setSendData={setSendData}
+          brandData={brandData || []}
+        />
         <FlexBox>
-          {/* <button onClick={() => console.log(rows)}>콘솔</button> */}
           <BackButton />
-          <CompleteButton text="완료" complete={complete} />
+          <CompleteButton
+            text="완료"
+            complete={complete}
+            sendLoading={sendLoading}
+          />
         </FlexBox>
       </Wrapper>
     </Container>
