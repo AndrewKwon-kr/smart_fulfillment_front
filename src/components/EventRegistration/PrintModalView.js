@@ -33,7 +33,6 @@ function PrintModalView(props) {
   });
   brandList.unshift({ key: 'all', value: 'all', label: '전체 브랜드' });
 
-  console.log(props.printsData);
   const setPrints = () => {
     props.setPrints(selectedItems);
     props.close();
@@ -49,7 +48,7 @@ function PrintModalView(props) {
       productList.filter((item) => item.label.includes(userInput))
     );
   };
-  console.log(filteredPrintItem);
+
   return (
     <Modal>
       <ModalContainer>

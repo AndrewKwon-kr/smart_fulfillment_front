@@ -64,8 +64,7 @@ function FreebieModalView(props) {
       );
     }
   };
-  console.log(props.freebiesData);
-  console.log(freebieList);
+
   return (
     <Modal>
       <ModalContainer>

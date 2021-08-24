@@ -279,7 +279,7 @@ function EventRegistration() {
   useEffect(() => {
     setCountPrint(prints.length);
   }, [prints]);
-  console.log(mainItems);
+
   return (
     <Container>
       <StepWrapper>

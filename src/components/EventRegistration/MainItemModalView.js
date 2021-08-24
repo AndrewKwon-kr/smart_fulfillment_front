@@ -49,7 +49,7 @@ function MainItemModalView(props) {
       productList.filter((item) => item.label.includes(userInput))
     );
   };
-  console.log(productList);
+
   return (
     <Modal>
       <ModalContainer>
