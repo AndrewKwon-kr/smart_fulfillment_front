@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 
 function Board(props) {
   const drop = (e) => {
@@ -6,9 +7,11 @@ function Board(props) {
     const cardId = e.dataTransfer.getData('cardId');
 
     const card = document.getElementById(cardId);
-    card.style.display = 'block';
+    if (card) {
+      card.style.display = 'block';
 
-    e.target.appendChild(card);
+      e.target.appendChild(card);
+    }
 
     const cards = document.getElementsByClassName('board')[1].childNodes;
     setItems(cards);
@@ -21,21 +24,32 @@ function Board(props) {
   function setItems(cards) {
     const items = [];
     cards.forEach((card) => {
-      items.push(card.innerText);
+      items.push({
+        id: card.id,
+        name: card.innerText,
+        image: card.childNodes[0].src,
+      });
     });
     props.setSelectedItems(items);
   }
 
   return (
-    <div
+    <BoardContainer
       id={props.id}
       className={props.className}
       onDrop={drop}
       onDragOver={dragOver}
     >
       {props.children}
-    </div>
+    </BoardContainer>
   );
 }
+
+const BoardContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 90%;
+`;
 
 export default Board;

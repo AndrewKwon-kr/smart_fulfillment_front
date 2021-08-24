@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import * as BiIcons from 'react-icons/bi';
-// import * as MdIcons from 'react-icons/md';
 
 const InputWrap = styled.div`
   margin: 20px 10px;
@@ -28,13 +27,6 @@ const SearchButton = styled(BiIcons.BiSearch)`
   display: inline-block;
   position: relative;
 `;
-// const ClearButton = styled(MdIcons.MdClear)`
-//   all: unset;
-//   cursor: pointer;
-//   display: inline-block;
-//   position: relative;
-//   left: -20px;
-// `;
 
 function PromotionSearch(props) {
   return (
@@ -49,7 +41,6 @@ function PromotionSearch(props) {
         name="filter"
         placeholder="검색어를 입력하세요"
       />
-      {/* <ClearButton size="24" color="#a9a9a9" /> */}
       <SearchButton size="24" onClick={props.handleClick} />
     </InputWrap>
   );

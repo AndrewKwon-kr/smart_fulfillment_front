@@ -1,14 +1,11 @@
 import React from 'react';
+import styled from 'styled-components';
 
 function Card(props) {
   const dragStart = (e) => {
     const target = e.target;
 
     e.dataTransfer.setData('cardId', target.id);
-
-    // setTimeout(() => {
-    //   target.style.display = 'none';
-    // }, 0);
   };
 
   const dragOver = (e) => {
@@ -16,16 +13,31 @@ function Card(props) {
   };
 
   return (
-    <div
+    <CardContent
       id={props.id}
       className={props.className}
       draggable={props.draggable}
       onDragStart={dragStart}
       onDragOver={dragOver}
+      image={props.image}
     >
       {props.children}
-    </div>
+    </CardContent>
   );
 }
+
+const CardContent = styled.div`
+  display: flex;
+  padding: 10px 25px;
+  border: 1px solid #f3f3f3;
+  border-radius: 5px;
+  box-shadow: rgb(235 235 235) 3px 3px 5px;
+  background-color: #fff;
+  cursor: pointer;
+  margin-bottom: 15px;
+  font-weight: bold;
+
+  align-items: center;
+`;
 
 export default Card;

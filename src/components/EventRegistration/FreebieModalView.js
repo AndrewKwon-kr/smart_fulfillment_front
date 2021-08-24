@@ -4,11 +4,12 @@ import { MainItemSearch, Board, Card } from 'components/EventRegistration';
 import Select from 'react-select';
 
 function FreebieModalView(props) {
-  const [categoryValue, setCategoryValue] = useState({ value: 'group' });
+  const [categoryValue, setCategoryValue] = useState({ value: 'erp' });
+  const [brandFilterValue, setBrandFilterValue] = useState({ value: 'all' });
   const [selectedItems, setSelectedItems] = useState([]);
   const categoryOptions = [
-    { value: 'group', label: '그룹별' },
-    { value: 'product', label: '제품별' },
+    { value: 'erp', label: 'ERP 등록제품' },
+    { value: 'freebie', label: '비매품' },
   ];
   const groupList = [
     { key: 'all', label: '전체 제품' },
@@ -19,92 +20,140 @@ function FreebieModalView(props) {
     { key: 'iblyn', label: '아이블린 전체 제품' },
     { key: 'bonboon', label: '본분 전체 제품' },
   ];
-  // const productList = [
-  //   { key: 'a', label: '방수매트' },
-  //   { key: 'b', label: '스와들속싸개' },
-  //   { key: 'c', label: '원형러그' },
-  //   { key: 'd', label: '수면조끼' },
-  //   { key: 'e', label: '자석받침대' },
-  //   { key: 'f', label: '키즈빈백' },
-  //   { key: 'g', label: '연필꽂이' },
-  //   { key: 'h', label: '색연필' },
-  // ];
-  const productList = props.freebiesData.map((item) => {
-    return { key: item.id, label: item.name };
+  const freebieList = props.freebiesData.map((item) => {
+    return {
+      key: item.id,
+      label: item.name,
+      image: item.image,
+      brands: item.brands.map((brand) => brand.name),
+    };
   });
+  const erpList = props.erpData.map((item) => {
+    return {
+      key: item.key,
+      label: item.name,
+      image: item.image,
+      brands: item.brands.map((brand) => brand.name),
+    };
+  });
+  const brandList = props.brandData.map((brand) => {
+    return { key: brand.id, value: brand.code, label: brand.name };
+  });
+  brandList.unshift({ key: 'all', value: 'all', label: '전체 브랜드' });
 
-  // const resetGroupList = () => {
-  //   const cards = document.getElementById('board-3').childNodes;
-  //   console.log(cards);
-
-  //   // cards.forEach((card) => card.remove());
-
-  //   for (let i = 0; i < cards.length; i++) {
-  //     const card = cards[i];
-  //     console.log('cards.length ---> ', cards.length, i);
-  //     card.parentElement.removeChild(card);
-  //   }
-  // };
-  console.log(props.freebiesData);
   const setFreebies = () => {
     props.setFreebies(selectedItems);
     props.close();
   };
+  const [userInput, setUserInput] = useState('');
+  const [filteredFreebieItem, setFilteredFreebieItem] = useState(freebieList);
+  const [filteredErpItem, setFilteredErpItem] = useState(erpList);
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setUserInput(value);
+  };
+  const handleClick = () => {
+    if (categoryValue.value === 'erp') {
+      setFilteredErpItem(
+        erpList.filter((item) => item.label.includes(userInput))
+      );
+    } else if (categoryValue.value === 'freebie') {
+      setFilteredFreebieItem(
+        freebieList.filter((item) => item.label.includes(userInput))
+      );
+    }
+  };
+  console.log(props.freebiesData);
+  console.log(freebieList);
   return (
     <Modal>
       <ModalContainer>
         <Title>사은품 찾기</Title>
-        <MainItemSearch />
-        <InputWrap>
+        <MainItemSearch handleChange={handleChange} handleClick={handleClick} />
+        <InputWrap className="CategoryOption">
           <Select
             options={categoryOptions}
             defaultValue={categoryOptions[0]}
             onChange={setCategoryValue}
           />
         </InputWrap>
-        {categoryValue.value === 'group' && (
+        <InputWrap className="BrandOption">
+          <Select
+            options={brandList}
+            defaultValue={brandList[0]}
+            onChange={setBrandFilterValue}
+          />
+        </InputWrap>
+        {categoryValue.value === 'erp' && (
           <div className="flexbox">
-            <Board id="board-1" className="board">
-              {groupList.map((group) => (
-                <Card
-                  key={group.key}
-                  id={group.key}
-                  className="card"
-                  draggable="true"
-                >
-                  {group.label}
-                </Card>
-              ))}
+            <Board
+              id="board-1"
+              className="board"
+              setSelectedItems={setSelectedItems}
+            >
+              {filteredErpItem
+                .filter(
+                  (item) =>
+                    item.brands.includes(brandFilterValue.label) ||
+                    brandFilterValue.value === 'all'
+                )
+                .map((item) => (
+                  <div key={item.key}>
+                    <Card
+                      key={item.key}
+                      id={item.key}
+                      className="card"
+                      draggable="true"
+                    >
+                      {item.image && <ItemImage src={item.image} alt="" />}
+                      {item.label}
+                    </Card>
+                  </div>
+                ))}
             </Board>
           </div>
         )}
-        {categoryValue.value === 'product' && (
+        {categoryValue.value === 'freebie' && (
           <div className="flexbox">
-            <Board id="board-2" className="board">
-              {productList.map((group) => (
-                <Card
-                  key={group.key}
-                  id={group.key}
-                  className="card"
-                  draggable="true"
-                >
-                  {group.label}
-                </Card>
-              ))}
+            <Board
+              id="board-2"
+              className="board"
+              setSelectedItems={setSelectedItems}
+            >
+              {filteredFreebieItem
+                .filter(
+                  (item) =>
+                    item.brands.includes(brandFilterValue.label) ||
+                    brandFilterValue.value === 'all'
+                )
+                .map((item) => (
+                  <div key={item.key}>
+                    <Card
+                      key={item.key}
+                      id={item.key}
+                      className="card"
+                      draggable="true"
+                    >
+                      {item.image && <ItemImage src={item.image} alt="" />}
+                      {item.label}
+                    </Card>
+                  </div>
+                ))}
             </Board>
           </div>
         )}
       </ModalContainer>
       <BoardContainer>
         <div className="flexbox2">
-          {categoryValue.value === 'group' && (
+          {categoryValue.value === 'erp' && (
             <Board
               id="board-3"
               className="board"
               setSelectedItems={setSelectedItems}
             ></Board>
           )}
-          {categoryValue.value === 'product' && (
+          {categoryValue.value === 'freebie' && (
             <Board
               id="board-4"
               className="board"
@@ -161,24 +210,6 @@ const Modal = styled.div`
       box-shadow: inset 0px 0px 5px white;
     }
   }
-  .flexbox .board {
-    display: flex;
-    flex-direction: column;
-
-    width: 90%;
-    padding: 15px 0;
-  }
-  .flexbox .board .card {
-    padding: 10px 25px;
-    border: 1px solid #f3f3f3;
-    border-radius: 5px;
-    box-shadow: rgb(235 235 235) 3px 3px 5px;
-
-    cursor: pointer;
-    margin-bottom: 15px;
-    font-weight: bold;
-    text-align: center;
-  }
   .flexbox2 {
     display: flex;
     justify-content: space-between;
@@ -197,18 +228,6 @@ const Modal = styled.div`
     width: 100%;
     background-color: #eff3ff;
     padding: 15px;
-  }
-  .flexbox2 .board .card {
-    padding: 10px 25px;
-    border: 1px solid #f3f3f3;
-    border-radius: 5px;
-    box-shadow: rgb(235 235 235) 3px 3px 5px;
-    background-color: #fff;
-
-    cursor: pointer;
-    margin-bottom: 15px;
-    font-weight: bold;
-    text-align: center;
   }
 `;
 const ModalContainer = styled.div`
@@ -256,9 +275,22 @@ const ButtonWrapper = styled.div`
 `;
 const InputWrap = styled.div`
   margin-top: 20px;
+  margin-right: 20px;
   position: relative;
   display: inline-block;
-  width: 100px;
+  &.CategoryOption {
+    width: 150px;
+  }
+  &.BrandOption {
+    width: 150px;
+  }
+`;
+const ItemImage = styled.img`
+  margin-right: 20px;
+
+  width: 36px;
+  height: 36px;
+  border-radius: 36px;
 `;
 
 export default FreebieModalView;

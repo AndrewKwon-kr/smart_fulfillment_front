@@ -16,10 +16,12 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
 import axios from 'axios';
+import { Button } from 'antd';
 
 function EventRegistration() {
   const [title, setTitle] = useState('');
   const [stepStatus, setStepStatus] = useState(1);
+  const [stepOneLoading, setStepOneLoading] = useState(false);
 
   const [countMainItem, setCountMainItem] = useState(0);
   const [countFreebie, setCountFreebie] = useState(0);
@@ -36,6 +38,7 @@ function EventRegistration() {
   const [mainItemsData, setMainItemsData] = useState([]);
   const [freebiesData, setFreebiesData] = useState([]);
   const [printsData, setPrintsData] = useState([]);
+  const [brandData, setBrandData] = useState([]);
 
   const [minBuyNumber, setMinBuyNumber] = useState(0);
   const [minBuyPrice, setMinBuyPrice] = useState({
@@ -70,90 +73,100 @@ function EventRegistration() {
     { id: 10, store: 'SSG', checked: false },
     { id: 11, store: '롯데마트', checked: false },
   ]);
-  useEffect(() => {
-    const getMainItemData = () => {
-      const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
+  const getMainItemData = () => {
+    const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
 
-      axios
-        .get(url)
-        .then((response) => {
-          try {
-            if (response.data.result.length !== 0) {
-              setMainItemsData(response.data.result);
-              // setLoading(false);
-            } else {
-              console.log(response.status);
-              // setLoading(false);
-            }
-          } catch (err) {
-            alert('데이터를 불러올 수 없습니다.');
-          }
-        })
-        .catch(() => {
-          alert('error');
-          // setLoading(false);
-        });
-    };
-    getMainItemData();
-  }, []);
-  useEffect(() => {
-    const getFreebieData = () => {
-      const url = `${process.env.REACT_APP_URL}/freebiegroup/freebies/`;
+    axios
+      .get(url)
+      .then((response) => {
+        try {
+          if (response.data.result.length !== 0) {
+            setMainItemsData(response.data.result);
 
-      axios
-        .get(url)
-        .then((response) => {
-          try {
-            if (response.data.result.length !== 0) {
-              setFreebiesData(response.data.result);
-              // setLoading(false);
-            } else {
-              console.log(response.status);
-              // setLoading(false);
-            }
-          } catch (err) {
-            alert('데이터를 불러올 수 없습니다.');
+            setStepStatus(stepStatus + 1);
+            setStepOneLoading(false);
+          } else {
+            console.log(response.status);
+            // setLoading(false);
           }
-        })
-        .catch(() => {
-          alert('error');
-          // setLoading(false);
-        });
-    };
-    getFreebieData();
-  }, []);
-  useEffect(() => {
-    const getPrintData = () => {
-      const url = `${process.env.REACT_APP_URL}/printgroup/prints/`;
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+        }
+      })
+      .catch(() => {
+        alert('error');
+        // setLoading(false);
+      });
+  };
+  const getFreebieData = () => {
+    const url = `${process.env.REACT_APP_URL}/freebiegroup/freebies/`;
 
-      axios
-        .get(url)
-        .then((response) => {
-          try {
-            if (response.data.result.length !== 0) {
-              setPrintsData(response.data.result);
-              // setLoading(false);
-            } else {
-              console.log(response.status);
-              // setLoading(false);
-            }
-          } catch (err) {
-            alert('데이터를 불러올 수 없습니다.');
+    axios
+      .get(url)
+      .then((response) => {
+        try {
+          if (response.data.result.length !== 0) {
+            console.log(response.data.result);
+            setFreebiesData(response.data.result);
+            // setLoading(false);
+          } else {
+            console.log(response.status);
+            // setLoading(false);
           }
-        })
-        .catch(() => {
-          alert('error');
-          // setLoading(false);
-        });
-    };
-    getPrintData();
-  }, []);
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+        }
+      })
+      .catch(() => {
+        alert('error');
+        // setLoading(false);
+      });
+  };
+  const getPrintData = () => {
+    const url = `${process.env.REACT_APP_URL}/printgroup/prints/`;
+
+    axios
+      .get(url)
+      .then((response) => {
+        try {
+          if (response.data.result.length !== 0) {
+            setPrintsData(response.data.result);
+            // setLoading(false);
+          } else {
+            console.log(response.status);
+            // setLoading(false);
+          }
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+        }
+      })
+      .catch(() => {
+        alert('error');
+        // setLoading(false);
+      });
+  };
+  const getBrandData = () => {
+    const url = `${process.env.REACT_APP_URL}/brand/`;
+    axios.get(url).then((response) => {
+      setBrandData(response.data);
+    });
+  };
 
   const onChange = (e) => {
     setTitle(e.target.value);
   };
   const setNextStep = () => {
-    setStepStatus(stepStatus + 1);
+    if (stepStatus === 1) {
+      setStepOneLoading(true);
+      setTimeout(() => {
+        setStepOneLoading(false);
+        // setStepStatus(stepStatus + 1);
+      }, 4000);
+      getMainItemData();
+      getFreebieData();
+      getPrintData();
+      getBrandData();
+    } else setStepStatus(stepStatus + 1);
   };
   const setBackStep = () => {
     setStepStatus(stepStatus - 1);
@@ -266,7 +279,7 @@ function EventRegistration() {
   useEffect(() => {
     setCountPrint(prints.length);
   }, [prints]);
-
+  console.log(mainItems);
   return (
     <Container>
       <StepWrapper>
@@ -304,15 +317,24 @@ function EventRegistration() {
           </EventInfomation>
           <EventInfomation>
             <EventInfomationText>본품</EventInfomationText>
-            {mainItems && mainItems.join(', ')}
+            {mainItems &&
+              mainItems.map((item) => {
+                return `${item.name}, `;
+              })}
           </EventInfomation>
           <EventInfomation>
             <EventInfomationText>사은품</EventInfomationText>
-            {freebies && freebies.join(', ')}
+            {freebies &&
+              freebies.map((item) => {
+                return `${item.name}, `;
+              })}
           </EventInfomation>
           <EventInfomation>
             <EventInfomationText>인쇄물</EventInfomationText>
-            {prints && prints.join(', ')}
+            {prints &&
+              prints.map((item) => {
+                return `${item.name}, `;
+              })}
           </EventInfomation>
         </EventInfomationWrapper>
         {stepStatus === 1 && (
@@ -332,8 +354,12 @@ function EventRegistration() {
               placeholder="ex) 어린이날 행사 이벤트"
             />
             <StepButtonWrapper>
-              <StepNextButton onClick={setNextStep} disabled={!title}>
-                다음
+              <StepNextButton
+                onClick={setNextStep}
+                disabled={!title}
+                loading={stepOneLoading}
+              >
+                {stepOneLoading ? '' : '다음'}
               </StepNextButton>
             </StepButtonWrapper>
           </>
@@ -352,7 +378,8 @@ function EventRegistration() {
                 {mainItems &&
                   mainItems.map((item, index) => (
                     <Item key={index}>
-                      {item}
+                      {item.image && <ItemImage src={item.image} />}
+                      {item.name}
                       <BsIcons.BsTrash
                         color="#a9a9a9"
                         style={{ float: 'right', cursor: 'pointer' }}
@@ -375,6 +402,7 @@ function EventRegistration() {
                   }}
                   setMainItems={setMainItems}
                   mainItemsData={mainItemsData}
+                  brandData={brandData}
                 />
               )}
             </ContentWrapper>
@@ -390,7 +418,8 @@ function EventRegistration() {
                 {freebies &&
                   freebies.map((item, index) => (
                     <Item key={index}>
-                      {item}
+                      {item.image && <ItemImage src={item.image} />}
+                      {item.name}
                       <BsIcons.BsTrash
                         color="#a9a9a9"
                         style={{ float: 'right', cursor: 'pointer' }}
@@ -412,7 +441,9 @@ function EventRegistration() {
                     closeModal('freebie');
                   }}
                   setFreebies={setFreebies}
+                  erpData={mainItemsData}
                   freebiesData={freebiesData}
+                  brandData={brandData}
                 />
               )}
             </ContentWrapper>
@@ -428,7 +459,8 @@ function EventRegistration() {
                 {prints &&
                   prints.map((item, index) => (
                     <Item key={index}>
-                      {item}
+                      {item.image && <ItemImage src={item.image} />}
+                      {item.name}
                       <BsIcons.BsTrash
                         color="#a9a9a9"
                         style={{ float: 'right', cursor: 'pointer' }}
@@ -451,6 +483,7 @@ function EventRegistration() {
                   }}
                   setPrints={setPrints}
                   printsData={printsData}
+                  brandData={brandData}
                 />
               )}
             </ContentWrapper>
@@ -748,14 +781,19 @@ const StepButtonWrapper = styled.div`
   text-decoration: none;
   transition: 0.2s all;
 `;
-const StepNextButton = styled.button`
+const StepNextButton = styled(Button)`
   all: unset;
   width: 40px;
   color: #fff;
+  border: 1px solid #d9d9d9;
   background-color: ${(props) => (props.disabled ? '#d9d9d9' : '#228be6')};
   padding: 0.5rem 2rem;
   cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
   border-radius: 2px;
+  &:hover {
+    background-color: #228be6;
+    color: #fff;
+  }
 `;
 const StepBackButton = styled.button`
   all: unset;
@@ -822,8 +860,11 @@ const AddItem = styled.li`
 `;
 const Item = styled.li`
   width: 100%;
-  height: 40px;
+  /* height: 40px; */
   /* line-height: 40px; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-radius: 5px;
   background-color: #fff;
   color: #000;
@@ -930,5 +971,10 @@ const SelectChannelButtonWrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+`;
+const ItemImage = styled.img`
+  width: 36px;
+  height: 36px;
+  border-radius: 36px;
 `;
 export default EventRegistration;

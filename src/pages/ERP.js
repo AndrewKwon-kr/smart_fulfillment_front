@@ -128,7 +128,19 @@ function ERP() {
     setSendLoading(true);
     setTimeout(() => {
       setSendLoading(false);
-      window.location.reload();
+      swal({
+        title: '수정 완료',
+        text: '다른 아이템을 수정하시겠습니까?',
+        icon: 'success',
+        buttons: { confirm: '예', cancel: '아니오' },
+      }).then((value) => {
+        if (value) {
+          window.location.reload();
+        } else {
+          window.location.href = '/registitem';
+        }
+      });
+      // window.location.reload();
     }, 4000);
   };
 

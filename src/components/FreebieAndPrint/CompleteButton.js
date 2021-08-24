@@ -42,7 +42,7 @@ function CompleteButton(props) {
       .then((response) => {
         try {
           if (response.data.code === 201) {
-            window.location.href = '/registitem';
+            // window.location.href = '/registitem';
             console.log(response.data);
             // setErpLoading(false);
           } else {
@@ -72,7 +72,7 @@ function CompleteButton(props) {
       .then((response) => {
         try {
           if (response.data.code === 201) {
-            window.location.href = '/registitem';
+            // window.location.href = '/registitem';
             console.log(response.data);
             // setErpLoading(false);
           } else {
