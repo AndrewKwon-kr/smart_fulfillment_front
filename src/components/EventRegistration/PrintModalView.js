@@ -4,22 +4,9 @@ import { MainItemSearch, Board, Card } from 'components/EventRegistration';
 import Select from 'react-select';
 
 function PrintModalView(props) {
-  const [categoryValue, setCategoryValue] = useState({ value: 'group' });
   const [brandFilterValue, setBrandFilterValue] = useState({ value: 'all' });
   const [selectedItems, setSelectedItems] = useState([]);
-  const categoryOptions = [
-    { value: 'group', label: '그룹별' },
-    { value: 'product', label: '제품별' },
-  ];
-  const groupList = [
-    { key: 'all', label: '전체 제품' },
-    { key: 'malanghoney', label: '말랑하니 전체 제품' },
-    { key: 'mowmow', label: '모우모우 전체 제품' },
-    { key: 'roomireve', label: '루미레브 전체 제품' },
-    { key: 'margemarket', label: '마지마켓 전체 제품' },
-    { key: 'iblyn', label: '아이블린 전체 제품' },
-    { key: 'bonboon', label: '본분 전체 제품' },
-  ];
+
   const productList = props.printsData.map((item) => {
     return {
       key: item.id,
@@ -59,6 +46,7 @@ function PrintModalView(props) {
             options={brandList}
             defaultValue={brandList[0]}
             onChange={setBrandFilterValue}
+            isSearchable={false}
           />
         </InputWrap>
         <div className="flexbox">

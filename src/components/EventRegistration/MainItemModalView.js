@@ -60,6 +60,7 @@ function MainItemModalView(props) {
             options={categoryOptions}
             defaultValue={categoryOptions[0]}
             onChange={setCategoryValue}
+            isSearchable={false}
           />
         </InputWrap>
         {categoryValue.value === 'product' && (
@@ -68,6 +69,7 @@ function MainItemModalView(props) {
               options={brandList}
               defaultValue={brandList[0]}
               onChange={setBrandFilterValue}
+              isSearchable={false}
             />
           </InputWrap>
         )}

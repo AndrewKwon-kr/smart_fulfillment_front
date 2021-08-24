@@ -11,15 +11,6 @@ function FreebieModalView(props) {
     { value: 'erp', label: 'ERP 등록제품' },
     { value: 'freebie', label: '비매품' },
   ];
-  const groupList = [
-    { key: 'all', label: '전체 제품' },
-    { key: 'malanghoney', label: '말랑하니 전체 제품' },
-    { key: 'mowmow', label: '모우모우 전체 제품' },
-    { key: 'roomireve', label: '루미레브 전체 제품' },
-    { key: 'margemarket', label: '마지마켓 전체 제품' },
-    { key: 'iblyn', label: '아이블린 전체 제품' },
-    { key: 'bonboon', label: '본분 전체 제품' },
-  ];
   const freebieList = props.freebiesData.map((item) => {
     return {
       key: item.id,
@@ -75,6 +66,7 @@ function FreebieModalView(props) {
             options={categoryOptions}
             defaultValue={categoryOptions[0]}
             onChange={setCategoryValue}
+            isSearchable={false}
           />
         </InputWrap>
         <InputWrap className="BrandOption">
@@ -82,6 +74,7 @@ function FreebieModalView(props) {
             options={brandList}
             defaultValue={brandList[0]}
             onChange={setBrandFilterValue}
+            isSearchable={false}
           />
         </InputWrap>
         {categoryValue.value === 'erp' && (

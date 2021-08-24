@@ -48,8 +48,8 @@ function FreebieAndPrint() {
       checked: false,
     },
   ]);
-  const [freebieData, setFreebieData] = useState([]);
-  const [printData, setPrintData] = useState([]);
+  // const [freebieData, setFreebieData] = useState([]);
+  // const [printData, setPrintData] = useState([]);
   const [freebieAndPrintData, setFreebieAndPrintData] = useState([]);
   const [freebieAndPrintLoading, setFreebieAndPrintLoading] = useState(true);
   const [isUpdate, setIsUpdate] = useState(false);
@@ -278,7 +278,7 @@ function FreebieAndPrint() {
             const fData = response.data.result.map((data) => {
               return { ...data, category: response.data.category };
             });
-            setFreebieData(fData);
+            // setFreebieData(fData);
             return fData;
           } else {
             console.log(response.status);
@@ -303,7 +303,7 @@ function FreebieAndPrint() {
             const pData = response.data.result.map((data) => {
               return { ...data, category: response.data.category };
             });
-            setPrintData(pData);
+            // setPrintData(pData);
             return pData;
           } else {
             console.log(response.status);

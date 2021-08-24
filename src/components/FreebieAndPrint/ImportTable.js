@@ -1,7 +1,6 @@
 import React from 'react';
 import { Table } from 'antd';
 import 'antd/dist/antd.css';
-import Search from './Search';
 
 const columns = [
   {
@@ -34,7 +33,6 @@ function ImportTable(props) {
   console.log(props.loading);
   return (
     <div>
-      {/* <Search /> */}
       <Table
         loading={props.loading}
         rowSelection={{

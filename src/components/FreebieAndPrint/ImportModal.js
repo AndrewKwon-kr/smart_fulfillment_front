@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import faker from 'faker/locale/ko';
 import ImportTable from './ImportTable';
-import axios from 'axios';
 
 faker.seed(5);
 
