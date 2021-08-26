@@ -37,18 +37,16 @@ function EventRegistration() {
 
   const [mainItemsData, setMainItemsData] = useState([]);
   const [freebiesData, setFreebiesData] = useState([]);
+  const [freebieErpData, setFreebieErpData] = useState([]);
   const [printsData, setPrintsData] = useState([]);
   const [brandData, setBrandData] = useState([]);
 
   const [minBuyNumber, setMinBuyNumber] = useState(0);
-  const [minBuyPrice, setMinBuyPrice] = useState({
-    price: '',
-    check: false,
-  });
-  const [limitNumber, setLimitNumber] = useState({
-    number: '',
-    check: false,
-  });
+  const [minBuyNumberChecked, setMinBuyNumberChecked] = useState(false);
+  const [minBuyPrice, setMinBuyPrice] = useState(0);
+  const [minBuyPriceChecked, setMinBuyPriceChecked] = useState(false);
+  const [limitNumber, setLimitNumber] = useState(0);
+  const [limitNumberChecked, setLimitNumberChecked] = useState(false);
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
@@ -122,6 +120,30 @@ function EventRegistration() {
         // setLoading(false);
       });
   };
+  const getFreebieErpData = () => {
+    const url = `${process.env.REACT_APP_URL}/freebiegroup/freebies/is-erp/`;
+
+    axios
+      .get(url)
+      .then((response) => {
+        try {
+          if (response.data.result.length !== 0) {
+            console.log(response.data.result);
+            setFreebieErpData(response.data.result);
+            // setLoading(false);
+          } else {
+            console.log(response.status);
+            // setLoading(false);
+          }
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+        }
+      })
+      .catch(() => {
+        alert('error');
+        // setLoading(false);
+      });
+  };
   const getPrintData = () => {
     const url = `${process.env.REACT_APP_URL}/printgroup/prints/`;
 
@@ -146,9 +168,9 @@ function EventRegistration() {
       });
   };
   const getBrandData = () => {
-    const url = `${process.env.REACT_APP_URL}/brand/`;
+    const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items1/`;
     axios.get(url).then((response) => {
-      setBrandData(response.data);
+      setBrandData(response.data.result);
     });
   };
 
@@ -166,6 +188,49 @@ function EventRegistration() {
       getFreebieData();
       getPrintData();
       getBrandData();
+      getFreebieErpData();
+    } else if (stepStatus === 4) {
+      console.log('finaly~~~~~~!!!!!!!');
+      const eventData = {};
+      eventData.title = title;
+      eventData.items = mainItems;
+      eventData.freebies = freebies;
+      eventData.prints = prints;
+      eventData.minimumQuantity = minBuyNumber;
+      eventData.minimumAmount = minBuyPrice;
+      eventData.initialLimitedQuantity = limitNumber;
+      eventData.start = startDate;
+      eventData.end = endDate;
+      eventData.channel = channelData;
+      console.log(eventData);
+
+      const url = `${process.env.REACT_APP_URL}/event/`;
+      const data = {
+        groupId: 1,
+        data: eventData,
+      };
+      console.log(eventData);
+      axios
+        .post(url, data)
+        .then((response) => {
+          try {
+            if (response.data.code === 201) {
+              // window.location.href = '/registitem';
+              console.log(response.data);
+              // setErpLoading(false);
+            } else {
+              console.log(response.status);
+              alert('데이터를 등록해주세요');
+              // setErpLoading(false);
+            }
+          } catch (err) {
+            alert('데이터를 불러올 수 없습니다.');
+          }
+        })
+        .catch(() => {
+          alert('error');
+          // setErpLoading(false);
+        });
     } else setStepStatus(stepStatus + 1);
   };
   const setBackStep = () => {
@@ -228,11 +293,14 @@ function EventRegistration() {
     num = Number(num);
 
     if (type === 'minBuyNumber') {
+      if (num < 2) {
+        num = 2;
+      }
       setMinBuyNumber(num);
     } else if (type === 'minBuyPrice') {
-      setMinBuyPrice({ price: num });
+      setMinBuyPrice(num);
     } else if (type === 'limitNumber') {
-      setLimitNumber({ number: num });
+      setLimitNumber(num);
     }
   };
 
@@ -263,7 +331,27 @@ function EventRegistration() {
       })
     );
   };
+  const [channelData, setChannelData] = useState([]);
 
+  useEffect(() => {
+    const setSelectedChannels = () => {
+      let companyShop = clickedCompanyStore ? ['malanghoney'] : [];
+      let smartStore = clickedSmartStore ? ['스마트스토어'] : [];
+      let besideStore = besideStoreList.filter(
+        (store) => store.checked === true
+      );
+      setChannelData(
+        besideStore
+          .map((store) => store.store)
+          .concat(companyShop)
+          .concat(smartStore)
+      );
+
+      console.log(companyShop, smartStore, besideStore);
+    };
+    setSelectedChannels();
+  }, [clickedCompanyStore, clickedSmartStore, besideStoreList]);
+  console.log(channelData);
   useEffect(() => {
     if (isInfinited === true) {
       setEndDate(null);
@@ -279,7 +367,18 @@ function EventRegistration() {
   useEffect(() => {
     setCountPrint(prints.length);
   }, [prints]);
-
+  console.log('==============');
+  console.log('타이틀 : ', title);
+  console.log('본품 : ', mainItems);
+  console.log('사은품 : ', freebies);
+  console.log('인쇄물 : ', prints);
+  console.log('최소구매개수 : ', minBuyNumber);
+  console.log('최소구매금액', minBuyPrice);
+  console.log('한정수량', limitNumber);
+  console.log('startDate : ', startDate);
+  console.log('endDate : ', endDate);
+  console.log('이벤트 채널 :', channelData);
+  console.log('==============');
   return (
     <Container>
       <StepWrapper>
@@ -494,8 +593,7 @@ function EventRegistration() {
                 disabled={
                   !(
                     mainItems.length !== 0 &&
-                    freebies.length !== 0 &&
-                    prints.length !== 0
+                    (freebies.length !== 0 || prints.length !== 0)
                   )
                 }
               >
@@ -512,12 +610,25 @@ function EventRegistration() {
                 <WayText>최소구매개수</WayText>
                 <InputNumber
                   type="text"
-                  value={minBuyNumber}
+                  value={minBuyNumber || 0}
                   onChange={(e) => {
                     onChangeNumber(e, 'minBuyNumber');
                   }}
+                  disabled={minBuyNumberChecked}
                 />
                 개
+                <WayOption className="checkbox">
+                  <input
+                    type="checkbox"
+                    style={{ marginRight: '10px' }}
+                    value={minBuyNumberChecked}
+                    onChange={() => {
+                      setMinBuyNumber(0);
+                      setMinBuyNumberChecked(!minBuyNumberChecked);
+                    }}
+                  />
+                  해당없음
+                </WayOption>
                 <WayOption className="placeholder">
                   2개 이상부터 입력해주세요
                 </WayOption>
@@ -526,21 +637,22 @@ function EventRegistration() {
                 <WayText>최소구매금액</WayText>
                 <InputNumber
                   type="text"
-                  value={minBuyPrice.price || ''}
+                  value={minBuyPrice || 0}
                   onChange={(e) => {
                     onChangeNumber(e, 'minBuyPrice');
                   }}
-                  disabled={minBuyPrice.check}
+                  disabled={minBuyPriceChecked}
                 />
                 원
                 <WayOption className="checkbox">
                   <input
                     type="checkbox"
                     style={{ marginRight: '10px' }}
-                    value={minBuyPrice.check}
-                    onChange={() =>
-                      setMinBuyPrice({ check: !minBuyPrice.check })
-                    }
+                    value={minBuyPriceChecked}
+                    onChange={() => {
+                      setMinBuyPrice(0);
+                      setMinBuyPriceChecked(!minBuyPriceChecked);
+                    }}
                   />
                   해당없음
                 </WayOption>
@@ -549,21 +661,22 @@ function EventRegistration() {
                 <WayText>한정수량</WayText>
                 <InputNumber
                   type="text"
-                  value={limitNumber.number || ''}
+                  value={limitNumber || 0}
                   onChange={(e) => {
                     onChangeNumber(e, 'limitNumber');
                   }}
-                  disabled={limitNumber.check}
+                  disabled={limitNumberChecked}
                 />
                 개
                 <WayOption className="checkbox">
                   <input
                     type="checkbox"
                     style={{ marginRight: '10px' }}
-                    value={limitNumber.check}
-                    onChange={() =>
-                      setLimitNumber({ check: !limitNumber.check })
-                    }
+                    value={limitNumberChecked}
+                    onChange={() => {
+                      setLimitNumber(0);
+                      setLimitNumberChecked(!limitNumberChecked);
+                    }}
                   />
                   제한없음
                 </WayOption>
@@ -608,18 +721,7 @@ function EventRegistration() {
             </CalenderWrapper>
             <StepButtonWrapper>
               <StepBackButton onClick={setBackStep}>이전</StepBackButton>
-              <StepNextButton
-                onClick={setNextStep}
-                disabled={
-                  !(
-                    mainItems.length !== 0 &&
-                    freebies.length !== 0 &&
-                    prints.length !== 0
-                  )
-                }
-              >
-                다음
-              </StepNextButton>
+              <StepNextButton onClick={setNextStep}>다음</StepNextButton>
             </StepButtonWrapper>
           </>
         )}
@@ -633,19 +735,23 @@ function EventRegistration() {
               <SelectChannelButton
                 icon={CompanyShopIcon}
                 label="자사몰"
-                test={() => setClickedCompanyStore(!clickedCompanyStore)}
+                setChannelData={() =>
+                  setClickedCompanyStore(!clickedCompanyStore)
+                }
                 show={clickedCompanyStore}
               />
               <SelectChannelButton
                 icon={NaverIcon}
                 label="스마트스토어"
-                test={() => setClickedSmartStore(!clickedSmartStore)}
+                setChannelData={() => setClickedSmartStore(!clickedSmartStore)}
                 show={clickedSmartStore}
               />
               <SelectChannelButton
                 icon={BesideShopIcon}
                 label="그 외"
-                test={() => setClickedBesideStore(!clickedBesideStore)}
+                setChannelData={() =>
+                  setClickedBesideStore(!clickedBesideStore)
+                }
                 show={visibleBesideModal}
               />
               {clickedBesideStore && (
@@ -660,9 +766,7 @@ function EventRegistration() {
             </SelectChannelButtonWrapper>
             <StepButtonWrapper>
               <StepBackButton onClick={setBackStep}>이전</StepBackButton>
-              <StepNextButton onClick={setNextStep} disabled={true}>
-                완료
-              </StepNextButton>
+              <StepNextButton onClick={setNextStep}>완료</StepNextButton>
             </StepButtonWrapper>
           </>
         )}

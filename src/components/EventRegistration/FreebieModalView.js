@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { MainItemSearch, Board, Card } from 'components/EventRegistration';
+import {
+  MainItemSearch,
+  Board,
+  Card,
+  FreebieFilterModalView,
+  ErpFilterModalView,
+} from 'components/EventRegistration';
 import Select from 'react-select';
 
 function FreebieModalView(props) {
@@ -11,20 +17,23 @@ function FreebieModalView(props) {
     { value: 'erp', label: 'ERP 등록제품' },
     { value: 'freebie', label: '비매품' },
   ];
-  const freebieList = props.freebiesData.map((item) => {
-    return {
-      key: item.id,
-      label: item.name,
-      image: item.image,
-      brands: item.brands.map((brand) => brand.name),
-    };
-  });
   const erpList = props.erpData.map((item) => {
     return {
       key: item.key,
       label: item.name,
       image: item.image,
       brands: item.brands.map((brand) => brand.name),
+      items: item.items,
+      code: item.code,
+    };
+  });
+  const freebieList = props.freebiesData.map((item) => {
+    return {
+      key: item.id,
+      label: item.name,
+      image: item.image,
+      brands: item.brands.map((brand) => brand.name),
+      items: item.items,
     };
   });
   const brandList = props.brandData.map((brand) => {
@@ -37,8 +46,8 @@ function FreebieModalView(props) {
     props.close();
   };
   const [userInput, setUserInput] = useState('');
-  const [filteredFreebieItem, setFilteredFreebieItem] = useState(freebieList);
-  const [filteredErpItem, setFilteredErpItem] = useState(erpList);
+  const [searchedErpItem, setSearchedErpItem] = useState(erpList);
+  const [searchedFreebieItem, setSearchedFreebieItem] = useState(freebieList);
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -46,15 +55,38 @@ function FreebieModalView(props) {
   };
   const handleClick = () => {
     if (categoryValue.value === 'erp') {
-      setFilteredErpItem(
+      setSearchedErpItem(
         erpList.filter((item) => item.label.includes(userInput))
       );
     } else if (categoryValue.value === 'freebie') {
-      setFilteredFreebieItem(
+      setSearchedFreebieItem(
         freebieList.filter((item) => item.label.includes(userInput))
       );
     }
   };
+
+  const [erpItemFilterVisible, setErpItemFilterVisible] = useState(false);
+  const [freebieItemFilterVisible, setFreebieItemFilterVisible] =
+    useState(false);
+  const openModal = (type) => {
+    if (type === 'erp') {
+      setErpItemFilterVisible(true);
+    } else {
+      setFreebieItemFilterVisible(true);
+    }
+  };
+  function closeModal(type) {
+    if (type === 'erp') {
+      setErpItemFilterVisible(false);
+    } else {
+      setFreebieItemFilterVisible(false);
+    }
+  }
+
+  const [filteredErpItem, setFilteredErpItem] = useState([]);
+  const [filteredFreebieItem, setFilteredFreebieItem] = useState([]);
+  console.log('보낼 정보 : ', selectedItems);
+  console.log('필터링된 아이템 : ', filteredErpItem);
 
   return (
     <Modal>
@@ -82,9 +114,13 @@ function FreebieModalView(props) {
             <Board
               id="board-1"
               className="board"
+              type="FreebieModalView_erp_remove"
               setSelectedItems={setSelectedItems}
+              erpList={erpList}
+              setFilteredErpItem={setFilteredErpItem}
+              selectedItems={selectedItems}
             >
-              {filteredErpItem
+              {searchedErpItem
                 .filter(
                   (item) =>
                     item.brands.includes(brandFilterValue.label) ||
@@ -111,9 +147,13 @@ function FreebieModalView(props) {
             <Board
               id="board-2"
               className="board"
+              type="FreebieModalView_freebie_remove"
               setSelectedItems={setSelectedItems}
+              freebieList={freebieList}
+              setFilteredFreebieItem={setFilteredFreebieItem}
+              selectedItems={selectedItems}
             >
-              {filteredFreebieItem
+              {searchedFreebieItem
                 .filter(
                   (item) =>
                     item.brands.includes(brandFilterValue.label) ||
@@ -142,14 +182,24 @@ function FreebieModalView(props) {
             <Board
               id="board-3"
               className="board"
+              type="FreebieModalView_erp_add"
               setSelectedItems={setSelectedItems}
+              erpList={erpList}
+              openModal={() => openModal('erp')}
+              setFilteredErpItem={setFilteredErpItem}
+              selectedItems={selectedItems}
             ></Board>
           )}
           {categoryValue.value === 'freebie' && (
             <Board
               id="board-4"
               className="board"
+              type="FreebieModalView_freebie_add"
               setSelectedItems={setSelectedItems}
+              freebieList={freebieList}
+              openModal={() => openModal('freebie')}
+              setFilteredFreebieItem={setFilteredFreebieItem}
+              selectedItems={selectedItems}
             ></Board>
           )}
         </div>
@@ -161,6 +211,28 @@ function FreebieModalView(props) {
             선택
           </Button>
         </ButtonWrapper>
+        {erpItemFilterVisible && (
+          <ErpFilterModalView
+            filteredErpItem={filteredErpItem}
+            setFilteredErpItem={setFilteredErpItem}
+            selectedItems={selectedItems}
+            setSelectedItems={setSelectedItems}
+            close={() => {
+              closeModal('erp');
+            }}
+          />
+        )}
+        {freebieItemFilterVisible && (
+          <FreebieFilterModalView
+            filteredFreebieItem={filteredFreebieItem}
+            setFilteredFreebieItem={setFilteredFreebieItem}
+            selectedItems={selectedItems}
+            setSelectedItems={setSelectedItems}
+            close={() => {
+              closeModal('freebie');
+            }}
+          />
+        )}
       </BoardContainer>
     </Modal>
   );

@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { MainItemSearch, Board, Card } from 'components/EventRegistration';
+import {
+  MainItemSearch,
+  Board,
+  Card,
+  PrintFilterModalView,
+} from 'components/EventRegistration';
 import Select from 'react-select';
 
 function PrintModalView(props) {
   const [brandFilterValue, setBrandFilterValue] = useState({ value: 'all' });
   const [selectedItems, setSelectedItems] = useState([]);
 
-  const productList = props.printsData.map((item) => {
+  const printList = props.printsData.map((item) => {
     return {
       key: item.id,
       label: item.name,
       image: item.image,
       brands: item.brands.map((brand) => brand.name),
+      items: item.items,
     };
   });
   const brandList = props.brandData.map((brand) => {
@@ -25,16 +31,29 @@ function PrintModalView(props) {
     props.close();
   };
   const [userInput, setUserInput] = useState('');
-  const [filteredPrintItem, setFilteredPrintItem] = useState(productList);
+  const [searchedPrintItem, setSearchedPrintItem] = useState(printList);
   const handleChange = (e) => {
     const value = e.target.value;
     setUserInput(value);
   };
   const handleClick = () => {
-    setFilteredPrintItem(
-      productList.filter((item) => item.label.includes(userInput))
+    setSearchedPrintItem(
+      printList.filter((item) => item.label.includes(userInput))
     );
   };
+
+  const [printItemFilterVisible, setPrintItemFilterVisible] = useState(false);
+
+  const openModal = (type) => {
+    setPrintItemFilterVisible(true);
+  };
+  function closeModal(type) {
+    setPrintItemFilterVisible(false);
+  }
+
+  const [filteredPrintItem, setFilteredPrintItem] = useState([]);
+  console.log('보낼 정보 : ', selectedItems);
+  console.log('필터링된 아이템 : ', filteredPrintItem);
 
   return (
     <Modal>
@@ -53,9 +72,13 @@ function PrintModalView(props) {
           <Board
             id="board-1"
             className="board"
+            type="PrintModalView_print_remove"
             setSelectedItems={setSelectedItems}
+            printList={printList}
+            setFilteredPrintItem={setFilteredPrintItem}
+            selectedItems={selectedItems}
           >
-            {filteredPrintItem
+            {searchedPrintItem
               .filter(
                 (item) =>
                   item.brands.includes(brandFilterValue.label) ||
@@ -82,7 +105,12 @@ function PrintModalView(props) {
           <Board
             id="board-3"
             className="board"
+            type="PrintModalView_print_add"
             setSelectedItems={setSelectedItems}
+            printList={printList}
+            openModal={() => openModal()}
+            setFilteredPrintItem={setFilteredPrintItem}
+            selectedItems={selectedItems}
           ></Board>
         </div>
         <ButtonWrapper>
@@ -93,6 +121,17 @@ function PrintModalView(props) {
             선택
           </Button>
         </ButtonWrapper>
+        {printItemFilterVisible && (
+          <PrintFilterModalView
+            filteredPrintItem={filteredPrintItem}
+            setFilteredPrintItem={setFilteredPrintItem}
+            selectedItems={selectedItems}
+            setSelectedItems={setSelectedItems}
+            close={() => {
+              closeModal('erp');
+            }}
+          />
+        )}
       </BoardContainer>
     </Modal>
   );

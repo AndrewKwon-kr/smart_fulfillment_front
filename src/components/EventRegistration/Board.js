@@ -12,9 +12,148 @@ function Board(props) {
 
       e.target.appendChild(card);
     }
+    console.log(props.type);
+    if (props.type === 'mainItemModalView_group_add') {
+      const group = props.groupList.filter(
+        (group) => group.key === Number(cardId)
+      )[0];
 
-    const cards = document.getElementsByClassName('board')[1].childNodes;
-    setItems(cards);
+      props.setFilteredGroupItem(
+        props.groupList
+          .filter((group) => group.key === Number(cardId))[0]
+          .itemgroups.map((item) => {
+            return {
+              ...item,
+              brand: group.name,
+              label: group.label,
+              code: item.code,
+              groupId: Number(cardId),
+            };
+          })
+      );
+      const cards = document.getElementsByClassName('board')[1].childNodes;
+      setItems(cards);
+      props.openModal();
+    }
+    if (props.type === 'mainItemModalView_group_remove') {
+      props.setSelectedItems(
+        props.selectedItems.filter((item) => item.id !== Number(cardId))
+      );
+    }
+
+    if (props.type === 'mainItemModalView_product_add') {
+      const group = props.productList.filter(
+        (product) => product.key === Number(cardId)
+      )[0];
+
+      props.setFilteredMainItem(
+        props.productList
+          .filter((product) => product.key === Number(cardId))[0]
+          .items.map((item) => {
+            return {
+              ...item,
+              brand: group.brand,
+              label: group.label,
+              groupCode: group.code,
+              key: item.id,
+              groupId: Number(cardId),
+            };
+          })
+      );
+      const cards = document.getElementsByClassName('board')[1].childNodes;
+      setItems(cards);
+      props.openModal();
+    }
+    if (props.type === 'mainItemModalView_product_remove') {
+      props.setSelectedItems(
+        props.selectedItems.filter((item) => item.id !== Number(cardId))
+      );
+    }
+
+    if (props.type === 'FreebieModalView_erp_add') {
+      const group = props.erpList.filter(
+        (product) => product.key === Number(cardId)
+      )[0];
+
+      props.setFilteredErpItem(
+        props.erpList
+          .filter((product) => product.key === Number(cardId))[0]
+          .items.map((item) => {
+            return {
+              ...item,
+              brands: group.brands.join(', '),
+              label: group.label,
+              groupCode: group.code,
+              key: item.id,
+              groupId: Number(cardId),
+            };
+          })
+      );
+      const cards = document.getElementsByClassName('board')[1].childNodes;
+      setItems(cards);
+      props.openModal();
+    }
+    if (props.type === 'FreebieModalView_erp_remove') {
+      props.setSelectedItems(
+        props.selectedItems.filter((item) => item.id !== Number(cardId))
+      );
+    }
+
+    if (props.type === 'FreebieModalView_freebie_add') {
+      const group = props.freebieList.filter(
+        (product) => product.key === Number(cardId)
+      )[0];
+
+      props.setFilteredFreebieItem(
+        props.freebieList
+          .filter((product) => product.key === Number(cardId))[0]
+          .items.map((item) => {
+            return {
+              ...item,
+              brands: group.brands.join(', '),
+              label: group.label,
+              key: item.id,
+              groupId: Number(cardId),
+            };
+          })
+      );
+      const cards = document.getElementsByClassName('board')[1].childNodes;
+      setItems(cards);
+      props.openModal();
+    }
+    if (props.type === 'FreebieModalView_freebie_remove') {
+      props.setSelectedItems(
+        props.selectedItems.filter((item) => item.id !== Number(cardId))
+      );
+    }
+
+    if (props.type === 'PrintModalView_print_add') {
+      const group = props.printList.filter(
+        (product) => product.key === Number(cardId)
+      )[0];
+
+      props.setFilteredPrintItem(
+        props.printList
+          .filter((product) => product.key === Number(cardId))[0]
+          .items.map((item) => {
+            return {
+              ...item,
+              brands: group.brands.join(', '),
+              label: group.label,
+              key: item.id,
+              groupId: Number(cardId),
+            };
+          })
+      );
+      const cards = document.getElementsByClassName('board')[1].childNodes;
+      setItems(cards);
+      props.openModal();
+    }
+    if (props.type === 'PrintModalView_print_remove') {
+      props.setSelectedItems(
+        props.selectedItems.filter((item) => item.id !== Number(cardId))
+      );
+    }
   };
 
   const dragOver = (e) => {
@@ -22,14 +161,15 @@ function Board(props) {
   };
 
   function setItems(cards) {
-    const items = [];
-    cards.forEach((card) => {
+    const items = props.selectedItems || [];
+
+    for (let i = items.length; i < cards.length; i++) {
       items.push({
-        id: card.id,
-        name: card.innerText,
-        image: card.childNodes[0].src,
+        id: Number(cards[i].id),
+        name: cards[i].innerText,
+        image: cards[i].childNodes[0].src,
       });
-    });
+    }
     props.setSelectedItems(items);
   }
 

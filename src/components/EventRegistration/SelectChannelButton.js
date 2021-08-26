@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import * as AiIcons from 'react-icons/ai';
 
-function SelectChannelButton({ icon, label, show, test }) {
+function SelectChannelButton({ icon, label, show, setChannelData }) {
   return (
-    <Wrapper onClick={test} show={show}>
+    <Wrapper onClick={setChannelData} show={show}>
       <CheckedIcon show={show}>
         <AiIcons.AiFillCheckCircle size="24" color="#228be6" />
       </CheckedIcon>

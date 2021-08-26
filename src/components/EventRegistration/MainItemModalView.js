@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { MainItemSearch, Board, Card } from 'components/EventRegistration';
+import {
+  MainItemSearch,
+  Board,
+  Card,
+  MainItemFilterModalView,
+  GroupItemFilterModalView,
+} from 'components/EventRegistration';
 import Select from 'react-select';
 
 function MainItemModalView(props) {
@@ -11,44 +17,88 @@ function MainItemModalView(props) {
     { value: 'group', label: '그룹별' },
     { value: 'product', label: '제품별' },
   ];
-  const groupList = [
-    { key: 'all', label: '전체 제품' },
-    { key: 'malanghoney', label: '말랑하니 전체 제품' },
-    { key: 'mowmow', label: '모우모우 전체 제품' },
-    { key: 'roomireve', label: '루미레브 전체 제품' },
-    { key: 'margemarket', label: '마지마켓 전체 제품' },
-    { key: 'iblyn', label: '아이블린 전체 제품' },
-    { key: 'bonboon', label: '본분 전체 제품' },
-  ];
+  // const groupList = [
+  //   { key: 'all', label: '전체 제품' },
+  //   { key: 'malanghoney', label: '말랑하니 전체 제품' },
+  //   { key: 'mowmow', label: '모우모우 전체 제품' },
+  //   { key: 'roomireve', label: '루미레브 전체 제품' },
+  //   { key: 'margemarket', label: '마지마켓 전체 제품' },
+  //   { key: 'iblyn', label: '아이블린 전체 제품' },
+  //   { key: 'bonboon', label: '본분 전체 제품' },
+  // ];
   const productList = props.mainItemsData.map((item) => {
     return {
       key: item.key,
       label: item.name,
       image: item.image,
       brand: item.brands[0].name,
+      items: item.items,
+      code: item.code,
     };
   });
   const brandList = props.brandData.map((brand) => {
-    return { key: brand.id, value: brand.code, label: brand.name };
+    return {
+      key: brand.id,
+      value: brand.code,
+      label: brand.name,
+    };
   });
   brandList.unshift({ key: 'all', value: 'all', label: '전체 브랜드' });
+  const groupList = props.brandData.map((brand) => {
+    return {
+      key: brand.id,
+      value: brand.code,
+      name: brand.name,
+      label: brand.name + ' 전체 제품',
+      itemgroups: brand.itemgroups,
+    };
+  });
+  groupList.unshift({ key: 'all', value: 'all', label: '전체 브랜드' });
 
   const setMainItems = () => {
-    console.log(selectedItems);
     props.setMainItems(selectedItems);
     props.close();
   };
   const [userInput, setUserInput] = useState('');
-  const [filteredMainItem, setFilteredMainItem] = useState(productList);
+  const [searchedMainItem, setSearchedMainItem] = useState(productList);
+  const [searchedGroupItem, setSearchedGroupItem] = useState(groupList);
   const handleChange = (e) => {
     const value = e.target.value;
     setUserInput(value);
   };
   const handleClick = () => {
-    setFilteredMainItem(
-      productList.filter((item) => item.label.includes(userInput))
-    );
+    if (categoryValue.value === 'group') {
+      setSearchedGroupItem(
+        groupList.filter((item) => item.label.includes(userInput))
+      );
+    } else if (categoryValue.value === 'product') {
+      setSearchedMainItem(
+        productList.filter((item) => item.label.includes(userInput))
+      );
+    }
   };
+
+  const [mainItemFilterVisible, setMainItemFilterVisible] = useState(false);
+  const [groupItemFilterVisible, setGroupItemFilterVisible] = useState(false);
+  const openModal = (type) => {
+    if (type === 'main') {
+      setMainItemFilterVisible(true);
+    } else {
+      setGroupItemFilterVisible(true);
+    }
+  };
+  function closeModal(type) {
+    if (type === 'main') {
+      setMainItemFilterVisible(false);
+    } else {
+      setGroupItemFilterVisible(false);
+    }
+  }
+
+  const [filteredMainItem, setFilteredMainItem] = useState([]);
+  const [filteredGroupItem, setFilteredGroupItem] = useState([]);
+  console.log('보낼 정보 : ', selectedItems);
+  console.log('필터링된 아이템 : ', filteredGroupItem);
 
   return (
     <Modal>
@@ -78,7 +128,12 @@ function MainItemModalView(props) {
             <Board
               id="board-1"
               className="board"
+              type="mainItemModalView_group_remove"
               setSelectedItems={setSelectedItems}
+              filteredItem={searchedGroupItem}
+              groupList={groupList}
+              setFilteredGroupItem={setFilteredGroupItem}
+              selectedItems={selectedItems}
             >
               {groupList.map((group) => (
                 <div key={group.key}>
@@ -101,10 +156,14 @@ function MainItemModalView(props) {
             <Board
               id="board-2"
               className="board"
+              type="mainItemModalView_product_remove"
               setSelectedItems={setSelectedItems}
-              filteredItem={filteredMainItem}
+              filteredItem={searchedMainItem}
+              productList={productList}
+              setFilteredMainItem={setFilteredMainItem}
+              selectedItems={selectedItems}
             >
-              {filteredMainItem
+              {searchedMainItem
                 .filter(
                   (item) =>
                     item.brand === brandFilterValue.label ||
@@ -135,6 +194,11 @@ function MainItemModalView(props) {
               id="board-3"
               className="board"
               setSelectedItems={setSelectedItems}
+              groupList={groupList}
+              openModal={() => openModal('group')}
+              setFilteredGroupItem={setFilteredGroupItem}
+              type="mainItemModalView_group_add"
+              selectedItems={selectedItems}
             ></Board>
           )}
           {categoryValue.value === 'product' && (
@@ -142,6 +206,11 @@ function MainItemModalView(props) {
               id="board-4"
               className="board"
               setSelectedItems={setSelectedItems}
+              productList={productList}
+              openModal={() => openModal('main')}
+              setFilteredMainItem={setFilteredMainItem}
+              type="mainItemModalView_product_add"
+              selectedItems={selectedItems}
             ></Board>
           )}
         </div>
@@ -154,6 +223,28 @@ function MainItemModalView(props) {
           </Button>
         </ButtonWrapper>
       </BoardContainer>
+      {mainItemFilterVisible && (
+        <MainItemFilterModalView
+          filteredMainItem={filteredMainItem}
+          setFilteredMainItem={setFilteredMainItem}
+          selectedItems={selectedItems}
+          setSelectedItems={setSelectedItems}
+          close={() => {
+            closeModal('main');
+          }}
+        />
+      )}
+      {groupItemFilterVisible && (
+        <GroupItemFilterModalView
+          filteredGroupItem={filteredGroupItem}
+          setFilteredGroupItem={setFilteredGroupItem}
+          selectedItems={selectedItems}
+          setSelectedItems={setSelectedItems}
+          close={() => {
+            closeModal('group');
+          }}
+        />
+      )}
     </Modal>
   );
 }
@@ -254,7 +345,7 @@ const Button = styled.button`
   }
 `;
 const ButtonWrapper = styled.div`
-  padding-bottom: 35px;
+  /* padding-bottom: 35px; */
   float: right;
 `;
 const InputWrap = styled.div`
