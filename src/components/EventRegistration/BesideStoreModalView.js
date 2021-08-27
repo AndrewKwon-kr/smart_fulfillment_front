@@ -83,9 +83,9 @@ function BesideStoreModalView(props) {
               <input
                 type="checkbox"
                 checked={store.checked}
-                onChange={(e) => props.onChange(e, index)}
+                onChange={(e) => props.onChange(e, store.id)}
               />
-              {store.store}
+              {store.name}
             </Channel>
           ))}
         </ChannelWrapper>

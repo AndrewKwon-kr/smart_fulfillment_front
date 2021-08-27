@@ -17,6 +17,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
 import axios from 'axios';
 import { Button } from 'antd';
+import swal from 'sweetalert';
 
 function EventRegistration() {
   const [title, setTitle] = useState('');
@@ -58,19 +59,10 @@ function EventRegistration() {
   const [clickedBesideStore, setClickedBesideStore] = useState(false);
   const [visibleBesideModal, setVisibleBesideModal] = useState(false);
   const [besideStoreList, setBesideStoreList] = useState([
-    { id: 0, store: '지마켓', checked: false },
-    { id: 1, store: '옥션', checked: false },
-    { id: 2, store: '11번가', checked: false },
-    { id: 3, store: '위메프', checked: false },
-    { id: 4, store: 'SSG', checked: false },
-    { id: 5, store: '롯데마트', checked: false },
-    { id: 6, store: '지마켓', checked: false },
-    { id: 7, store: '옥션', checked: false },
-    { id: 8, store: '11번가sfsadfasdfs', checked: false },
-    { id: 9, store: '위메프', checked: false },
-    { id: 10, store: 'SSG', checked: false },
-    { id: 11, store: '롯데마트', checked: false },
+    { id: 2, name: '지마켓', checked: false },
   ]);
+
+  const [postLoading, setPostLoading] = useState(false);
   const getMainItemData = () => {
     const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
 
@@ -190,47 +182,8 @@ function EventRegistration() {
       getBrandData();
       getFreebieErpData();
     } else if (stepStatus === 4) {
-      console.log('finaly~~~~~~!!!!!!!');
-      const eventData = {};
-      eventData.title = title;
-      eventData.items = mainItems;
-      eventData.freebies = freebies;
-      eventData.prints = prints;
-      eventData.minimumQuantity = minBuyNumber;
-      eventData.minimumAmount = minBuyPrice;
-      eventData.initialLimitedQuantity = limitNumber;
-      eventData.start = startDate;
-      eventData.end = endDate;
-      eventData.channel = channelData;
-      console.log(eventData);
-
-      const url = `${process.env.REACT_APP_URL}/event/`;
-      const data = {
-        groupId: 1,
-        data: eventData,
-      };
-      console.log(eventData);
-      axios
-        .post(url, data)
-        .then((response) => {
-          try {
-            if (response.data.code === 201) {
-              // window.location.href = '/registitem';
-              console.log(response.data);
-              // setErpLoading(false);
-            } else {
-              console.log(response.status);
-              alert('데이터를 등록해주세요');
-              // setErpLoading(false);
-            }
-          } catch (err) {
-            alert('데이터를 불러올 수 없습니다.');
-          }
-        })
-        .catch(() => {
-          alert('error');
-          // setErpLoading(false);
-        });
+      postEventData();
+      enterLoading();
     } else setStepStatus(stepStatus + 1);
   };
   const setBackStep = () => {
@@ -335,17 +288,16 @@ function EventRegistration() {
 
   useEffect(() => {
     const setSelectedChannels = () => {
-      let companyShop = clickedCompanyStore ? ['malanghoney'] : [];
-      let smartStore = clickedSmartStore ? ['스마트스토어'] : [];
+      let companyShop = clickedCompanyStore
+        ? [{ id: 1, name: 'malanghoney' }]
+        : [];
+      let smartStore = clickedSmartStore
+        ? [{ id: 3, name: '스마트스토어' }]
+        : [];
       let besideStore = besideStoreList.filter(
         (store) => store.checked === true
       );
-      setChannelData(
-        besideStore
-          .map((store) => store.store)
-          .concat(companyShop)
-          .concat(smartStore)
-      );
+      setChannelData(besideStore.concat(companyShop).concat(smartStore));
 
       console.log(companyShop, smartStore, besideStore);
     };
@@ -357,6 +309,87 @@ function EventRegistration() {
       setEndDate(null);
     }
   }, [isInfinited]);
+  const postEventData = () => {
+    const eventData = {};
+
+    eventData.title = title;
+    eventData.items = mainItems;
+    eventData.freebies = freebies;
+    eventData.prints = prints;
+    eventData.minimumQuantity = minBuyNumber;
+    eventData.minimumAmount = minBuyPrice;
+    eventData.initialLimitedQuantity = limitNumber;
+    eventData.start = startDate;
+    eventData.end = endDate;
+    eventData.channels = channelData;
+
+    const url = `${process.env.REACT_APP_URL}/event/`;
+    const data = {
+      groupId: 1,
+      data: eventData,
+    };
+
+    axios
+      .post(url, data)
+      .then((response) => {
+        try {
+          if (response.data.code === 201) {
+            // window.location.href = '/registitem';
+            console.log(response.data);
+            // setErpLoading(false);
+          } else {
+            console.log(response.status);
+            alert('데이터를 등록해주세요');
+            // setErpLoading(false);
+          }
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+        }
+      })
+      .catch(() => {
+        alert('error');
+        // setErpLoading(false);
+      });
+  };
+  const enterLoading = (type) => {
+    setPostLoading(true);
+    setTimeout(() => {
+      setPostLoading(false);
+      swal({
+        title: '등록 완료',
+        // text: '다른 아이템을 등록하시겠습니까?',
+        icon: 'success',
+        buttons: '확인',
+      }).then((value) => {
+        if (value) {
+          // window.location.reload();
+        }
+        // else {
+        //   window.location.href = '/registitem';
+        // }
+      });
+    }, 4000);
+
+    // else if (type === 'complete') {
+    //   setLoading(true);
+    //   setTimeout(() => {
+    //     setLoading(false);
+    //     swal({
+    //       title: '수정 완료',
+    //       text: '다른 아이템을 등록하시겠습니까?',
+    //       icon: 'success',
+    //       buttons: { confirm: '예', cancel: '아니오' },
+    //     }).then((value) => {
+    //       if (value) {
+    //         window.location.reload();
+    //       } else {
+    //         window.location.href = '/registitem';
+    //       }
+    //     });
+    //   }, 4000);
+
+    // }
+  };
 
   useEffect(() => {
     setCountMainItem(mainItems.length);
@@ -375,7 +408,7 @@ function EventRegistration() {
   console.log('최소구매개수 : ', minBuyNumber);
   console.log('최소구매금액', minBuyPrice);
   console.log('한정수량', limitNumber);
-  console.log('startDate : ', startDate);
+  console.log('startDate : ', startDate, typeof startDate);
   console.log('endDate : ', endDate);
   console.log('이벤트 채널 :', channelData);
   console.log('==============');
@@ -423,17 +456,19 @@ function EventRegistration() {
           </EventInfomation>
           <EventInfomation>
             <EventInfomationText>사은품</EventInfomationText>
-            {freebies &&
-              freebies.map((item) => {
-                return `${item.name}, `;
-              })}
+            {freebies
+              ? freebies.map((item) => {
+                  return `${item.name}, `;
+                })
+              : '-'}
           </EventInfomation>
           <EventInfomation>
             <EventInfomationText>인쇄물</EventInfomationText>
-            {prints &&
-              prints.map((item) => {
-                return `${item.name}, `;
-              })}
+            {prints
+              ? prints.map((item) => {
+                  return `${item.name}, `;
+                })
+              : '-'}
           </EventInfomation>
         </EventInfomationWrapper>
         {stepStatus === 1 && (
@@ -622,6 +657,7 @@ function EventRegistration() {
                     type="checkbox"
                     style={{ marginRight: '10px' }}
                     value={minBuyNumberChecked}
+                    checked={minBuyNumberChecked}
                     onChange={() => {
                       setMinBuyNumber(0);
                       setMinBuyNumberChecked(!minBuyNumberChecked);
@@ -649,6 +685,7 @@ function EventRegistration() {
                     type="checkbox"
                     style={{ marginRight: '10px' }}
                     value={minBuyPriceChecked}
+                    checked={minBuyPriceChecked}
                     onChange={() => {
                       setMinBuyPrice(0);
                       setMinBuyPriceChecked(!minBuyPriceChecked);
@@ -673,6 +710,7 @@ function EventRegistration() {
                     type="checkbox"
                     style={{ marginRight: '10px' }}
                     value={limitNumberChecked}
+                    checked={limitNumberChecked}
                     onChange={() => {
                       setLimitNumber(0);
                       setLimitNumberChecked(!limitNumberChecked);
@@ -714,6 +752,7 @@ function EventRegistration() {
                   type="checkbox"
                   style={{ marginRight: '10px' }}
                   value={isInfinited}
+                  checked={isInfinited}
                   onChange={() => setIsInfinited(!isInfinited)}
                 />
                 제한없음
@@ -766,7 +805,9 @@ function EventRegistration() {
             </SelectChannelButtonWrapper>
             <StepButtonWrapper>
               <StepBackButton onClick={setBackStep}>이전</StepBackButton>
-              <StepNextButton onClick={setNextStep}>완료</StepNextButton>
+              <StepNextButton onClick={setNextStep} loading={postLoading}>
+                {postLoading ? '' : '완료'}
+              </StepNextButton>
             </StepButtonWrapper>
           </>
         )}

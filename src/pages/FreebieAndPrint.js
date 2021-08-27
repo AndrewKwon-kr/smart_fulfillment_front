@@ -239,11 +239,7 @@ function FreebieAndPrint() {
             window.location.href = '/registitem';
           }
         });
-        // window.location.reload();
       }, 4000);
-      // setTimeout(() => {
-      //   setFreebieAndPrintLoading(false);
-      // }, 4000);
     } else if (type === 'complete') {
       setLoading(true);
       setTimeout(() => {
@@ -260,11 +256,7 @@ function FreebieAndPrint() {
             window.location.href = '/registitem';
           }
         });
-        // window.location.reload();
       }, 4000);
-      // setTimeout(() => {
-      //   setLoading(false);
-      // }, 4000);
     }
   };
 
