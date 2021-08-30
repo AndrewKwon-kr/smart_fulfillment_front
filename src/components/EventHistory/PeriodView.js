@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -57,6 +57,31 @@ const events = [
 //   },
 // ].map((x) => new Task(x));
 function PeriodView(props) {
+  const [eventData, setEventData] = useState([]);
+
+  function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+  console.log(eventData);
+  useEffect(() => {
+    setEventData(
+      props.eventData.map((data) => {
+        return {
+          ...data,
+          start: data.startDate.substring(0, 10),
+          end: data.endDate ? data.endDate.substring(0, 10) : '',
+          color: getRandomColor(),
+          // textColor: getRandomColor(),
+        };
+      })
+    );
+  }, [props.eventData]);
+
   return (
     <div className="App">
       <FullCalendar
@@ -72,8 +97,7 @@ function PeriodView(props) {
         //     click: () => console.log('new event'),
         //   },
         // }}
-        events={events}
-        eventColor="#189AB4"
+        events={eventData}
         nowIndicator
         // dateClick={(e) => console.log(e.dateStr)}
         eventClick={(e) => swal(e.event.title)}

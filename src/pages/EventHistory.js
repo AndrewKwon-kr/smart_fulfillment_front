@@ -1,15 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {
   PromotionView,
   PeriodView,
   SituationView,
 } from 'components/EventHistory';
-import eventData from '../eventData';
+// import eventData from '../eventData';
+import axios from 'axios';
+import { Spin } from 'antd';
+import swal from 'sweetalert';
 
 function EventHistory() {
   const [categoryValue, setCategoryValue] = useState('promotion');
+  const [eventData, setEventData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const getEventData = () => {
+    const url = `${process.env.REACT_APP_URL}/event/`;
 
+    axios
+      .get(url)
+      .then((response) => {
+        try {
+          if (response.data.result.length !== 0) {
+            console.log(response.data.result);
+            setEventData(response.data.result);
+            setLoading(false);
+          } else if (response.data.result.length === 0) {
+            swal('등록된 이벤트가 없습니다.');
+            setLoading(false);
+          }
+        } catch (err) {
+          console.log(err);
+          alert('데이터를 불러올 수 없습니다.');
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        alert('error');
+        setLoading(false);
+      });
+  };
+  useEffect(() => {
+    getEventData();
+  }, []);
   return (
     <Container>
       <CategoryHeader>
@@ -33,15 +66,19 @@ function EventHistory() {
           현황별
         </Category>
       </CategoryHeader>
-      <Wrapper>
-        {categoryValue === 'promotion' && (
-          <PromotionView eventData={eventData} />
-        )}
-        {categoryValue === 'period' && <PeriodView eventData={eventData} />}
-        {categoryValue === 'situation' && (
-          <SituationView eventData={eventData} />
-        )}
-      </Wrapper>
+      {loading ? (
+        <Spinner size="large" tip="데이터를 불러오는 중입니다..." />
+      ) : (
+        <Wrapper>
+          {categoryValue === 'promotion' && (
+            <PromotionView eventData={eventData} />
+          )}
+          {categoryValue === 'period' && <PeriodView eventData={eventData} />}
+          {categoryValue === 'situation' && (
+            <SituationView eventData={eventData} />
+          )}
+        </Wrapper>
+      )}
     </Container>
   );
 }
@@ -87,11 +124,14 @@ const Category = styled.div`
 `;
 const Wrapper = styled.div`
   position: relative;
-  top: 100px;
+  top: 40px;
   display: inline-block;
   width: 80%;
   text-align: start;
   padding-bottom: 40px;
+`;
+const Spinner = styled(Spin)`
+  margin-top: 80px;
 `;
 
 export default EventHistory;

@@ -223,6 +223,8 @@ function EventRegistration() {
       setFreebies(freebies.filter((item) => item !== freebies[index]));
     } else if (type === 'print') {
       setPrints(prints.filter((item) => item !== prints[index]));
+    } else if (type === 'all') {
+      setMainItems([]);
     }
   };
 
@@ -298,12 +300,10 @@ function EventRegistration() {
         (store) => store.checked === true
       );
       setChannelData(besideStore.concat(companyShop).concat(smartStore));
-
-      console.log(companyShop, smartStore, besideStore);
     };
     setSelectedChannels();
   }, [clickedCompanyStore, clickedSmartStore, besideStoreList]);
-  console.log(channelData);
+
   useEffect(() => {
     if (isInfinited === true) {
       setEndDate(null);
@@ -449,25 +449,20 @@ function EventRegistration() {
           </EventInfomation>
           <EventInfomation>
             <EventInfomationText>본품</EventInfomationText>
-            {mainItems &&
-              mainItems.map((item) => {
-                return `${item.name}, `;
-              })}
+            {mainItems.length !== brandData.length
+              ? mainItems.map((item) => item.name).join(', ')
+              : '전체 브랜드'}
           </EventInfomation>
           <EventInfomation>
             <EventInfomationText>사은품</EventInfomationText>
-            {freebies
-              ? freebies.map((item) => {
-                  return `${item.name}, `;
-                })
+            {freebies.length !== 0
+              ? freebies.map((item) => item.name).join(', ')
               : '-'}
           </EventInfomation>
           <EventInfomation>
             <EventInfomationText>인쇄물</EventInfomationText>
-            {prints
-              ? prints.map((item) => {
-                  return `${item.name}, `;
-                })
+            {prints.length !== 0
+              ? prints.map((item) => item.name).join(', ')
               : '-'}
           </EventInfomation>
         </EventInfomationWrapper>
@@ -509,7 +504,8 @@ function EventRegistration() {
                 </ReloadButton>
               </LabelWrapper>
               <ItemWrapper>
-                {mainItems &&
+                {brandData.length !== mainItems.length ? (
+                  mainItems &&
                   mainItems.map((item, index) => (
                     <Item key={index}>
                       {item.image && <ItemImage src={item.image} />}
@@ -520,7 +516,17 @@ function EventRegistration() {
                         onClick={() => removeItem(index, 'main')}
                       />
                     </Item>
-                  ))}
+                  ))
+                ) : (
+                  <Item>
+                    전체 브랜드
+                    <BsIcons.BsTrash
+                      color="#a9a9a9"
+                      style={{ float: 'right', cursor: 'pointer' }}
+                      onClick={() => removeItem(1, 'all')}
+                    />
+                  </Item>
+                )}
                 <AddItem
                   onClick={() => {
                     openModal('main');
@@ -1091,7 +1097,7 @@ const EventInfomationWrapper = styled.ul`
   display: ${(props) => (props.visible ? 'block' : 'none')};
   top: -5vw;
   left: 50vw;
-  width: 300px;
+  width: 25vw;
   border-radius: 5px;
   border: 1px solid #a9a9a9;
   list-style: none;

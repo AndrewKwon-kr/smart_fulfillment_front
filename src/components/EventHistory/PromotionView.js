@@ -8,6 +8,7 @@ function PromotionView(props) {
   const eventData = props.eventData;
   const [userInput, setUserInput] = useState('');
   const [filteredEventData, setFilteredEventData] = useState(eventData);
+
   const handleChange = (e) => {
     const value = e.target.value;
     setUserInput(value);
@@ -17,59 +18,62 @@ function PromotionView(props) {
       eventData.filter((event) => event.title.includes(userInput))
     );
   };
-
+  console.log(eventData);
   return (
     <Wrapper>
       <PromotionSearch handleChange={handleChange} handleClick={handleClick} />
       <CardContainer>
-        {filteredEventData.map((event, index) => (
-          <EventInfomationCard key={index}>
+        {filteredEventData.map((event) => (
+          <EventInfomationCard key={event.id}>
             <Title>{event.title}</Title>
             <Date>
               <ClockIcon />
-              {event.startDate} ~ {event.endDate}
+              {event.startDate.substring(0, 10).split('-').join('. ')} ~{' '}
+              {event.endDate
+                ? event.endDate.substring(0, 10).split('-').join('. ')
+                : '제한없음'}
             </Date>
             <Infomation>
               <div className="info">
                 최소구매개수
                 <span>
-                  {event.minBuyNumber
-                    ? event.minBuyNumber.toLocaleString('ko-KR')
+                  {event.minimumQuantity
+                    ? event.minimumQuantity.toLocaleString('ko-KR')
                     : '-'}
-                  개
+                  {' 개'}
                 </span>
               </div>
               <div className="info">
                 최소구매금액
                 <span>
-                  {event.minBuyPrice
-                    ? event.minBuyPrice.toLocaleString('ko-KR')
+                  {event.minimumAmount
+                    ? event.minimumAmount.toLocaleString('ko-KR')
                     : '-'}
-                  원
+                  {' 원'}
                 </span>
               </div>
             </Infomation>
             <Brand>
               <BrandIcon />
-              {event.brand}
+              {event.channels.map((channel) => channel.name).join(', ')}
             </Brand>
             <ItemInfo>
               <div className="info">
                 <span className="label">본품</span>
                 <span className="content">
-                  {event.mainItem ? event.mainItem : '-'}
+                  {/* {event.mainItem ? event.mainItem : '-'} */}
                 </span>
               </div>
               <div className="info">
                 <span className="label">사은품</span>
                 <span className="content">
-                  {event.freebies ? event.freebies.join(', ') : '-'}
+                  {/* {event.freebies ? event.freebies : '-'} */}
                 </span>
               </div>
               <div className="info">
                 <span className="label">인쇄물</span>
                 <span className="content">
-                  {event.prints ? event.prints : '-'}
+                  {/* {event.prints ? event.prints : '-'} */}
                 </span>
               </div>
             </ItemInfo>

@@ -22,12 +22,14 @@ function SituationView(props) {
       eventData.filter(
         (event) =>
           new window.Date(event.startDate) < todayDate &&
-          todayDate < new window.Date(event.endDate)
+          (todayDate < new window.Date(event.endDate) || event.endDate === null)
       ).length
     );
     setCountAfter(
-      eventData.filter((event) => new window.Date(event.endDate) < todayDate)
-        .length
+      eventData.filter(
+        (event) =>
+          new window.Date(event.endDate) < todayDate && event.endDate !== null
+      ).length
     );
   }, [eventData]);
 
@@ -47,7 +49,13 @@ function SituationView(props) {
                   <Title>{event.title}</Title>
                   <Date>
                     <ClockIcon />
-                    {event.startDate} ~ {event.endDate}
+                    {event.startDate
+                      .substring(0, 10)
+                      .split('-')
+                      .join('. ')} ~{' '}
+                    {event.endDate
+                      ? event.endDate.substring(0, 10).split('-').join('. ')
+                      : '제한없음'}
                   </Date>
                   <Brand>
                     <BrandIcon />
@@ -68,14 +76,21 @@ function SituationView(props) {
               .filter(
                 (event) =>
                   new window.Date(event.startDate) < todayDate &&
-                  todayDate < new window.Date(event.endDate)
+                  (todayDate < new window.Date(event.endDate) ||
+                    event.endDate === null)
               )
               .map((event, index) => (
                 <Item key={index}>
                   <Title>{event.title}</Title>
                   <Date>
                     <ClockIcon />
-                    {event.startDate} ~ {event.endDate}
+                    {event.startDate
+                      .substring(0, 10)
+                      .split('-')
+                      .join('. ')} ~{' '}
+                    {event.endDate
+                      ? event.endDate.substring(0, 10).split('-').join('. ')
+                      : '제한없음'}
                   </Date>
                   <Brand>
                     <BrandIcon />
@@ -93,13 +108,23 @@ function SituationView(props) {
         <ItemWrapper>
           {eventData &&
             eventData
-              .filter((event) => new window.Date(event.endDate) < todayDate)
+              .filter(
+                (event) =>
+                  new window.Date(event.endDate) < todayDate &&
+                  event.endDate !== null
+              )
               .map((event, index) => (
                 <Item key={index}>
                   <Title>{event.title}</Title>
                   <Date>
                     <ClockIcon />
-                    {event.startDate} ~ {event.endDate}
+                    {event.startDate
+                      .substring(0, 10)
+                      .split('-')
+                      .join('. ')} ~{' '}
+                    {event.endDate
+                      ? event.endDate.substring(0, 10).split('-').join('. ')
+                      : '제한없음'}
                   </Date>
                   <Brand>
                     <BrandIcon />

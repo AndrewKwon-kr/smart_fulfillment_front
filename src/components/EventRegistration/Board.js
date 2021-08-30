@@ -18,22 +18,39 @@ function Board(props) {
         (group) => group.key === Number(cardId)
       )[0];
 
-      props.setFilteredGroupItem(
-        props.groupList
-          .filter((group) => group.key === Number(cardId))[0]
-          .itemgroups.map((item) => {
-            return {
-              ...item,
-              brand: group.name,
-              label: group.label,
-              code: item.code,
-              groupId: Number(cardId),
-            };
-          })
-      );
-      const cards = document.getElementsByClassName('board')[1].childNodes;
-      setItems(cards);
-      props.openModal();
+      if (cardId !== 'all') {
+        props.setFilteredGroupItem(
+          props.groupList
+            .filter((group) => group.key === Number(cardId))[0]
+            .itemgroups.map((item) => {
+              return {
+                ...item,
+                brand: group.name,
+                label: group.label,
+                code: item.code,
+                groupId: Number(cardId),
+              };
+            })
+        );
+        const cards = document.getElementsByClassName('board')[1].childNodes;
+        setItems(cards);
+        props.openModal();
+      } else {
+        // props.setSelectedItems();
+        console.log('!@#!$!@#!@#!@');
+        props.setSelectedItems(
+          props.groupList
+            .filter((group) => group.key !== 'all')
+            .map((group) => {
+              return {
+                ...group,
+                items: group.itemgroups,
+                id: group.key,
+              };
+            })
+        );
+        // console.log(props.groupList.shift());
+      }
     }
     if (props.type === 'mainItemModalView_group_remove') {
       props.setSelectedItems(
