@@ -8,6 +8,7 @@ import {
   ItemInquiry,
   EventRegistration,
   EventHistory,
+  OrderCollection,
 } from './pages';
 import Navigator from 'components/Base/SideMenu/Navigator';
 import './App.css';
@@ -25,6 +26,7 @@ class App extends Component {
           <Route path="/inquiryitem" component={ItemInquiry} />
           <Route path="/registevent" component={EventRegistration} />
           <Route path="/historyevent" component={EventHistory} />
+          <Route path="/support" component={OrderCollection} />
         </Switch>
       </BrowserRouter>
     );
