@@ -1,9 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import faker from 'faker/locale/ko';
 import ImportTable from './ImportTable';
-
-faker.seed(5);
+import Search from './Search';
 
 const Modal = styled.div`
   display: flex;
@@ -55,13 +53,24 @@ const ButtonWrapper = styled.div`
 `;
 
 function ImportModal(props) {
-  console.log(props.data);
+  const data = props.data;
+  const [userInput, setUserInput] = useState();
+  const [searchedEvent, setSearchedEvent] = useState(data);
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setUserInput(value);
+  };
+  const handleClick = () => {
+    setSearchedEvent(data.filter((item) => item.name.includes(userInput)));
+  };
   return (
     <Modal>
       <ModalContainer>
         <h3>등록된 사은품 · 인쇄물 불러오기</h3>
+        <Search handleChange={handleChange} handleClick={handleClick} />
         <ImportTable
-          data={props.data}
+          data={searchedEvent}
           loading={props.loading}
           importData={props.importData}
           setSelectedRow={props.setSelectedRow}

@@ -17,9 +17,10 @@ function FreebieModalView(props) {
     { value: 'erp', label: 'ERP 등록제품' },
     { value: 'freebie', label: '비매품' },
   ];
+  console.log(props.erpData);
   const erpList = props.erpData.map((item) => {
     return {
-      key: item.key,
+      key: item.id,
       label: item.name,
       image: item.image,
       brands: item.brands.map((brand) => brand.name),
@@ -27,6 +28,7 @@ function FreebieModalView(props) {
       code: item.code,
     };
   });
+  console.log(erpList);
   const freebieList = props.freebiesData.map((item) => {
     return {
       key: item.id,

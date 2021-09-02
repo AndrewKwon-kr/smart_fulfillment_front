@@ -2,9 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 import * as BiIcons from 'react-icons/bi';
 
+const InputWrap = styled.div`
+  margin: 20px 10px;
+  width: 80%;
+  display: flex;
+`;
 const Input = styled.input`
-  margin: 20px 0;
-  width: 60%;
+  width: 90%;
+  display: inline-block;
   border: none;
   border-bottom: 1px solid #d9d9d9;
   outline: none;
@@ -13,25 +18,31 @@ const Input = styled.input`
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   box-sizing: border-box;
+
+  font-size: 1rem;
 `;
-const Button = styled.button`
+const SearchButton = styled(BiIcons.BiSearch)`
   all: unset;
   cursor: pointer;
+  display: inline-block;
+  position: relative;
 `;
 
-function Search({ onSubmit }) {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    onSubmit(event.target.elements.filter.value);
-  };
-
+function Search(props) {
   return (
-    <form onSubmit={handleSubmit}>
-      <Input name="filter" placeholder="검색어를 입력하세요" />
-      <Button>
-        <BiIcons.BiSearch />
-      </Button>
-    </form>
+    <InputWrap>
+      <Input
+        onChange={props.handleChange}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter') {
+            props.handleClick();
+          }
+        }}
+        name="filter"
+        placeholder="검색어를 입력하세요"
+      />
+      <SearchButton size="24" onClick={props.handleClick} />
+    </InputWrap>
   );
 }
 

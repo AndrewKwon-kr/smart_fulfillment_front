@@ -11,3 +11,6 @@ export { default as FreebieFilterModalView } from './FreebieFilterModalView';
 export { default as ErpFilterModalView } from './ErpFilterModalView';
 export { default as PrintFilterModalView } from './PrintFilterModalView';
 export { default as GroupItemFilterModalView } from './GroupItemFilterModalView';
+export { default as FreebieInfoModalView } from './FreebieInfoModalView';
+export { default as ImportModalView } from './ImportModalView';
+export { default as ImportModalTable } from './ImportModalTable';

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ModalOrderView } from 'components/OrderCollection';
-import excelIcon from 'assets/icon_excel.png';
 import { ExcelRenderer } from 'react-excel-renderer';
 import { Button, Upload } from 'antd';
 import axios from 'axios';
 import swal from 'sweetalert';
+import * as XLSX from 'xlsx';
 
 function OrderCollection() {
   // console.log(erpData);
@@ -15,6 +15,8 @@ function OrderCollection() {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [file, setFile] = useState();
+
   const openModal = () => {
     setModalVisible(true);
   };
@@ -23,7 +25,6 @@ function OrderCollection() {
   };
 
   const createErpData = (row) => {
-    console.log(row);
     console.log('create---> ', row);
     setLoading(true);
     const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items/`;
@@ -35,7 +36,8 @@ function OrderCollection() {
     if (row.length !== 0) {
       axios.post(url, data).then((response) => {
         if (response.data.code === 201) {
-          window.location.href = '/erp';
+          console.log(response.data);
+          // window.location.href = '/erp';
         }
       });
     }
@@ -90,7 +92,8 @@ function OrderCollection() {
         console.log(err);
       } else {
         let newRows = [];
-        resp.rows.slice(2, -1).map((row, index) => {
+        console.log(fileObj);
+        resp.rows.map((row, index) => {
           if (row && row !== 'undefined') {
             newRows.push({
               key: index,
@@ -117,13 +120,61 @@ function OrderCollection() {
         } else {
           // console.log(isErpData);
           setExcelRows(newRows);
-          isErpData ? updateErpData(newRows) : createErpData(newRows);
+          console.log(newRows);
+          // createErpData(newRows);
 
           // setErrorMessage(null);
         }
       }
     });
     return false;
+  };
+
+  const filePathset = (e) => {
+    console.log(e.file);
+    console.log(e.fileList);
+    // var file = e.target.files[0];
+    setFile(e.file);
+    readFile();
+  };
+  const readFile = () => {
+    var f = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      // evt = on_file_select event
+      /* Parse data */
+      const bstr = e.target.result;
+      const wb = XLSX.read(bstr, { type: 'binary' });
+      /* Get first worksheet */
+      const wsname = wb.SheetNames[6];
+      const ws = wb.Sheets[wsname];
+      /* Convert array of arrays */
+      const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
+      /* Update state */
+      console.log(convertToJson(data)); // shows data in json format
+    };
+    reader.readAsBinaryString(f);
+  };
+  const convertToJson = (csv) => {
+    var lines = csv.split('\n');
+
+    var result = [];
+
+    var headers = lines[0].split(',');
+
+    for (var i = 1; i < lines.length; i++) {
+      var obj = {};
+      var currentline = lines[i].split(',');
+
+      for (var j = 0; j < headers.length; j++) {
+        obj[headers[j]] = currentline[j];
+      }
+
+      result.push(obj);
+    }
+
+    //return result; //JavaScript object
+    return JSON.stringify(result); //JSON
   };
   return (
     <Container>
@@ -140,6 +191,7 @@ function OrderCollection() {
             id="upload"
             accept=".xlsx, .xls"
             beforeUpload={fileHandler}
+            onChange={filePathset.bind(this)}
             onRemove={() => setRows([])}
             multiple={false}
           >
@@ -147,7 +199,9 @@ function OrderCollection() {
           </Upload>
           <InvoiceUploadButton>송장 업로드</InvoiceUploadButton>
         </ExcelButtonWrapper>
-        {modalVisible && <ModalOrderView closeModal={closeModal} />}
+        {modalVisible && (
+          <ModalOrderView uploadExcel={uploadExcel} closeModal={closeModal} />
+        )}
       </Wrapper>
     </Container>
   );

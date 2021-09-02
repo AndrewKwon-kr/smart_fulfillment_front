@@ -29,6 +29,7 @@
     "react-export-excel": "^0.5.3",
     "react-frappe-gantt": "^0.2.3",
     "react-highlight-words": "^0.17.0",
+    "react-hook-form": "^7.14.1",
     "react-hot-loader": "^4.5.3",
     "react-icons": "^4.2.0",
     "react-router-dom": "^5.2.0",

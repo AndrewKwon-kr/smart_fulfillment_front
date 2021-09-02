@@ -37,7 +37,10 @@ function ModalOrderView(props) {
             모든 주문이 매핑되어 있나요?
           </Content>
         </ContentWrapper>
-        <TransformButton disabled={checkedOne & checkedTwo}>
+        <TransformButton
+          onClick={props.uploadExcel}
+          disabled={!(checkedOne && checkedTwo)}
+        >
           변환하기
         </TransformButton>
         <ButtonWrapper>
@@ -82,6 +85,7 @@ const ContentWrapper = styled.div`
 const Content = styled.div`
   margin-bottom: 20px;
   text-align: left;
+  display: flex;
 `;
 const ButtonWrapper = styled.div`
   margin-top: 20px;
@@ -112,10 +116,10 @@ const TransformButton = styled.button`
   padding: 5px 30px;
   border-radius: 5px;
   border: ${(props) =>
-    props.disabled ? '1px solid #228be6' : '1px solid #e1e1e1'};
-  cursor: ${(props) => (props.disabled ? 'pointer' : 'default')};
-  color: ${(props) => (props.disabled ? '#fff' : '#a1a1a1')};
-  background-color: ${(props) => (props.disabled ? '#228be6' : '#fff')};
+    props.disabled ? '1px solid #e1e1e1' : '1px solid #228be6'};
+  cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
+  color: ${(props) => (props.disabled ? '#a1a1a1' : '#fff')};
+  background-color: ${(props) => (props.disabled ? '#fff' : '#228be6')};
 `;
 const CheckedIcon = styled(GoIcons.GoCheck)`
   margin-right: 20px;

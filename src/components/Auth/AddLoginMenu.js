@@ -31,7 +31,7 @@ const AddLoginMenu = ({ autoLogin }) => (
     </AutoLogin>
     <FindPasswordAndJoinWrap>
       <LinkMenu to="/">비밀번호 찾기</LinkMenu>
-      <LinkMenu to="/">회원가입</LinkMenu>
+      <LinkMenu to="/signup">회원가입</LinkMenu>
     </FindPasswordAndJoinWrap>
   </div>
 );

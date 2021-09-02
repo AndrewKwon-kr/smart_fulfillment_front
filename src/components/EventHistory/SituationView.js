@@ -59,7 +59,7 @@ function SituationView(props) {
                   </Date>
                   <Brand>
                     <BrandIcon />
-                    {event.brand}
+                    {event.channels.map((channel) => channel.name).join(', ')}
                   </Brand>
                 </Item>
               ))}
@@ -94,7 +94,7 @@ function SituationView(props) {
                   </Date>
                   <Brand>
                     <BrandIcon />
-                    {event.brand}
+                    {event.channels.map((channel) => channel.name).join(', ')}
                   </Brand>
                 </Item>
               ))}
@@ -128,7 +128,7 @@ function SituationView(props) {
                   </Date>
                   <Brand>
                     <BrandIcon />
-                    {event.brand}
+                    {event.channels.map((channel) => channel.name).join(', ')}
                   </Brand>
                 </Item>
               ))}
@@ -163,6 +163,9 @@ const Brand = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 const BrandIcon = styled(MdIcons.MdLocationOn)`
   margin-right: 5px;

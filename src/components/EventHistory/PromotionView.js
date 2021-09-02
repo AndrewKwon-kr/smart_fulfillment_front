@@ -61,22 +61,34 @@ function PromotionView(props) {
               <div className="info">
                 <span className="label">본품</span>
                 <span className="content">
-                  {/* {event.mainItem ? event.mainItem : '-'} */}
+                  {event.items ? event.items.map((item) => item) : '-'}
                 </span>
               </div>
               <div className="info">
                 <span className="label">사은품</span>
                 <span className="content">
-                  {/* {event.freebies ? event.freebies : '-'} */}
+                  {event.freebies ? event.freebies.map((item) => item) : '-'}
                 </span>
               </div>
               <div className="info">
                 <span className="label">인쇄물</span>
                 <span className="content">
-                  {/* {event.prints ? event.prints : '-'} */}
+                  {event.prints ? event.prints.map((item) => item) : '-'}
                 </span>
               </div>
             </ItemInfo>
+            <Infomation>
+              <div className="info">
+                {event.isRange
+                  ? '모두 증정'
+                  : `전체 중 택 ${event.rangeQuantity}`}
+              </div>
+              <div className="info">
+                {event.type === '' && '해당없음'}
+                {event.type === 'random' && '랜덤지급'}
+                {event.type === 'choice' && '고객선택'}
+              </div>
+            </Infomation>
           </EventInfomationCard>
         ))}
       </CardContainer>
@@ -120,7 +132,7 @@ const ClockIcon = styled(FiIcons.FiClock)`
   margin-right: 5px;
 `;
 const Infomation = styled.div`
-  margin-bottom: 10px;
+  margin: 30px 0;
   display: flex;
   justify-content: center;
   font-size: 13px;

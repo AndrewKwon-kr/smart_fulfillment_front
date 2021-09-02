@@ -8,12 +8,15 @@ const Title = styled.div`
   color: ${oc.gray[8]};
   margin-bottom: 1rem;
 `;
-
+const AuthWrapper = styled.div`
+  margin: 40px auto 0;
+  width: 40vw;
+`;
 const AuthContent = ({ title, children }) => (
-  <div>
+  <AuthWrapper>
     <Title>{title}</Title>
     {children}
-  </div>
+  </AuthWrapper>
 );
 
 export default AuthContent;

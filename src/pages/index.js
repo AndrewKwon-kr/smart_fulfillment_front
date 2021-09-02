@@ -8,3 +8,4 @@ export { default as ItemInquiry } from './ItemInquiry';
 export { default as EventRegistration } from './EventRegistration';
 export { default as EventHistory } from './EventHistory';
 export { default as OrderCollection } from './OrderCollection';
+export { default as SignUp } from './SignUp';

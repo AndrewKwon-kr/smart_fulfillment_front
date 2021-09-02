@@ -8,6 +8,8 @@ import {
   PrintModalView,
   SelectChannelButton,
   BesideStoreModalView,
+  FreebieInfoModalView,
+  ImportModalView,
 } from 'components/EventRegistration';
 import CompanyShopIcon from 'assets/icon_company_shop.png';
 import NaverIcon from 'assets/icon_naver.png';
@@ -41,6 +43,7 @@ function EventRegistration() {
   const [freebieErpData, setFreebieErpData] = useState([]);
   const [printsData, setPrintsData] = useState([]);
   const [brandData, setBrandData] = useState([]);
+  const [eventData, setEventData] = useState([]);
 
   const [minBuyNumber, setMinBuyNumber] = useState(0);
   const [minBuyNumberChecked, setMinBuyNumberChecked] = useState(false);
@@ -62,7 +65,15 @@ function EventRegistration() {
     { id: 2, name: '지마켓', checked: false },
   ]);
 
+  const [freebieRange, setFreebieRange] = useState(true);
+  const [freebieType, setFreebieType] = useState('');
+  const [freebieInfoModalVisible, setFreebieInfoModalVisible] = useState(false);
+  const [rangeNumber, setRangeNumber] = useState(0);
+
   const [postLoading, setPostLoading] = useState(false);
+  const [importLoading, setImportLoading] = useState(false);
+  const [importVisible, setImportVisible] = useState(false);
+
   const getMainItemData = () => {
     const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
 
@@ -165,6 +176,30 @@ function EventRegistration() {
       setBrandData(response.data.result);
     });
   };
+  const getEventData = () => {
+    const url = `${process.env.REACT_APP_URL}/event/`;
+    setImportLoading(true);
+    axios
+      .get(url)
+      .then((response) => {
+        try {
+          if (response.data.result) {
+            console.log(response.data.result);
+            setEventData(response.data.result);
+            setImportLoading(false);
+            openModal('import');
+          } else {
+            console.log(response.status);
+            alert('데이터를 등록해주세요');
+          }
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+        }
+      })
+      .catch(() => {
+        alert('error');
+      });
+  };
 
   const onChange = (e) => {
     setTitle(e.target.value);
@@ -196,6 +231,10 @@ function EventRegistration() {
       setFreebieModalVisible(true);
     } else if (type === 'print') {
       setPrintModalVisible(true);
+    } else if (type === 'freebieInfo') {
+      setFreebieInfoModalVisible(true);
+    } else if (type === 'import') {
+      setImportVisible(true);
     }
   };
   function closeModal(type) {
@@ -205,6 +244,13 @@ function EventRegistration() {
       setFreebieModalVisible(false);
     } else if (type === 'print') {
       setPrintModalVisible(false);
+    } else if (type === 'freebieInfo') {
+      setFreebieInfoModalVisible(false);
+      setRangeNumber(0);
+      setFreebieType('');
+      setFreebieRange('');
+    } else if (type === 'import') {
+      setImportVisible(false);
     }
   }
   const reload = (type) => {
@@ -256,6 +302,8 @@ function EventRegistration() {
       setMinBuyPrice(num);
     } else if (type === 'limitNumber') {
       setLimitNumber(num);
+    } else if (type === 'range') {
+      setRangeNumber(num);
     }
   };
 
@@ -315,6 +363,9 @@ function EventRegistration() {
     eventData.title = title;
     eventData.items = mainItems;
     eventData.freebies = freebies;
+    eventData.isRange = freebieRange;
+    eventData.rangeQuantity = rangeNumber;
+    eventData.type = freebieType;
     eventData.prints = prints;
     eventData.minimumQuantity = minBuyNumber;
     eventData.minimumAmount = minBuyPrice;
@@ -322,6 +373,7 @@ function EventRegistration() {
     eventData.start = startDate;
     eventData.end = endDate;
     eventData.channels = channelData;
+    console.log(eventData);
 
     const url = `${process.env.REACT_APP_URL}/event/`;
     const data = {
@@ -400,18 +452,21 @@ function EventRegistration() {
   useEffect(() => {
     setCountPrint(prints.length);
   }, [prints]);
-  console.log('==============');
-  console.log('타이틀 : ', title);
-  console.log('본품 : ', mainItems);
-  console.log('사은품 : ', freebies);
-  console.log('인쇄물 : ', prints);
-  console.log('최소구매개수 : ', minBuyNumber);
-  console.log('최소구매금액', minBuyPrice);
-  console.log('한정수량', limitNumber);
-  console.log('startDate : ', startDate, typeof startDate);
-  console.log('endDate : ', endDate);
-  console.log('이벤트 채널 :', channelData);
-  console.log('==============');
+  // console.log('==============');
+  // console.log('타이틀 : ', title);
+  // console.log('본품 : ', mainItems);
+  // console.log('사은품 : ', freebies);
+  // console.log('인쇄물 : ', prints);
+  // console.log('최소구매개수 : ', minBuyNumber);
+  // console.log('최소구매금액', minBuyPrice);
+  // console.log('한정수량', limitNumber);
+  // console.log('startDate : ', startDate, typeof startDate);
+  // console.log('endDate : ', endDate);
+  // console.log('이벤트 채널 :', channelData);
+  // console.log('==============');
+  // console.log('증정 범위 숫자', rangeNumber);
+  // console.log('증정 범위 : ', freebieRange);
+  // console.log('증정 방식 : ', freebieType);
   return (
     <Container>
       <StepWrapper>
@@ -469,6 +524,19 @@ function EventRegistration() {
         {stepStatus === 1 && (
           <>
             <SubTitle>이벤트 이름을 입력해주세요</SubTitle>
+            <ImportButton
+              onClick={() => getEventData()}
+              loading={importLoading}
+            >
+              불러오기
+            </ImportButton>
+            {importVisible && (
+              <ImportModalView
+                close={() => closeModal('import')}
+                eventData={eventData}
+                loading={importLoading}
+              />
+            )}
             <br />
             <Description>
               이미 등록된 이벤트 정보를 수정하고 싶다면 우측 상단의 '불러오기'를
@@ -550,6 +618,25 @@ function EventRegistration() {
               <LabelWrapper>
                 <TextLabel>사은품</TextLabel>
                 <CountLabel>{countFreebie}</CountLabel>
+                <FreebieInfoButton
+                  disabled={freebies.length === 0}
+                  onClick={() => openModal('freebieInfo')}
+                >
+                  사은품 정보
+                </FreebieInfoButton>
+                {freebieInfoModalVisible && (
+                  <FreebieInfoModalView
+                    close={() => closeModal('freebieInfo')}
+                    onChangeNumber={onChangeNumber}
+                    rangeNumber={rangeNumber}
+                    setRangeNumber={setRangeNumber}
+                    freebieRange={freebieRange}
+                    freebieType={freebieType}
+                    setFreebieRange={setFreebieRange}
+                    setFreebieType={setFreebieType}
+                    setFreebieInfoModalVisible={setFreebieInfoModalVisible}
+                  />
+                )}
                 <ReloadButton onClick={() => reload('freebie')}>
                   <AiIcons.AiOutlineReload size="24" color="#a9a9a9" />
                 </ReloadButton>
@@ -581,7 +668,7 @@ function EventRegistration() {
                     closeModal('freebie');
                   }}
                   setFreebies={setFreebies}
-                  erpData={mainItemsData}
+                  erpData={freebieErpData}
                   freebiesData={freebiesData}
                   brandData={brandData}
                 />
@@ -961,7 +1048,7 @@ const ContentWrapper = styled.div`
   position: relative;
   display: inline-block;
   margin-left: 3%;
-  width: 30%;
+  min-width: 30%;
   height: 500px;
   background-color: #eff3ff;
   border-radius: 20px;
@@ -1127,5 +1214,22 @@ const ItemImage = styled.img`
   width: 36px;
   height: 36px;
   border-radius: 36px;
+`;
+const FreebieInfoButton = styled.button`
+  margin-left: 20px;
+  padding: 1px 5px;
+  color: #fff;
+  background-color: ${(props) => (props.disabled ? '#e1e1e1' : '#228be6')};
+  cursor: ${(props) => (props.disabled ? 'default' : 'pointer')};
+  border: ${(props) =>
+    props.disabled ? '1px solid #e1e1e1' : '1px solid #228be6'};
+  box-sizing: border-box;
+  border-radius: 5px;
+`;
+const ImportButton = styled(Button)`
+  float: right;
+  display: flex;
+  padding: 1.2rem 1.7rem;
+  align-items: center;
 `;
 export default EventRegistration;

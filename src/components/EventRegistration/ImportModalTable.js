@@ -4,20 +4,26 @@ import 'antd/dist/antd.css';
 
 const columns = [
   {
-    title: '분류',
-    dataIndex: 'category',
+    title: '등록일',
+    dataIndex: 'created',
   },
   {
-    title: '이름',
-    dataIndex: 'name',
+    title: '이벤트명',
+    dataIndex: 'title',
   },
 ];
 
-function ImportTable(props) {
-  const data = props.data;
+function ImportModalTable(props) {
+  const data = props.data.map((data) => {
+    return {
+      ...data,
+      key: data.id,
+      created: data.created.substring(0, 10).split('-').join('. '),
+    };
+  });
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      props.setSelectedRow(selectedRows);
+      // props.setSelectedRow(selectedRows);
       console.log(
         `selectedRowKeys: ${selectedRowKeys}`,
         'selectedRows: ',
@@ -32,7 +38,7 @@ function ImportTable(props) {
   };
   console.log(props.loading);
   return (
-    <div>
+    <div style={{ marginTop: 20 }}>
       <Table
         loading={props.loading}
         rowSelection={{
@@ -47,4 +53,4 @@ function ImportTable(props) {
   );
 }
 
-export default ImportTable;
+export default ImportModalTable;

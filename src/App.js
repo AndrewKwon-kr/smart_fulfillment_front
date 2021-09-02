@@ -9,6 +9,7 @@ import {
   EventRegistration,
   EventHistory,
   OrderCollection,
+  SignUp,
 } from './pages';
 import Navigator from 'components/Base/SideMenu/Navigator';
 import './App.css';
@@ -27,6 +28,7 @@ class App extends Component {
           <Route path="/registevent" component={EventRegistration} />
           <Route path="/historyevent" component={EventHistory} />
           <Route path="/support" component={OrderCollection} />
+          <Route path="/signup" component={SignUp} />
         </Switch>
       </BrowserRouter>
     );
