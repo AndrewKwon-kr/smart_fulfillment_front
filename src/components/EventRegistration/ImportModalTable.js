@@ -23,7 +23,7 @@ function ImportModalTable(props) {
   });
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      // props.setSelectedRow(selectedRows);
+      props.setSelectedRow(selectedRows);
       console.log(
         `selectedRowKeys: ${selectedRowKeys}`,
         'selectedRows: ',

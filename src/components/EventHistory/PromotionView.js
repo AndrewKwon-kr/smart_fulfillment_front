@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import * as FiIcons from 'react-icons/fi';
-import * as MdIcons from 'react-icons/md';
+import * as GrIcons from 'react-icons/gr';
 import { PromotionSearch } from '../EventHistory';
 
 function PromotionView(props) {
@@ -53,10 +53,10 @@ function PromotionView(props) {
                 </span>
               </div>
             </Infomation>
-            <Brand>
-              <BrandIcon />
+            <Channel>
+              <ChannelIcon color="blue" />
               {event.channels.map((channel) => channel.name).join(', ')}
-            </Brand>
+            </Channel>
             <ItemInfo>
               <div className="info">
                 <span className="label">본품</span>
@@ -154,14 +154,14 @@ const Infomation = styled.div`
     }
   }
 `;
-const Brand = styled.div`
+const Channel = styled.div`
   margin-bottom: 10px;
   color: #a9a9a9;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
-const BrandIcon = styled(MdIcons.MdLocationOn)`
+const ChannelIcon = styled(GrIcons.GrChannel)`
   margin-right: 5px;
 `;
 const ItemInfo = styled.div`

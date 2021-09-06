@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import ImportModalTable from './ImportModalTable';
 import MainItemSearch from './MainItemSearch';
+import { Button } from 'antd';
 
 function ImportModalView(props) {
   const [userInput, setUserInput] = useState();
@@ -27,14 +28,20 @@ function ImportModalView(props) {
           data={searchedEvent}
           loading={props.loading}
           // importData={props.importData}
-          // setSelectedRow={props.setSelectedRow}
+          setSelectedRow={props.setSelectedRow}
         />
         <br />
         <ButtonWrapper>
-          <Button className="close" onClick={props.close}>
+          <AntdButton className="close" onClick={props.close}>
             취소
-          </Button>
-          <Button className="close">선택</Button>
+          </AntdButton>
+          <AntdButton
+            className="close"
+            onClick={props.getEventData}
+            loading={props.selectedRowLoading}
+          >
+            선택
+          </AntdButton>
         </ButtonWrapper>
       </ModalContainer>
     </Modal>
@@ -66,7 +73,7 @@ const ModalContainer = styled.div`
   }
 `;
 
-const Button = styled.button`
+const AntdButton = styled(Button)`
   all: unset;
   margin-left: 10px;
   display: inline-block;

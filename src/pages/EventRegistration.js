@@ -74,6 +74,9 @@ function EventRegistration() {
   const [importLoading, setImportLoading] = useState(false);
   const [importVisible, setImportVisible] = useState(false);
 
+  const [selectedRows, setSelectedRow] = useState();
+  const [selectedRowLoading, setSelectedRowLoading] = useState(false);
+
   const getMainItemData = () => {
     const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
 
@@ -176,7 +179,7 @@ function EventRegistration() {
       setBrandData(response.data.result);
     });
   };
-  const getEventData = () => {
+  const getImportData = () => {
     const url = `${process.env.REACT_APP_URL}/event/`;
     setImportLoading(true);
     axios
@@ -190,14 +193,49 @@ function EventRegistration() {
             openModal('import');
           } else {
             console.log(response.status);
+            setImportLoading(false);
             alert('데이터를 등록해주세요');
           }
         } catch (err) {
+          setImportLoading(false);
           alert('데이터를 불러올 수 없습니다.');
         }
       })
       .catch(() => {
+        setImportLoading(false);
         alert('error');
+      });
+  };
+  const getEventData = () => {
+    const url = `${process.env.REACT_APP_URL}/event/${selectedRows[0].id}/`;
+    setSelectedRowLoading(true);
+    axios
+      .get(url)
+      .then((response) => {
+        try {
+          if (response.data.result) {
+            setSelectedRowLoading(false);
+
+            closeModal('import');
+            console.log(response.data.result);
+            const data = response.data.result;
+            setTitle(data.title);
+          } else {
+            console.log(response.status);
+            alert('데이터를 등록해주세요');
+            setSelectedRowLoading(false);
+            closeModal('import');
+          }
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+          setSelectedRowLoading(false);
+          closeModal('import');
+        }
+      })
+      .catch(() => {
+        alert('error');
+        setSelectedRowLoading(false);
+        closeModal('import');
       });
   };
 
@@ -421,26 +459,9 @@ function EventRegistration() {
         // }
       });
     }, 4000);
-
-    // else if (type === 'complete') {
-    //   setLoading(true);
-    //   setTimeout(() => {
-    //     setLoading(false);
-    //     swal({
-    //       title: '수정 완료',
-    //       text: '다른 아이템을 등록하시겠습니까?',
-    //       icon: 'success',
-    //       buttons: { confirm: '예', cancel: '아니오' },
-    //     }).then((value) => {
-    //       if (value) {
-    //         window.location.reload();
-    //       } else {
-    //         window.location.href = '/registitem';
-    //       }
-    //     });
-    //   }, 4000);
-
-    // }
+  };
+  const importData = (data) => {
+    setTitle(data.title);
   };
 
   useEffect(() => {
@@ -467,6 +488,7 @@ function EventRegistration() {
   // console.log('증정 범위 숫자', rangeNumber);
   // console.log('증정 범위 : ', freebieRange);
   // console.log('증정 방식 : ', freebieType);
+  console.log(selectedRows);
   return (
     <Container>
       <StepWrapper>
@@ -525,7 +547,7 @@ function EventRegistration() {
           <>
             <SubTitle>이벤트 이름을 입력해주세요</SubTitle>
             <ImportButton
-              onClick={() => getEventData()}
+              onClick={() => getImportData()}
               loading={importLoading}
             >
               불러오기
@@ -535,6 +557,10 @@ function EventRegistration() {
                 close={() => closeModal('import')}
                 eventData={eventData}
                 loading={importLoading}
+                importData={importData}
+                setSelectedRow={setSelectedRow}
+                getEventData={getEventData}
+                selectedRowLoading={selectedRowLoading}
               />
             )}
             <br />
@@ -577,7 +603,7 @@ function EventRegistration() {
                   mainItems.map((item, index) => (
                     <Item key={index}>
                       {item.image && <ItemImage src={item.image} />}
-                      {item.name}
+                      {item.label}
                       <BsIcons.BsTrash
                         color="#a9a9a9"
                         style={{ float: 'right', cursor: 'pointer' }}
