@@ -51,7 +51,7 @@ function FreebieAndPrint() {
   // const [freebieData, setFreebieData] = useState([]);
   // const [printData, setPrintData] = useState([]);
   const [freebieAndPrintData, setFreebieAndPrintData] = useState([]);
-  const [freebieAndPrintLoading, setFreebieAndPrintLoading] = useState(true);
+  const [freebieAndPrintLoading, setFreebieAndPrintLoading] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [dataKey, setDataKey] = useState();
 
@@ -59,11 +59,6 @@ function FreebieAndPrint() {
 
   const nextId = useRef(2);
 
-  useEffect(() => {
-    if (options.length === 0) {
-      // props.setImage('');
-    }
-  });
   useEffect(() => {
     const getData = () => {
       const url = `${process.env.REACT_APP_URL}/brand/`;
@@ -312,10 +307,9 @@ function FreebieAndPrint() {
   };
   const getBothData = async () => {
     let data = [];
-
+    setFreebieAndPrintLoading(true);
     try {
       Promise.all([getPrintData(), getFreebieData()]).then((responses) => {
-        setFreebieAndPrintLoading(false);
         responses.map((response) =>
           response.map((ret) => (data = [...data, ret]))
         );
@@ -324,6 +318,9 @@ function FreebieAndPrint() {
             return { ...data, key: index };
           })
         );
+
+        setFreebieAndPrintLoading(false);
+        openModal();
         return data;
       });
     } catch (err) {
@@ -336,11 +333,7 @@ function FreebieAndPrint() {
     <Container>
       <Wrapper>
         <SubTitle>사은품 · 인쇄물 정보 등록(및 수정)</SubTitle>
-        <ImportButton
-          text="불러오기"
-          getBothData={getBothData}
-          openModal={openModal}
-        />
+        <ImportButton text="불러오기" getBothData={getBothData} />
         {modalVisible && (
           <ImportModal
             importData={importData}

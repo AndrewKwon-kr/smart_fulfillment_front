@@ -24,12 +24,12 @@ function GroupFilterModalView(props) {
   );
 
   const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      // props.setSelectedRow(selectedRows);
-      console.log('selectedRows: ', selectedRows);
-      console.log(selectedRowKeys);
-      setDefaultRowKeys(selectedRowKeys);
-    },
+    // onChange: (selectedRowKeys, selectedRows) => {
+    //   // props.setSelectedRow(selectedRows);
+    //   console.log('selectedRows: ', selectedRows);
+    //   console.log(selectedRowKeys);
+    //   setDefaultRowKeys(selectedRowKeys);
+    // },
     getCheckboxProps: (record) => ({
       disabled: record.name === 'Disabled User',
       // Column configuration not to be checked

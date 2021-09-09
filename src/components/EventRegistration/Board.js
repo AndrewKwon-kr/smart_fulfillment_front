@@ -19,36 +19,34 @@ function Board(props) {
       )[0];
 
       if (cardId !== 'all') {
-        props.setSelectedItems(
-          props.groupList
-            .filter((group) => group.key === Number(cardId))
-            .map((group) => {
-              return {
-                ...group,
-                items: group.itemgroups,
-                id: group.key,
-              };
-            })
-        );
-        // props.setFilteredGroupItem(
+        // props.setSelectedItems(
         //   props.groupList
-        //     .filter((group) => group.key === Number(cardId))[0]
-        //     .itemgroups.map((item) => {
+        //     .filter((group) => group.key === Number(cardId))
+        //     .map((group) => {
         //       return {
-        //         ...item,
-        //         brand: group.name,
-        //         label: group.label,
-        //         code: item.code,
-        //         groupId: Number(cardId),
+        //         ...group,
+        //         items: group.itemgroups,
+        //         id: group.key,
         //       };
         //     })
         // );
-        // const cards = document.getElementsByClassName('board')[1].childNodes;
-        // setItems(cards);
-        // props.openModal();
+        props.setFilteredGroupItem(
+          props.groupList
+            .filter((group) => group.key === Number(cardId))[0]
+            .itemgroups.map((item) => {
+              return {
+                ...item,
+                brand: group.name,
+                label: group.label,
+                code: item.code,
+                groupId: Number(cardId),
+              };
+            })
+        );
+        const cards = document.getElementsByClassName('board')[1].childNodes;
+        setItems(cards);
+        props.openModal();
       } else {
-        // props.setSelectedItems();
-        console.log('!@#!$!@#!@#!@');
         props.setSelectedItems(
           props.groupList
             .filter((group) => group.key !== 'all')

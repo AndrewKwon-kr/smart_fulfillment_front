@@ -20,6 +20,7 @@ import ko from 'date-fns/locale/ko';
 import axios from 'axios';
 import { Button } from 'antd';
 import swal from 'sweetalert';
+import { isTSMethodSignature } from '@babel/types';
 
 function EventRegistration() {
   const [title, setTitle] = useState('');
@@ -219,7 +220,7 @@ function EventRegistration() {
             closeModal('import');
             console.log(response.data.result);
             const data = response.data.result;
-            setTitle(data.title);
+            importData(data);
           } else {
             console.log(response.status);
             alert('데이터를 등록해주세요');
@@ -411,7 +412,7 @@ function EventRegistration() {
     eventData.start = startDate;
     eventData.end = endDate;
     eventData.channels = channelData;
-    console.log(eventData);
+    // console.log(eventData);
 
     const url = `${process.env.REACT_APP_URL}/event/`;
     const data = {
@@ -461,7 +462,18 @@ function EventRegistration() {
     }, 4000);
   };
   const importData = (data) => {
+    getMainItemData();
+    getFreebieData();
+    getPrintData();
+    getBrandData();
+    getFreebieErpData();
+    console.log(data);
+    setStepStatus(stepStatus + 1);
     setTitle(data.title);
+    setMainItems(data.items);
+    setFreebies(data.freebies);
+    setPrints(data.prints);
+    console.log(stepStatus);
   };
 
   useEffect(() => {
@@ -488,7 +500,7 @@ function EventRegistration() {
   // console.log('증정 범위 숫자', rangeNumber);
   // console.log('증정 범위 : ', freebieRange);
   // console.log('증정 방식 : ', freebieType);
-  console.log(selectedRows);
+  // console.log(selectedRows);
   return (
     <Container>
       <StepWrapper>
@@ -603,7 +615,7 @@ function EventRegistration() {
                   mainItems.map((item, index) => (
                     <Item key={index}>
                       {item.image && <ItemImage src={item.image} />}
-                      {item.label}
+                      {item.label ?? item.name}
                       <BsIcons.BsTrash
                         color="#a9a9a9"
                         style={{ float: 'right', cursor: 'pointer' }}

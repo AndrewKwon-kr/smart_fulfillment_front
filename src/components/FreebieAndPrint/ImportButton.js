@@ -29,10 +29,7 @@ const BorderedButton = styled(Button)`
 function ImportButton(props) {
   return (
     <BorderedButton
-      // loading={props.loading}
       onClick={() => {
-        // props.enterLoading();
-        props.openModal();
         props.getBothData();
       }}
     >

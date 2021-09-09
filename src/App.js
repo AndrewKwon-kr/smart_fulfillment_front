@@ -10,6 +10,7 @@ import {
   EventHistory,
   OrderCollection,
   SignUp,
+  TestSignUp,
 } from './pages';
 import Navigator from 'components/Base/SideMenu/Navigator';
 import './App.css';
@@ -29,6 +30,7 @@ class App extends Component {
           <Route path="/historyevent" component={EventHistory} />
           <Route path="/support" component={OrderCollection} />
           <Route path="/signup" component={SignUp} />
+          <Route path="/testsignup" component={TestSignUp} />
         </Switch>
       </BrowserRouter>
     );
