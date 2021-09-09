@@ -10,8 +10,8 @@ import swal from 'sweetalert';
 function ERP() {
   // console.log(erpData);
   const [rows, setRows] = useState([]);
-  const [excelRows, setExcelRows] = useState([]);
-  const [isErpData, setIsErpData] = useState(false);
+  // const [excelRows, setExcelRows] = useState([]);
+  const isErpData = false;
   const [brandData, setBrandData] = useState([]);
   const [loading, setLoading] = useState(true);
   // const [cols, setCols] = useState([]);
@@ -193,7 +193,7 @@ function ERP() {
           return false;
         } else {
           // console.log(isErpData);
-          setExcelRows(newRows);
+          // setExcelRows(newRows);
           isErpData ? updateErpData(newRows) : createErpData(newRows);
 
           // setErrorMessage(null);

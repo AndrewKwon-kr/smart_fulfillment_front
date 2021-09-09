@@ -20,7 +20,6 @@ import ko from 'date-fns/locale/ko';
 import axios from 'axios';
 import { Button } from 'antd';
 import swal from 'sweetalert';
-import { isTSMethodSignature } from '@babel/types';
 
 function EventRegistration() {
   const [title, setTitle] = useState('');

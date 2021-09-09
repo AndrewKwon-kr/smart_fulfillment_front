@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ModalOrderView } from 'components/OrderCollection';
 import { ExcelRenderer } from 'react-excel-renderer';
 import { Button, Upload } from 'antd';
-import axios from 'axios';
+// import axios from 'axios';
 import swal from 'sweetalert';
 import * as XLSX from 'xlsx';
 
 function OrderCollection() {
   // console.log(erpData);
-  const [rows, setRows] = useState([]);
-  const [excelRows, setExcelRows] = useState([]);
-  const [isErpData, setIsErpData] = useState(false);
-  const [loading, setLoading] = useState(true);
+  // const [rows, setRows] = useState([]);
+  // const [excelRows, setExcelRows] = useState([]);
+  // const [isErpData, setIsErpData] = useState(false);
+  // const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
   const [file, setFile] = useState();
@@ -24,39 +24,39 @@ function OrderCollection() {
     setModalVisible(false);
   };
 
-  const createErpData = (row) => {
-    console.log('create---> ', row);
-    setLoading(true);
-    const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items/`;
-    const data = {
-      messageType: 'create',
-      groupId: 1,
-      erpDatas: row,
-    };
-    if (row.length !== 0) {
-      axios.post(url, data).then((response) => {
-        if (response.data.code === 201) {
-          console.log(response.data);
-          // window.location.href = '/erp';
-        }
-      });
-    }
-  };
-  const updateErpData = (row) => {
-    console.log('update ---> ', row);
-    const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items/`;
-    const data = {
-      messageType: 'update',
-      groupId: 1,
-      erpDatas: row,
-    };
-    if (row.length !== 0) {
-      console.log(row);
-      axios
-        .post(url, data)
-        .then((response) => console.log(response.data.result));
-    }
-  };
+  // const createErpData = (row) => {
+  //   console.log('create---> ', row);
+  //   setLoading(true);
+  //   const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items/`;
+  //   const data = {
+  //     messageType: 'create',
+  //     groupId: 1,
+  //     erpDatas: row,
+  //   };
+  //   if (row.length !== 0) {
+  //     axios.post(url, data).then((response) => {
+  //       if (response.data.code === 201) {
+  //         console.log(response.data);
+  //         // window.location.href = '/erp';
+  //       }
+  //     });
+  //   }
+  // };
+  // const updateErpData = (row) => {
+  //   console.log('update ---> ', row);
+  //   const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items/`;
+  //   const data = {
+  //     messageType: 'update',
+  //     groupId: 1,
+  //     erpDatas: row,
+  //   };
+  //   if (row.length !== 0) {
+  //     console.log(row);
+  //     axios
+  //       .post(url, data)
+  //       .then((response) => console.log(response.data.result));
+  //   }
+  // };
 
   const uploadExcel = () => {
     swal({
@@ -119,7 +119,7 @@ function OrderCollection() {
           return false;
         } else {
           // console.log(isErpData);
-          setExcelRows(newRows);
+          // setExcelRows(newRows);
           console.log(newRows);
           // createErpData(newRows);
 
@@ -192,7 +192,7 @@ function OrderCollection() {
             accept=".xlsx, .xls"
             beforeUpload={fileHandler}
             onChange={filePathset.bind(this)}
-            onRemove={() => setRows([])}
+            // onRemove={() => setRows([])}
             multiple={false}
           >
             <button></button>

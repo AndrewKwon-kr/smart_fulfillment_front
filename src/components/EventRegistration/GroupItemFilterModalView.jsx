@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Table } from 'antd';
 import 'antd/dist/antd.css';
@@ -19,9 +19,10 @@ const columns = [
 ];
 
 function GroupFilterModalView(props) {
-  const [defaultRowKeys, setDefaultRowKeys] = useState(
-    props.filteredGroupItem.map((item) => item.key)
-  );
+  // const [defaultRowKeys, setDefaultRowKeys] = useState(
+  //   props.filteredGroupItem.map((item) => item.key)
+  // );
+  const defaultRowKeys = props.filteredGroupItem.map((item) => item.key);
 
   const rowSelection = {
     // onChange: (selectedRowKeys, selectedRows) => {

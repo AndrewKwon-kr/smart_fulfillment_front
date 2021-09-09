@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import * as FiIcons from 'react-icons/fi';
 import * as GrIcons from 'react-icons/gr';
-import { PromotionSearch } from '../EventHistory';
+import { PromotionSearch } from '.';
 
 function PromotionView(props) {
   const eventData = props.eventData;
