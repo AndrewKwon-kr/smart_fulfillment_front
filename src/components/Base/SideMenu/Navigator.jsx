@@ -6,24 +6,26 @@ import { SideBarData } from './SidebarData';
 import logo from 'assets/logo.png';
 import styled from 'styled-components';
 
-const Logo = styled.img`
-  width: 166px;
-  height: 73px;
-  position: absolute;
-  left: 50%;
-`;
-
 function Navigator() {
   const [sidebar, setSidebar] = useState(false);
+  const isLogined = localStorage.getItem('access_token');
 
   const showSidebar = () => setSidebar(!sidebar);
+  const logout = () => {
+    console.log('asdf');
+    localStorage.removeItem('access_token');
+    window.location.reload();
+  };
   return (
     <>
       <Navbar>
         <Menubars to="#">
           <FaIcons.FaBars onClick={showSidebar} />
         </Menubars>
-        <Logo alt="셀러비" src={logo} />
+        <Link to="/">
+          <Logo alt="셀러비" src={logo} />
+        </Link>
+        {isLogined && <Logout onClick={logout}>로그아웃</Logout>}
       </Navbar>
       <NavMenuWrap>
         <div className={sidebar ? 'nav-menu active' : 'nav-menu'}>
@@ -63,12 +65,25 @@ const Navbar = styled.div`
   border-bottom: 1px solid #d9d9d9;
   z-index: 2;
 `;
-
+const Logo = styled.img`
+  width: 166px;
+  height: 73px;
+  position: absolute;
+  left: 50%;
+  top: 0;
+`;
 const Menubars = styled(Link)`
   margin-left: 2rem;
   font-size: 2rem;
   background-color: #fff;
   color: #9c9c9c;
+`;
+const Logout = styled.div`
+  position: relative;
+  top: 0;
+  left: 90%;
+  font-weight: bold;
+  cursor: pointer;
 `;
 
 const NavMenuWrap = styled.nav`

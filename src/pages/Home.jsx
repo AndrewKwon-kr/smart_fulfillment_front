@@ -5,10 +5,12 @@ import { Login } from 'containers/Auth';
 
 // require('../styles/home.css');
 function Home() {
+  const isLogined = localStorage.getItem('access_token');
+
   return (
     <Container>
-      <BackgroundImage />
-      <Login />
+      <BackgroundImage isLogined={isLogined} />
+      {!isLogined && <Login />}
     </Container>
   );
 }
@@ -26,7 +28,7 @@ const BackgroundImage = styled.div`
   display: inline-block;
   top: 1px;
   left: 0;
-  width: 65%;
+  width: ${(props) => (props.isLogined ? '100%' : '65%')};
   height: 100%;
   background: url(${backgroundImg});
   background-position: center;

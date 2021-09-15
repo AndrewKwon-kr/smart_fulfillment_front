@@ -247,7 +247,6 @@ function EventRegistration() {
       setStepOneLoading(true);
       setTimeout(() => {
         setStepOneLoading(false);
-        // setStepStatus(stepStatus + 1);
       }, 4000);
       getMainItemData();
       getFreebieData();
@@ -452,11 +451,10 @@ function EventRegistration() {
         buttons: '확인',
       }).then((value) => {
         if (value) {
-          // window.location.reload();
+          window.location.reload();
+        } else {
+          window.location.href = '/registitem';
         }
-        // else {
-        //   window.location.href = '/registitem';
-        // }
       });
     }, 4000);
   };

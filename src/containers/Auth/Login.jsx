@@ -4,16 +4,45 @@ import styled from 'styled-components';
 import logo from 'assets/logo.png';
 import useForm from 'lib/useForm';
 import validate from 'lib/validate';
+import axios from 'axios';
 
 function Login() {
   const [isAutoChecked, setIsAutoChecked] = useState(false);
   const { values, errors, submitting, handleChange, handleSubmit } = useForm({
     initialValues: { email: '', password: '' },
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      getLoginData(values);
     },
     validate,
   });
+  const getLoginData = (row) => {
+    const url = `${process.env.REACT_APP_URL}/auth/jwt/create/`;
+
+    axios
+      .post(url, row)
+      .then((response) => {
+        try {
+          if (response.status === 200) {
+            console.log(response);
+            localStorage.setItem('access_token', response.data.access);
+            localStorage.setItem('refresh_token', response.data.refresh);
+            window.location.href = '/registitem';
+
+            // setErpLoading(false);
+          } else {
+            console.log(response.status);
+            alert('데이터를 등록해주세요');
+            // setErpLoading(false);
+          }
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+        }
+      })
+      .catch(() => {
+        alert('비밀번호 또는 이메일이 틀렸습니다.');
+        // setErpLoading(false);
+      });
+  };
 
   return (
     <LoginWrap>

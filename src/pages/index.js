@@ -9,3 +9,5 @@ export { default as EventRegistration } from './EventRegistration';
 export { default as EventHistory } from './EventHistory';
 export { default as OrderCollection } from './OrderCollection';
 export { default as SignUp } from './SignUp';
+export { default as ActivationAccount } from './ActivationAccount';
+export { default as FindPassword } from './FindPassword';

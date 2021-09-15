@@ -30,7 +30,7 @@ const AddLoginMenu = ({ autoLogin }) => (
       <input type="checkbox" onChange={autoLogin} /> 자동로그인
     </AutoLogin>
     <FindPasswordAndJoinWrap>
-      <LinkMenu to="/">비밀번호 찾기</LinkMenu>
+      <LinkMenu to="/find-pw">비밀번호 찾기</LinkMenu>
       <LinkMenu to="/signup">회원가입</LinkMenu>
     </FindPasswordAndJoinWrap>
   </div>

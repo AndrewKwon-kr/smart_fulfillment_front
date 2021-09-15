@@ -112,20 +112,15 @@ function ItemInquiry() {
 
   useEffect(() => {
     if (tabStatus === 'freebie') {
-      document.getElementById('freebie').style.background = '#f9fbff';
-      document.getElementById('erp').style.background = '';
       setIsConfirm(false);
     } else if (tabStatus === 'erp') {
       setTabStatus('erp');
-      document.getElementById('freebie').style.background = '';
-      document.getElementById('erp').style.background = '#f9fbff';
       setIsConfirm(false);
     }
   }, [tabStatus]);
 
   useEffect(() => {
     function createExcelData(data, type) {
-      console.log(data);
       let itemArray = [];
       for (let i = 0; i < data.length; i++) {
         let itemGroup = data[i];
@@ -184,6 +179,7 @@ function ItemInquiry() {
         <br />
         <FreebieAndPrintTab
           id="freebie"
+          status={tabStatus}
           onClick={() => {
             setTabStatus('freebie');
           }}
@@ -192,6 +188,7 @@ function ItemInquiry() {
         </FreebieAndPrintTab>
         <ErpTab
           id="erp"
+          status={tabStatus}
           onClick={() => {
             setTabStatus('erp');
           }}
@@ -268,6 +265,8 @@ const FreebieAndPrintTab = styled.div`
   height: 50px;
   border: 1px solid #a9a9a9;
   border-bottom: 0;
+  background-color: ${(props) =>
+    props.status === 'freebie' ? '#f9fbff' : '#fff'};
   color: #a9a9a9;
   line-height: 50px;
   text-align: center;
@@ -287,6 +286,7 @@ const ErpTab = styled.div`
   height: 50px;
   border: 1px solid #a9a9a9;
   border-bottom: 0;
+  background-color: ${(props) => (props.status === 'erp' ? '#f9fbff' : '#fff')};
   color: #a9a9a9;
   line-height: 50px;
   text-align: center;

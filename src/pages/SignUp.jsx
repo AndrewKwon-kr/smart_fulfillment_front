@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
-import SellhaLogo from '../assets/logo.png';
+// import SellhaLogo from '../assets/logo.png';
 import { Link } from 'react-router-dom';
 import { Button, Checkbox, Form, Input } from 'antd';
 
@@ -13,82 +13,88 @@ const popUpOptions =
 const passRegExp =
   /(?=.*\d{1,24})(?=.*[~`!@#$%^&*()-_+=]{1,24})(?=.*[a-zA-Z]{1,24}).{8,24}$/;
 
+const size = {
+  small: '770px',
+  medium: '1220px',
+  large: '1700px',
+};
+const colors = {
+  primary: '#FFDA4F',
+  success: '#20C239',
+  warning: '#FACA22',
+  danger: '#FF1717',
+  white: '#FFFFFF',
+  black: '#000000',
+  lightGray: '#EBEBEB',
+  lineGray: '#F2F2F2',
+  gray: '#D9D9D9',
+  darkGray: '#7F7F7F',
+  lightYellow: '#ffda4f80',
+  orange: '#FFC83A',
+  blue: '#5278da99',
+  green: '#00ae0099',
+};
+const theme = {
+  ...colors,
+  colors,
+  mobile: `(max-width: ${size.small})`,
+  tablet: `(max-width: ${size.medium})`,
+  laptop: `(max-width: 1440px)`,
+  desktop: `(max-width: ${size.large})`,
+};
+
 export default function SignupPage({ history }) {
-  const size = {
-    small: '770px',
-    medium: '1220px',
-    large: '1700px',
-  };
-  const colors = {
-    primary: '#FFDA4F',
-    success: '#20C239',
-    warning: '#FACA22',
-    danger: '#FF1717',
-    white: '#FFFFFF',
-    black: '#000000',
-    lightGray: '#EBEBEB',
-    lineGray: '#F2F2F2',
-    gray: '#D9D9D9',
-    darkGray: '#7F7F7F',
-    lightYellow: '#ffda4f80',
-    orange: '#FFC83A',
-    blue: '#5278da99',
-    green: '#00ae0099',
-  };
-  const theme = {
-    ...colors,
-    colors,
-    mobile: `(max-width: ${size.small})`,
-    tablet: `(max-width: ${size.medium})`,
-    laptop: `(max-width: 1440px)`,
-    desktop: `(max-width: ${size.large})`,
-  };
   const [form] = Form.useForm();
   function checkDuplicateEmail(email) {
+    console.log(email);
     return axios
-      .get(`${process.env.REACT_APP_URL}/duplicate-email`, {
+      .post(`${process.env.REACT_APP_URL}/auth/duplicate-email/`, {
         params: { email },
       })
-      .then(({ data }) => !!data.isDuplicate);
+      .then(({ data }) => !!data.isDuplicated);
   }
 
   function checkDuplicatePhone(phone) {
     return axios
-      .get(`${process.env.REACT_APP_URL}/duplicate-phone`, {
+      .post(`${process.env.REACT_APP_URL}/auth/duplicate-phone/`, {
         params: { phone },
       })
-      .then(({ data }) => !!data.isDuplicate);
+      .then(({ data }) => !!data.isDuplicated);
   }
 
   // member
   function localSignup(signupForm) {
     return axios
-      .post(`${process.env.REACT_APP_URL}/local-signup`, signupForm)
-      .then((res) => res.data);
+      .post(`${process.env.REACT_APP_URL}/auth/users/`, signupForm)
+      .then((res) => res.status);
   }
 
-  function sendCertifyEmail(email) {
-    return axios.get(
-      `${process.env.REACT_APP_URL}/send-certify-email?email=${email}`
-    );
-  }
   const handleSignupButton = (values) => {
     const asyncSignup = async () => {
       try {
-        await localSignup({
+        const isSignedUp = await localSignup({
           email: values.email,
           password: values.pass1,
+          re_password: values.pass2,
           name: values.name,
           phone: values.phone,
         });
-        await sendCertifyEmail(values.email);
-        await Swal.fire({
-          icon: 'success',
-          title: '회원가입이 완료되었습니다',
-          text: '이메일 인증을 진행해주세요',
-          confirmButtonColor: theme.colors.primary,
-        });
-        history.push('/');
+        isSignedUp === 201
+          ? await Swal.fire(
+              {
+                icon: 'success',
+                title: '회원가입이 완료되었습니다',
+                text: '이메일 인증을 진행해주세요',
+                confirmButtonColor: theme.colors.primary,
+              },
+              history.push('/')
+            )
+          : Swal.fire({
+              icon: 'error',
+              title: '회원가입을 할 수 없습니다.',
+              text: '정보를 다시 한번 확인해 주세요.',
+              confirmButtonColor: theme.colors.primary,
+            });
       } catch (error) {
         Swal.fire({
           icon: 'error',
@@ -104,9 +110,9 @@ export default function SignupPage({ history }) {
   return (
     <Container>
       {/* <IntroDiv>똑똑한 셀러들이 찾는 아이템 분석 플랫폼</IntroDiv> */}
-      <Link to="/">
+      {/* <Link to="/">
         <img src={SellhaLogo} alt="셀러하이" width="230px" />
-      </Link>
+      </Link> */}
       <TitleDiv>회원 가입</TitleDiv>
       <StyledForm onFinish={handleSignupButton} form={form} scrollToFirstError>
         <StyledForm.Item
@@ -137,7 +143,6 @@ export default function SignupPage({ history }) {
         >
           <StyledInput placeholder="이메일" />
         </StyledForm.Item>
-
         <StyledForm.Item
           name="pass1"
           rules={[
@@ -161,7 +166,6 @@ export default function SignupPage({ history }) {
         >
           <StyledInput type="password" placeholder="비밀번호" />
         </StyledForm.Item>
-
         <StyledForm.Item
           name="pass2"
           dependencies={['pass1']}
@@ -187,7 +191,6 @@ export default function SignupPage({ history }) {
         >
           <StyledInput type="password" placeholder="비밀번호 확인" />
         </StyledForm.Item>
-
         <StyledForm.Item
           name="name"
           rules={[
@@ -200,7 +203,6 @@ export default function SignupPage({ history }) {
         >
           <StyledInput type="text" placeholder="이름" />
         </StyledForm.Item>
-
         <StyledForm.Item
           name="phone"
           rules={[
@@ -297,6 +299,9 @@ const Container = styled.div`
 
   margin: auto;
   margin-top: 3em;
+  .ant-form-item-explain {
+    min-height: 25px;
+  }
 `;
 
 // const IntroDiv = styled.div`
