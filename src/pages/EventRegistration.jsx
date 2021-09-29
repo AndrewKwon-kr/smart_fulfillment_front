@@ -822,31 +822,33 @@ function EventRegistration() {
                   해당없음
                 </WayOption>
               </Way>
-              <Way>
-                <WayText>한정수량</WayText>
-                <InputNumber
-                  type="text"
-                  value={limitNumber || 0}
-                  onChange={(e) => {
-                    onChangeNumber(e, 'limitNumber');
-                  }}
-                  disabled={limitNumberChecked}
-                />
-                개
-                <WayOption className="checkbox">
-                  <input
-                    type="checkbox"
-                    style={{ marginRight: '10px' }}
-                    value={limitNumberChecked}
-                    checked={limitNumberChecked}
-                    onChange={() => {
-                      setLimitNumber(0);
-                      setLimitNumberChecked(!limitNumberChecked);
+              {freebies.length !== 0 && (
+                <Way>
+                  <WayText>한정수량</WayText>
+                  <InputNumber
+                    type="text"
+                    value={limitNumber || 0}
+                    onChange={(e) => {
+                      onChangeNumber(e, 'limitNumber');
                     }}
+                    disabled={limitNumberChecked}
                   />
-                  제한없음
-                </WayOption>
-              </Way>
+                  개
+                  <WayOption className="checkbox">
+                    <input
+                      type="checkbox"
+                      style={{ marginRight: '10px' }}
+                      value={limitNumberChecked}
+                      checked={limitNumberChecked}
+                      onChange={() => {
+                        setLimitNumber(0);
+                        setLimitNumberChecked(!limitNumberChecked);
+                      }}
+                    />
+                    제한없음
+                  </WayOption>
+                </Way>
+              )}
             </EventWayList>
             <SubTitle>증정 기간</SubTitle>
             <br />

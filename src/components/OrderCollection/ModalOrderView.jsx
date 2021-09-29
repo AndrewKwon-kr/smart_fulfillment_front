@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import * as GoIcons from 'react-icons/go';
+import { Button } from 'antd';
 
 function ModalOrderView(props) {
   const [checkedOne, setCheckedOne] = useState(false);
@@ -13,40 +14,84 @@ function ModalOrderView(props) {
       setCheckedTwo(!checkedTwo);
     }
   };
+  console.log(props.progressStep);
   return (
     <Modal>
       <ModalContainer>
-        <Title>모두 체크해야 변환된 주문서를 받을 수 있습니다</Title>
-        <ContentWrapper>
-          <Content>
-            <CheckedIcon
-              size="20"
-              className="one"
-              onClick={() => clickCheckedIcon('one')}
-              checked={checkedOne}
-            />
-            사방넷에서 주문서를 수집했나요?
-          </Content>
-          <Content>
-            <CheckedIcon
-              size="20"
-              className="two"
-              onClick={() => clickCheckedIcon('two')}
-              checked={checkedTwo}
-            />
-            모든 주문이 매핑되어 있나요?
-          </Content>
-        </ContentWrapper>
-        <TransformButton
-          onClick={props.uploadExcel}
-          disabled={!(checkedOne && checkedTwo)}
-        >
-          변환하기
-        </TransformButton>
+        {props.step === 0 ? (
+          <>
+            <Title>모두 체크해야 변환된 주문서를 받을 수 있습니다</Title>
+            <ContentWrapper>
+              <Content>
+                <CheckedIcon
+                  size="20"
+                  className="one"
+                  onClick={() => clickCheckedIcon('one')}
+                  checked={checkedOne}
+                />
+                <label onClick={() => clickCheckedIcon('one')}>
+                  사방넷에서 주문서를 수집했나요?
+                </label>
+              </Content>
+              <Content>
+                <CheckedIcon
+                  size="20"
+                  className="two"
+                  onClick={() => clickCheckedIcon('two')}
+                  checked={checkedTwo}
+                />
+                <label onClick={() => clickCheckedIcon('two')}>
+                  모든 주문이 매핑되어 있나요?
+                </label>
+              </Content>
+            </ContentWrapper>
+            <TransformButton
+              onClick={props.uploadExcel}
+              disabled={!(checkedOne && checkedTwo)}
+            >
+              변환하기
+            </TransformButton>
+          </>
+        ) : (
+          <>
+            <Title>주문서를 변환 중 입니다</Title>
+            <SubTitle>잠시만 기다려주세요</SubTitle>
+            <StepTwoWrapper>
+              <ProgressWrap>
+                <Progress progressStep={props.progressStep >= 0}>
+                  ●<div className="Text">주문대기</div>
+                </Progress>
+                <Line progressStep={props.progressStep >= 0} />
+                <Progress progressStep={props.progressStep >= 1}>
+                  ●<div className="Text">주문수집</div>
+                </Progress>
+                <Line progressStep={props.progressStep >= 1} />
+                <Progress progressStep={props.progressStep >= 2}>
+                  ●<div className="Text">주문확인</div>
+                </Progress>
+                <Line progressStep={props.progressStep >= 2} />
+                <Progress progressStep={props.progressStep >= 3}>
+                  ●<div className="Text">이벤트 적용</div>
+                </Progress>
+                <Line progressStep={props.progressStep >= 3} />
+                <Progress progressStep={props.progressStep >= 4}>
+                  ●<div className="Text">완료</div>
+                </Progress>
+              </ProgressWrap>
+              <DownloadButton
+                onClick={props.orderDownload}
+                disabled={props.progressStep !== 4}
+              >
+                주문서 다운로드
+              </DownloadButton>
+            </StepTwoWrapper>
+          </>
+        )}
+
         <ButtonWrapper>
-          <Button className="close" onClick={props.closeModal}>
+          <CancelButton className="close" onClick={props.closeModal}>
             취소
-          </Button>
+          </CancelButton>
         </ButtonWrapper>
       </ModalContainer>
     </Modal>
@@ -68,7 +113,7 @@ const ModalContainer = styled.div`
   padding: 35px 25px;
   display: block;
   background-color: #fff;
-  width: 500px;
+  width: 700px;
   height: 300px;
   border-radius: 10px;
   text-align: center;
@@ -76,11 +121,42 @@ const ModalContainer = styled.div`
 const Title = styled.div`
   font-weight: bold;
   font-size: 15px;
-  margin-bottom: 40px;
+`;
+const SubTitle = styled.div`
+  margin-top: 5px;
+  font-size: 13px;
+  color: #a1a1a1;
 `;
 const ContentWrapper = styled.div`
-  margin: 20px auto;
+  margin: 40px auto 20px;
   padding: 0 40px;
+`;
+const StepTwoWrapper = styled.div`
+  margin: 40px auto 0px;
+`;
+const ProgressWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
+const Progress = styled.div`
+  font-size: 10px;
+  color: ${(props) => (props.progressStep ? '#228be6' : '#a1a1a1')};
+  .Text {
+    margin-top: 5px;
+    font-size: 14px;
+    font-weight: bold;
+  }
+`;
+const Line = styled.div`
+  margin-left: 15px;
+  margin-right: 15px;
+  width: 10%;
+  height: 1px;
+  margin-top: -25px;
+  overflow-x: visible;
+  background-color: ${(props) => (props.progressStep ? '#228be6' : '#a1a1a1')};
 `;
 const Content = styled.div`
   margin-bottom: 20px;
@@ -91,7 +167,7 @@ const ButtonWrapper = styled.div`
   margin-top: 20px;
   float: right;
 `;
-const Button = styled.button`
+const CancelButton = styled.button`
   all: unset;
   margin-left: 10px;
   display: inline-block;
@@ -131,5 +207,8 @@ const CheckedIcon = styled(GoIcons.GoCheck)`
   &.two {
     color: ${(props) => (props.checked ? '#228be6' : '#e1e1e1')};
   }
+`;
+const DownloadButton = styled(Button)`
+  margin-top: 40px;
 `;
 export default ModalOrderView;

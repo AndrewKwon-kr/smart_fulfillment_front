@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { SideBarData } from './SidebarData';
 import logo from 'assets/logo.png';
 import styled from 'styled-components';
+import { Avatar, Dropdown, Menu } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 
 function Navigator() {
   const [sidebar, setSidebar] = useState(false);
@@ -12,10 +14,18 @@ function Navigator() {
 
   const showSidebar = () => setSidebar(!sidebar);
   const logout = () => {
-    console.log('asdf');
     localStorage.removeItem('access_token');
     window.location.reload();
   };
+  const menu = (
+    <Menu>
+      <Menu.Item key={1} onClick={logout}>
+        로그아웃
+      </Menu.Item>
+      <Menu.Item key={2}>내 정보</Menu.Item>
+      <Menu.Item key={3}>xx</Menu.Item>
+    </Menu>
+  );
   return (
     <>
       <Navbar>
@@ -25,7 +35,11 @@ function Navigator() {
         <Link to="/">
           <Logo alt="셀러비" src={logo} />
         </Link>
-        {isLogined && <Logout onClick={logout}>로그아웃</Logout>}
+        {isLogined && (
+          <Dropdown overlay={menu} placement="bottomRight" arrow>
+            <MyInfo size={48} icon={<UserOutlined />} />
+          </Dropdown>
+        )}
       </Navbar>
       <NavMenuWrap>
         <div className={sidebar ? 'nav-menu active' : 'nav-menu'}>
@@ -78,10 +92,10 @@ const Menubars = styled(Link)`
   background-color: #fff;
   color: #9c9c9c;
 `;
-const Logout = styled.div`
+const MyInfo = styled(Avatar)`
   position: relative;
   top: 0;
-  left: 90%;
+  left: 85%;
   font-weight: bold;
   cursor: pointer;
 `;

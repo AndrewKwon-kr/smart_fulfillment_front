@@ -43,6 +43,11 @@ function EventHistory() {
   useEffect(() => {
     getEventData();
   }, []);
+  useEffect(() => {
+    return () => {
+      setLoading(false);
+    };
+  }, []);
   return (
     <Container>
       <CategoryHeader>

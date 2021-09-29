@@ -118,12 +118,14 @@ function FreebieMainTable(props) {
       title: '이름',
       dataIndex: 'name',
       key: 'name',
+      width: '30%',
       ...getColumnSearchProps('name'),
     },
     {
       title: '분류',
       dataIndex: 'category',
       key: 'category',
+      width: '20%',
       filters: [
         { text: '사은품(비매품)', value: '사은품(비매품)' },
         { text: '인쇄물', value: '인쇄물' },

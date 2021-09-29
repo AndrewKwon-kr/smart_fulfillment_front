@@ -168,6 +168,13 @@ function ItemInquiry() {
     });
   };
 
+  useEffect(() => {
+    return () => {
+      setFreebieAndPrintLoading(false);
+      setErpLoading(false);
+    };
+  }, []);
+
   return (
     <Container>
       <Wrapper>

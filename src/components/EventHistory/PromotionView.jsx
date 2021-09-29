@@ -18,7 +18,7 @@ function PromotionView(props) {
       eventData.filter((event) => event.title.includes(userInput))
     );
   };
-  console.log(eventData);
+
   return (
     <Wrapper>
       <PromotionSearch handleChange={handleChange} handleClick={handleClick} />

@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { ModalOrderView } from 'components/OrderCollection';
+import { ModalOrderView, OrderExcel } from 'components/OrderCollection';
 import { ExcelRenderer } from 'react-excel-renderer';
 import { Button, Upload } from 'antd';
 // import axios from 'axios';
 import swal from 'sweetalert';
 import * as XLSX from 'xlsx';
+import axios from 'axios';
 
 function OrderCollection() {
   // console.log(erpData);
@@ -14,14 +15,31 @@ function OrderCollection() {
   // const [isErpData, setIsErpData] = useState(false);
   // const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isConfirm, setIsConfirm] = useState(false); // Excel 다운로드 Yes or No
 
-  const [file, setFile] = useState();
+  const [jsonFile, setJsonFile] = useState();
+  const [step, setStep] = useState(0);
+
+  const [orderExcelData, setOrderExcelData] = useState([]);
 
   const openModal = () => {
     setModalVisible(true);
   };
   const closeModal = () => {
     setModalVisible(false);
+    setStep(0);
+    setCount(0);
+  };
+
+  const [count, setCount] = useState(0);
+  const intervalId = useRef(null);
+
+  const startCounter = () => {
+    intervalId.current = setInterval(
+      () => setCount((count) => count + 1),
+      2500
+    );
+    console.log(`시작... intervalId: ${intervalId.current}`);
   };
 
   // const createErpData = (row) => {
@@ -57,6 +75,16 @@ function OrderCollection() {
   //       .then((response) => console.log(response.data.result));
   //   }
   // };
+  useEffect(() => {
+    const getData = () => {
+      const url = `${process.env.REACT_APP_URL}/order/map-event/`;
+      axios.get(url).then((response) => {
+        console.log(response.data.result);
+        setOrderExcelData(response.data.result);
+      });
+    };
+    getData();
+  }, []);
 
   const uploadExcel = () => {
     swal({
@@ -134,11 +162,17 @@ function OrderCollection() {
     console.log(e.file);
     console.log(e.fileList);
     // var file = e.target.files[0];
-    setFile(e.file);
-    readFile();
+    // setFile(e.file);
+    readFile(e.file);
+    startCounter();
+    setTimeout(() => {
+      clearInterval(intervalId.current);
+    }, 10000);
+    // startCounter();
   };
-  const readFile = () => {
+  const readFile = (file) => {
     var f = file;
+
     const reader = new FileReader();
     reader.onload = (e) => {
       // evt = on_file_select event
@@ -151,9 +185,11 @@ function OrderCollection() {
       /* Convert array of arrays */
       const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
       /* Update state */
-      console.log(convertToJson(data)); // shows data in json format
+      setJsonFile(convertToJson(data)); // shows data in json format
     };
     reader.readAsBinaryString(f);
+    setStep(1);
+    console.log(jsonFile);
   };
   const convertToJson = (csv) => {
     var lines = csv.split('\n');
@@ -176,6 +212,17 @@ function OrderCollection() {
     //return result; //JavaScript object
     return JSON.stringify(result); //JSON
   };
+
+  const orderDownload = () => {
+    swal({
+      text: '주문서를 다운로드 하시겠습니까?',
+      buttons: { confirm: '확인', cancel: '취소' },
+    }).then((value) => {
+      if (value === true) {
+        setIsConfirm(true);
+      }
+    });
+  };
   return (
     <Container>
       <Wrapper>
@@ -186,6 +233,14 @@ function OrderCollection() {
           <ExcelButton onClick={() => openModal()}>
             주문서 변환 및 다운로드
           </ExcelButton>
+          {isConfirm && (
+            <OrderExcel
+              data={orderExcelData}
+              setIsConfirm={() => {
+                setIsConfirm(false);
+              }}
+            />
+          )}
           <Upload
             name="file"
             id="upload"
@@ -200,7 +255,13 @@ function OrderCollection() {
           <InvoiceUploadButton>송장 업로드</InvoiceUploadButton>
         </ExcelButtonWrapper>
         {modalVisible && (
-          <ModalOrderView uploadExcel={uploadExcel} closeModal={closeModal} />
+          <ModalOrderView
+            uploadExcel={uploadExcel}
+            closeModal={closeModal}
+            step={step}
+            orderDownload={orderDownload}
+            progressStep={count}
+          />
         )}
       </Wrapper>
     </Container>

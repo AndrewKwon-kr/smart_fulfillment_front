@@ -71,6 +71,7 @@ function FreebieSubTable({ record, index }) {
     {
       title: '이미지',
       key: 'image',
+      width: '30%',
       render: (option) => (
         <OptionTwoWrapper>
           {option.mainImage && <Mark>대표</Mark>}
