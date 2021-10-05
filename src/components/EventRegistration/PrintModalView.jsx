@@ -52,8 +52,6 @@ function PrintModalView(props) {
   }
 
   const [filteredPrintItem, setFilteredPrintItem] = useState([]);
-  console.log('보낼 정보 : ', selectedItems);
-  console.log('필터링된 아이템 : ', filteredPrintItem);
 
   return (
     <Modal>

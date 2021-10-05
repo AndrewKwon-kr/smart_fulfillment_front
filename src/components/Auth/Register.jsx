@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AuthContent, InputWithLabel, AuthButton } from 'components/Auth';
+import { AuthContent, InputWithLabel, AuthButton } from './';
 
 class Register extends Component {
   render() {

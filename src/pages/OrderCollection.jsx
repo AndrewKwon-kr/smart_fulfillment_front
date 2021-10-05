@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { ModalOrderView, OrderExcel } from 'components/OrderCollection';
 import { ExcelRenderer } from 'react-excel-renderer';
@@ -9,11 +9,6 @@ import * as XLSX from 'xlsx';
 import axios from 'axios';
 
 function OrderCollection() {
-  // console.log(erpData);
-  // const [rows, setRows] = useState([]);
-  // const [excelRows, setExcelRows] = useState([]);
-  // const [isErpData, setIsErpData] = useState(false);
-  // const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false); // Excel 다운로드 Yes or No
 
@@ -39,52 +34,16 @@ function OrderCollection() {
       () => setCount((count) => count + 1),
       2500
     );
-    console.log(`시작... intervalId: ${intervalId.current}`);
   };
 
-  // const createErpData = (row) => {
-  //   console.log('create---> ', row);
-  //   setLoading(true);
-  //   const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items/`;
-  //   const data = {
-  //     messageType: 'create',
-  //     groupId: 1,
-  //     erpDatas: row,
-  //   };
-  //   if (row.length !== 0) {
-  //     axios.post(url, data).then((response) => {
-  //       if (response.data.code === 201) {
-  //         console.log(response.data);
-  //         // window.location.href = '/erp';
-  //       }
-  //     });
-  //   }
-  // };
-  // const updateErpData = (row) => {
-  //   console.log('update ---> ', row);
-  //   const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items/`;
-  //   const data = {
-  //     messageType: 'update',
-  //     groupId: 1,
-  //     erpDatas: row,
-  //   };
-  //   if (row.length !== 0) {
-  //     console.log(row);
-  //     axios
-  //       .post(url, data)
-  //       .then((response) => console.log(response.data.result));
-  //   }
-  // };
-  useEffect(() => {
-    const getData = () => {
-      const url = `${process.env.REACT_APP_URL}/order/map-event/`;
-      axios.get(url).then((response) => {
-        console.log(response.data.result);
-        setOrderExcelData(response.data.result);
-      });
-    };
-    getData();
-  }, []);
+  const getData = async () => {
+    const url = `${process.env.REACT_APP_URL}/order/map-event/`;
+    await axios.get(url).then((response) => {
+      console.log(response.data.result);
+      setOrderExcelData(response.data.result);
+      setIsConfirm(true);
+    });
+  };
 
   const uploadExcel = () => {
     swal({
@@ -164,6 +123,7 @@ function OrderCollection() {
     // var file = e.target.files[0];
     // setFile(e.file);
     readFile(e.file);
+    setStep(1);
     startCounter();
     setTimeout(() => {
       clearInterval(intervalId.current);
@@ -188,7 +148,7 @@ function OrderCollection() {
       setJsonFile(convertToJson(data)); // shows data in json format
     };
     reader.readAsBinaryString(f);
-    setStep(1);
+
     console.log(jsonFile);
   };
   const convertToJson = (csv) => {
@@ -219,7 +179,7 @@ function OrderCollection() {
       buttons: { confirm: '확인', cancel: '취소' },
     }).then((value) => {
       if (value === true) {
-        setIsConfirm(true);
+        getData();
       }
     });
   };

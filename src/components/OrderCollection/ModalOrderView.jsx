@@ -14,7 +14,7 @@ function ModalOrderView(props) {
       setCheckedTwo(!checkedTwo);
     }
   };
-  console.log(props.progressStep);
+
   return (
     <Modal>
       <ModalContainer>

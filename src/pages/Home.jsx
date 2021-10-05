@@ -1,7 +1,7 @@
 // import React from 'react';
 import styled from 'styled-components';
 import backgroundImg from '../assets/home_bg.png';
-import { Login } from 'containers/Auth';
+import { Login } from 'components/Auth/';
 
 // require('../styles/home.css');
 function Home() {

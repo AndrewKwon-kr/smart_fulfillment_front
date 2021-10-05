@@ -27,7 +27,6 @@ function ImportModalView(props) {
         <ImportModalTable
           data={searchedEvent}
           loading={props.loading}
-          // importData={props.importData}
           setSelectedRow={props.setSelectedRow}
         />
         <br />

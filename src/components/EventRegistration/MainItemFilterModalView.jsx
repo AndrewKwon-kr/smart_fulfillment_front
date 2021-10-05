@@ -63,8 +63,7 @@ function MainItemFilterModalView(props) {
     );
     props.close();
   };
-  // console.log(props.filteredMainItem);
-  // console.log(defaultRowKeys);
+
   return (
     <Modal>
       <ModalContainer>
