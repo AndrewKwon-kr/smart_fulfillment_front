@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ModalOrderView, OrderExcel } from 'components/OrderCollection';
-import { ExcelRenderer } from 'react-excel-renderer';
-import { Button, Upload } from 'antd';
-// import axios from 'axios';
-// import Swal from 'sweetalert2';
-import * as XLSX from 'xlsx';
+import { Button } from 'antd';
 import axios from 'axios';
 
 function OrderCollection() {
   const [modalVisible, setModalVisible] = useState(false);
   const [isConfirm, setIsConfirm] = useState(false); // Excel 다운로드 Yes or No
-
-  const [jsonFile, setJsonFile] = useState();
   const [step, setStep] = useState(0);
 
   const [orderExcelData, setOrderExcelData] = useState([]);
@@ -27,29 +21,6 @@ function OrderCollection() {
     setProgressStep(0);
   };
 
-  // const intervalId = useRef(null);
-
-  // const startCounter = () => {
-  //   intervalId.current = setInterval(
-  //     () => setProgressStep((count) => count + 1),
-  //     2500
-  //   );
-  // };
-
-  // const downloadOrder = async () => {
-  //   setIsConfirm(true);
-  // };
-
-  // const uploadExcel = () => {
-  //   swal({
-  //     text: 'Excel 파일을 등록 하시겠습니까?',
-  //     buttons: { confirm: '확인', cancel: '취소' },
-  //   }).then((value) => {
-  //     if (value === true) {
-  //       document.getElementById('upload').click();
-  //     }
-  //   });
-  // };
   const transformOrder = async () => {
     const url = `${process.env.REACT_APP_URL}/1/order/check-sabangnet/`;
     setStep(1);
@@ -77,133 +48,6 @@ function OrderCollection() {
     });
   };
 
-  const fileHandler = (fileList) => {
-    let fileObj = fileList;
-    if (!fileObj) {
-      // setErrorMessage('No file uploaded!');
-      return false;
-    }
-    if (
-      !(
-        fileObj.type === 'application/vnd.ms-excel' ||
-        fileObj.type ===
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      )
-    ) {
-      // setErrorMessage('Unknown file format. Only Excel files are uploaded!');
-
-      return false;
-    }
-    //just pass the fileObj as parameter
-    ExcelRenderer(fileObj, (err, resp) => {
-      if (err) {
-        console.log(err);
-      } else {
-        let newRows = [];
-        console.log(fileObj);
-        resp.rows.map((row, index) => {
-          if (row && row !== 'undefined') {
-            newRows.push({
-              key: index,
-              code: row[0],
-              name: row[1],
-              type: row[2],
-              size: row[3],
-              brandName: row[4],
-              brandCode: row[5],
-              itemGroupName: row[6],
-              itemGroupCode: row[7],
-              representativeName: row[8],
-              representativeCode: row[9],
-              search: row[10],
-              use: row[11],
-            });
-          }
-          return newRows;
-        });
-        if (newRows.length === 0) {
-          // setErrorMessage('No data found in file!');
-
-          return false;
-        } else {
-          // console.log(isErpData);
-          // setExcelRows(newRows);
-          console.log(newRows);
-          // createErpData(newRows);
-
-          // setErrorMessage(null);
-        }
-      }
-    });
-    return false;
-  };
-
-  const filePathset = (e) => {
-    console.log(e.file);
-    console.log(e.fileList);
-    // var file = e.target.files[0];
-    // setFile(e.file);
-    readFile(e.file);
-    setStep(1);
-    // startCounter();
-    // setTimeout(() => {
-    //   clearInterval(intervalId.current);
-    // }, 10000);
-  };
-  const readFile = (file) => {
-    var f = file;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      // evt = on_file_select event
-      /* Parse data */
-      const bstr = e.target.result;
-      const wb = XLSX.read(bstr, { type: 'binary' });
-      /* Get first worksheet */
-      const wsname = wb.SheetNames[6];
-      const ws = wb.Sheets[wsname];
-      /* Convert array of arrays */
-      const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
-      /* Update state */
-      setJsonFile(convertToJson(data)); // shows data in json format
-    };
-    reader.readAsBinaryString(f);
-
-    console.log(jsonFile);
-  };
-  const convertToJson = (csv) => {
-    var lines = csv.split('\n');
-
-    var result = [];
-
-    var headers = lines[0].split(',');
-
-    for (var i = 1; i < lines.length; i++) {
-      var obj = {};
-      var currentline = lines[i].split(',');
-
-      for (var j = 0; j < headers.length; j++) {
-        obj[headers[j]] = currentline[j];
-      }
-
-      result.push(obj);
-    }
-
-    //return result; //JavaScript object
-    return JSON.stringify(result); //JSON
-  };
-
-  // const orderDownload = () => {
-  //   Swal.fire({
-  //     icon: 'success',
-  //     title: '주문서를 다운로드 하시겠습니까?',
-  //     showCancelButton: true,
-  //   }).then((value) => {
-  //     if (value === true) {
-  //       downloadOrder();
-  //     }
-  //   });
-  // };
   return (
     <Container>
       <Wrapper>
@@ -222,17 +66,6 @@ function OrderCollection() {
               }}
             />
           )}
-          <Upload
-            name="file"
-            id="upload"
-            accept=".xlsx, .xls"
-            beforeUpload={fileHandler}
-            onChange={filePathset.bind(this)}
-            // onRemove={() => setRows([])}
-            multiple={false}
-          >
-            <button></button>
-          </Upload>
           <InvoiceUploadButton>송장 업로드</InvoiceUploadButton>
         </ExcelButtonWrapper>
         {modalVisible && (
