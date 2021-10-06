@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ModalOrderView, OrderExcel } from 'components/OrderCollection';
 import { ExcelRenderer } from 'react-excel-renderer';
 import { Button, Upload } from 'antd';
 // import axios from 'axios';
-import swal from 'sweetalert';
+// import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 import axios from 'axios';
 
@@ -16,6 +16,7 @@ function OrderCollection() {
   const [step, setStep] = useState(0);
 
   const [orderExcelData, setOrderExcelData] = useState([]);
+  const [progressStep, setProgressStep] = useState(0);
 
   const openModal = () => {
     setModalVisible(true);
@@ -23,36 +24,56 @@ function OrderCollection() {
   const closeModal = () => {
     setModalVisible(false);
     setStep(0);
-    setCount(0);
+    setProgressStep(0);
   };
 
-  const [count, setCount] = useState(0);
-  const intervalId = useRef(null);
+  // const intervalId = useRef(null);
 
-  const startCounter = () => {
-    intervalId.current = setInterval(
-      () => setCount((count) => count + 1),
-      2500
-    );
-  };
+  // const startCounter = () => {
+  //   intervalId.current = setInterval(
+  //     () => setProgressStep((count) => count + 1),
+  //     2500
+  //   );
+  // };
 
-  const getData = async () => {
-    const url = `${process.env.REACT_APP_URL}/order/map-event/`;
+  // const downloadOrder = async () => {
+  //   setIsConfirm(true);
+  // };
+
+  // const uploadExcel = () => {
+  //   swal({
+  //     text: 'Excel 파일을 등록 하시겠습니까?',
+  //     buttons: { confirm: '확인', cancel: '취소' },
+  //   }).then((value) => {
+  //     if (value === true) {
+  //       document.getElementById('upload').click();
+  //     }
+  //   });
+  // };
+  const transformOrder = async () => {
+    const url = `${process.env.REACT_APP_URL}/1/order/check-sabangnet/`;
+    setStep(1);
+    setProgressStep(1);
+    console.log('transformOrder_before');
     await axios.get(url).then((response) => {
-      console.log(response.data.result);
-      setOrderExcelData(response.data.result);
-      setIsConfirm(true);
+      console.log('transformOrder_after');
+      if (response.data.result) {
+        setProgressStep(2);
+        eventMapping();
+      } else {
+        setStep(2);
+      }
     });
   };
 
-  const uploadExcel = () => {
-    swal({
-      text: 'Excel 파일을 등록 하시겠습니까?',
-      buttons: { confirm: '확인', cancel: '취소' },
-    }).then((value) => {
-      if (value === true) {
-        document.getElementById('upload').click();
-      }
+  const eventMapping = async () => {
+    const url = `${process.env.REACT_APP_URL}/order/map-event/`;
+    setProgressStep(3);
+    console.log('eventMapping_before');
+    await axios.get(url).then((response) => {
+      console.log('eventMapping_after');
+      setOrderExcelData(response.data.result);
+      setProgressStep(4);
     });
   };
 
@@ -124,11 +145,10 @@ function OrderCollection() {
     // setFile(e.file);
     readFile(e.file);
     setStep(1);
-    startCounter();
-    setTimeout(() => {
-      clearInterval(intervalId.current);
-    }, 10000);
     // startCounter();
+    // setTimeout(() => {
+    //   clearInterval(intervalId.current);
+    // }, 10000);
   };
   const readFile = (file) => {
     var f = file;
@@ -173,16 +193,17 @@ function OrderCollection() {
     return JSON.stringify(result); //JSON
   };
 
-  const orderDownload = () => {
-    swal({
-      text: '주문서를 다운로드 하시겠습니까?',
-      buttons: { confirm: '확인', cancel: '취소' },
-    }).then((value) => {
-      if (value === true) {
-        getData();
-      }
-    });
-  };
+  // const orderDownload = () => {
+  //   Swal.fire({
+  //     icon: 'success',
+  //     title: '주문서를 다운로드 하시겠습니까?',
+  //     showCancelButton: true,
+  //   }).then((value) => {
+  //     if (value === true) {
+  //       downloadOrder();
+  //     }
+  //   });
+  // };
   return (
     <Container>
       <Wrapper>
@@ -216,11 +237,11 @@ function OrderCollection() {
         </ExcelButtonWrapper>
         {modalVisible && (
           <ModalOrderView
-            uploadExcel={uploadExcel}
+            transformOrder={transformOrder}
             closeModal={closeModal}
             step={step}
-            orderDownload={orderDownload}
-            progressStep={count}
+            orderDownload={() => setIsConfirm(true)}
+            progressStep={progressStep}
           />
         )}
       </Wrapper>

@@ -2,10 +2,48 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import * as GoIcons from 'react-icons/go';
 import { Button } from 'antd';
+import { InputWithLabel } from '../Auth';
+import validateSabangnet from 'lib/validateSabangnet';
+import axios from 'axios';
+import useForm from 'lib/useForm';
 
 function ModalOrderView(props) {
   const [checkedOne, setCheckedOne] = useState(false);
   const [checkedTwo, setCheckedTwo] = useState(false);
+
+  const { values, errors, submitting, handleChange, handleSubmit } = useForm({
+    initialValues: { sabangnetKey: '', sabangnetId: '', groupId: 1 },
+    onSubmit: (values) => {
+      getLoginData(values);
+    },
+    validate: validateSabangnet,
+  });
+  const getLoginData = (row) => {
+    const url = `${process.env.REACT_APP_URL}/order/sabangnet/`;
+    console.log(row);
+    axios
+      .post(url, row)
+      .then((response) => {
+        console.log(response);
+        try {
+          if (response.status === 200) {
+            props.transformOrder();
+
+            // setErpLoading(false);
+          } else {
+            console.log(response.status);
+            alert('데이터를 등록해주세요');
+            // setErpLoading(false);
+          }
+        } catch (err) {
+          alert('데이터를 불러올 수 없습니다.');
+        }
+      })
+      .catch(() => {
+        alert('다른 에러');
+        // setErpLoading(false);
+      });
+  };
 
   const clickCheckedIcon = (type) => {
     if (type === 'one') {
@@ -46,16 +84,24 @@ function ModalOrderView(props) {
               </Content>
             </ContentWrapper>
             <TransformButton
-              onClick={props.uploadExcel}
+              onClick={props.transformOrder}
               disabled={!(checkedOne && checkedTwo)}
             >
               변환하기
             </TransformButton>
           </>
-        ) : (
+        ) : props.step === 1 ? (
           <>
-            <Title>주문서를 변환 중 입니다</Title>
-            <SubTitle>잠시만 기다려주세요</SubTitle>
+            <Title>
+              {props.progressStep < 4
+                ? '주문서를 변환 중 입니다'
+                : '변환이 완료되었습니다'}
+            </Title>
+            <SubTitle>
+              {props.progressStep < 4
+                ? '잠시만 기다려주세요'
+                : '주문서를 다운로드 해주세요'}
+            </SubTitle>
             <StepTwoWrapper>
               <ProgressWrap>
                 <Progress progressStep={props.progressStep >= 0}>
@@ -86,12 +132,49 @@ function ModalOrderView(props) {
               </DownloadButton>
             </StepTwoWrapper>
           </>
+        ) : (
+          <form onSubmit={handleSubmit} noValidate>
+            <InputWithLabel
+              type="text"
+              label="사방넷 Key"
+              name="sabangnetKey"
+              placeholder="사방넷 키를 입력하세요"
+              value={values.sabangnetKey}
+              onChange={handleChange}
+            />
+            {errors.sabangnetKey && (
+              <span className="errorMessage">{errors.sabangnetKey}</span>
+            )}
+            <InputWithLabel
+              type="text"
+              label="사방넷 ID"
+              name="sabangnetId"
+              placeholder="사방넷 ID를 입력하세요"
+              value={values.sabangnetId}
+              onChange={handleChange}
+            />
+            {errors.sabangnetId && (
+              <span className="errorMessage">{errors.sabangnetId}</span>
+            )}
+            <button
+              style={{ display: 'none' }}
+              id="submit"
+              type="submit"
+              disabled={submitting}
+            >
+              완료
+            </button>
+          </form>
         )}
-
         <ButtonWrapper>
           <CancelButton className="close" onClick={props.closeModal}>
             취소
           </CancelButton>
+          {props.step === 2 && (
+            <CompleteButtonLabel disabled={submitting} htmlFor="submit">
+              완료
+            </CompleteButtonLabel>
+          )}
         </ButtonWrapper>
       </ModalContainer>
     </Modal>
@@ -168,6 +251,23 @@ const ButtonWrapper = styled.div`
   float: right;
 `;
 const CancelButton = styled.button`
+  all: unset;
+  margin-left: 10px;
+  display: inline-block;
+  color: #a1a1a1;
+  background-color: #fff;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 12px;
+  transition: 0.2s all;
+
+  &:hover {
+    color: #228be6;
+  }
+`;
+const CompleteButtonLabel = styled.label`
   all: unset;
   margin-left: 10px;
   display: inline-block;
