@@ -84,7 +84,7 @@ function ModalOrderView(props) {
               </Content>
             </ContentWrapper>
             <TransformButton
-              onClick={props.transformOrder}
+              onClick={props.CheckSabangnetOrder}
               disabled={!(checkedOne && checkedTwo)}
             >
               변환하기

@@ -21,7 +21,7 @@ function OrderCollection() {
     setProgressStep(0);
   };
 
-  const transformOrder = async () => {
+  const CheckSabangnetOrder = async () => {
     const url = `${process.env.REACT_APP_URL}/1/order/check-sabangnet/`;
     setStep(1);
     setProgressStep(1);
@@ -30,16 +30,24 @@ function OrderCollection() {
       console.log('transformOrder_after');
       if (response.data.result) {
         setProgressStep(2);
-        eventMapping();
+        gatherSabangnetOrder();
       } else {
         setStep(2);
       }
     });
   };
+  const gatherSabangnetOrder = async () => {
+    const url = `${process.env.REACT_APP_URL}/1/order/gather-sabangnet/`;
+    console.log('gatherSabangnetOrder_before');
+    await axios.get(url).then((response) => {
+      console.log('gatherSabangnetOrder_after');
+      setProgressStep(3);
+      eventMapping();
+    });
+  };
 
   const eventMapping = async () => {
     const url = `${process.env.REACT_APP_URL}/order/map-event/`;
-    setProgressStep(3);
     console.log('eventMapping_before');
     await axios.get(url).then((response) => {
       console.log('eventMapping_after');
@@ -70,7 +78,7 @@ function OrderCollection() {
         </ExcelButtonWrapper>
         {modalVisible && (
           <ModalOrderView
-            transformOrder={transformOrder}
+            CheckSabangnetOrder={CheckSabangnetOrder}
             closeModal={closeModal}
             step={step}
             orderDownload={() => setIsConfirm(true)}
