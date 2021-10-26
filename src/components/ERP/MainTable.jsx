@@ -38,12 +38,9 @@ function MainTable(props) {
   const list = props.data;
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
-  const [filteredInfo, setFilteredInfo] = useState(null);
 
   const handleChange = (pagination, filters) => {
     console.log('Various parameters', pagination, filters);
-    setFilteredInfo(filters);
-    localStorage.setItem('testFilter', filteredInfo);
   };
 
   const getColumnSearchProps = (dataIndex) => ({

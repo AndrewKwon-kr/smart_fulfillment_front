@@ -2,50 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import * as GoIcons from 'react-icons/go';
 import { Button } from 'antd';
-import { InputWithLabel } from '../Auth';
-import validateSabangnet from 'lib/validateSabangnet';
-import axios from 'axios';
-import useForm from 'lib/useForm';
 
-function ModalOrderView(props) {
+function ModalTrackingView(props) {
   const [checkedOne, setCheckedOne] = useState(false);
   const [checkedTwo, setCheckedTwo] = useState(false);
-
-  const { values, errors, submitting, handleChange, handleSubmit } = useForm({
-    initialValues: { sabangnetKey: '', sabangnetId: '', groupId: 1 },
-    onSubmit: (values) => {
-      postSabangnetData(values);
-    },
-    validate: validateSabangnet,
-  });
-  const postSabangnetData = (row) => {
-    const url = `${process.env.REACT_APP_URL}/order/sabangnet/`;
-    console.log(row);
-    axios
-      .post(url, row)
-      .then((response) => {
-        console.log(response);
-        try {
-          if (response.status === 200) {
-            props.checkSabangnetOrder();
-
-            // setErpLoading(false);
-          } else {
-            console.log(response.status);
-            alert('데이터를 등록해주세요');
-            // setErpLoading(false);
-          }
-        } catch (err) {
-          console.log(err);
-          alert('데이터를 불러올 수 없습니다.');
-        }
-      })
-      .catch(() => {
-        alert('다른 에러');
-        // setErpLoading(false);
-      });
-  };
-
   const clickCheckedIcon = (type) => {
     if (type === 'one') {
       setCheckedOne(!checkedOne);
@@ -53,13 +13,12 @@ function ModalOrderView(props) {
       setCheckedTwo(!checkedTwo);
     }
   };
-
   return (
     <Modal>
       <ModalContainer>
         {props.step === 0 ? (
           <>
-            <Title>모두 체크해야 변환된 주문서를 받을 수 있습니다</Title>
+            <Title>변환된 주문서를 업로드 해주세요</Title>
             <ContentWrapper>
               <Content>
                 <CheckedIcon
@@ -69,113 +28,70 @@ function ModalOrderView(props) {
                   checked={checkedOne}
                 />
                 <label onClick={() => clickCheckedIcon('one')}>
-                  사방넷에서 주문서를 수집했나요?
+                  주문서(엑셀파일)가 택배사의 형식과 동일한가요?
                 </label>
               </Content>
-              <Content>
+              {/* <Content>
                 <CheckedIcon
                   size="20"
                   className="two"
                   onClick={() => clickCheckedIcon('two')}
                   checked={checkedTwo}
                 />
-                <label onClick={() => clickCheckedIcon('two')}>
-                  모든 주문이 매핑되어 있나요?
-                </label>
-              </Content>
+                <label onClick={() => clickCheckedIcon('two')}></label>
+              </Content> */}
             </ContentWrapper>
             <TransformButton
-              onClick={props.checkSabangnetOrder}
-              disabled={!(checkedOne && checkedTwo)}
+              onClick={props.uploadExcel}
+              disabled={checkedOne}
+              // disabled={!(checkedOne && checkedTwo)}
             >
-              변환하기
+              업로드
             </TransformButton>
           </>
-        ) : props.step === 1 ? (
+        ) : (
           <>
             <Title>
-              {props.progressStep < 4
-                ? '주문서를 변환 중 입니다'
-                : '변환이 완료되었습니다'}
+              {props.progressStep < 3
+                ? '송장을 업로드 중 입니다'
+                : '업로드가 완료되었습니다'}
             </Title>
             <SubTitle>
-              {props.progressStep < 4
+              {props.progressStep < 3
                 ? '잠시만 기다려주세요'
-                : '주문서를 다운로드 해주세요'}
+                : '송장을 다운로드 해주세요'}
             </SubTitle>
             <StepTwoWrapper>
               <ProgressWrap>
                 <Progress progressStep={props.progressStep >= 0}>
-                  ●<div className="Text">주문대기</div>
+                  ●<div className="Text">송장번호 매핑</div>
                 </Progress>
                 <Line progressStep={props.progressStep >= 0} />
                 <Progress progressStep={props.progressStep >= 1}>
-                  ●<div className="Text">주문수집</div>
+                  ●<div className="Text">사방넷 송장 업로드</div>
                 </Progress>
                 <Line progressStep={props.progressStep >= 1} />
                 <Progress progressStep={props.progressStep >= 2}>
-                  ●<div className="Text">주문확인</div>
+                  ●<div className="Text">출고대기</div>
                 </Progress>
                 <Line progressStep={props.progressStep >= 2} />
                 <Progress progressStep={props.progressStep >= 3}>
-                  ●<div className="Text">이벤트 적용</div>
-                </Progress>
-                <Line progressStep={props.progressStep >= 3} />
-                <Progress progressStep={props.progressStep >= 4}>
                   ●<div className="Text">완료</div>
                 </Progress>
               </ProgressWrap>
               <DownloadButton
-                onClick={props.orderDownload}
-                disabled={props.progressStep !== 4}
+                onClick={() => props.setIsTrackingConfirm(true)}
+                disabled={props.progressStep !== 3}
               >
-                주문서 다운로드
+                송장 다운로드
               </DownloadButton>
             </StepTwoWrapper>
           </>
-        ) : (
-          <form onSubmit={handleSubmit} noValidate>
-            <InputWithLabel
-              type="text"
-              label="사방넷 Key"
-              name="sabangnetKey"
-              placeholder="사방넷 키를 입력하세요"
-              value={values.sabangnetKey}
-              onChange={handleChange}
-            />
-            {errors.sabangnetKey && (
-              <span className="errorMessage">{errors.sabangnetKey}</span>
-            )}
-            <InputWithLabel
-              type="text"
-              label="사방넷 ID"
-              name="sabangnetId"
-              placeholder="사방넷 ID를 입력하세요"
-              value={values.sabangnetId}
-              onChange={handleChange}
-            />
-            {errors.sabangnetId && (
-              <span className="errorMessage">{errors.sabangnetId}</span>
-            )}
-            <button
-              style={{ display: 'none' }}
-              id="submit"
-              type="submit"
-              disabled={submitting}
-            >
-              완료
-            </button>
-          </form>
         )}
         <ButtonWrapper>
           <CancelButton className="close" onClick={props.closeModal}>
             취소
           </CancelButton>
-          {props.step === 2 && (
-            <CompleteButtonLabel disabled={submitting} htmlFor="submit">
-              완료
-            </CompleteButtonLabel>
-          )}
         </ButtonWrapper>
       </ModalContainer>
     </Modal>
@@ -268,28 +184,12 @@ const CancelButton = styled.button`
     color: #228be6;
   }
 `;
-const CompleteButtonLabel = styled.label`
-  all: unset;
-  margin-left: 10px;
-  display: inline-block;
-  color: #a1a1a1;
-  background-color: #fff;
-  padding: 0.5rem 1.2rem;
-  cursor: pointer;
-  border-radius: 4px;
-  text-decoration: none;
-  font-size: 12px;
-  transition: 0.2s all;
 
-  &:hover {
-    color: #228be6;
-  }
-`;
 const TransformButton = styled.button`
   all: unset;
   display: flex;
   justify-content: center;
-  margin: 0 auto;
+  margin: 40px auto;
   padding: 5px 30px;
   border-radius: 5px;
   border: ${(props) =>
@@ -312,4 +212,4 @@ const CheckedIcon = styled(GoIcons.GoCheck)`
 const DownloadButton = styled(Button)`
   margin-top: 40px;
 `;
-export default ModalOrderView;
+export default ModalTrackingView;

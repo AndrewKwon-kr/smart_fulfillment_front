@@ -15,6 +15,7 @@ function Navigator() {
   const showSidebar = () => setSidebar(!sidebar);
   const logout = () => {
     localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
     window.location.reload();
   };
   const menu = (
@@ -22,7 +23,9 @@ function Navigator() {
       <Menu.Item key={1} onClick={logout}>
         로그아웃
       </Menu.Item>
-      <Menu.Item key={2}>내 정보</Menu.Item>
+      <Menu.Item key={2}>
+        <Link to="/my-page/">내 정보</Link>
+      </Menu.Item>
       <Menu.Item key={3}>xx</Menu.Item>
     </Menu>
   );

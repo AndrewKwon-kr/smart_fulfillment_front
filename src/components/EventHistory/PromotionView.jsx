@@ -108,6 +108,7 @@ const CardContainer = styled.div`
 const EventInfomationCard = styled.div`
   margin: 10px 1%;
   display: inline-block;
+  min-width: 300px;
   width: 31%;
   height: 350px;
   border: 1px solid #a9a9a9;

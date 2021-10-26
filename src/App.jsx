@@ -12,6 +12,7 @@ import {
   SignUp,
   ActivationAccount,
   FindPassword,
+  MyPage,
 } from './pages';
 import Navigator from 'components/Base/SideMenu/Navigator';
 import './App.css';
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/signup" component={SignUp} />
         <Route path="/activation" component={ActivationAccount} />
         <Route path="/find-pw" component={FindPassword} />
+        <Route path="/my-page" component={MyPage} />
       </Switch>
     </BrowserRouter>
   );

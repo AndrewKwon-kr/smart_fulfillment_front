@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { InputWithLabel, AuthButton, AddLoginMenu } from '.';
 import styled from 'styled-components';
 import logo from 'assets/logo.png';
@@ -9,8 +9,7 @@ import axios from 'axios';
 // import { useDispatch } from 'react-redux';
 // import { login, setUserInfo } from 'redux/user';
 
-function Login() {
-  const [isAutoChecked, setIsAutoChecked] = useState(false);
+function Login(props) {
   const { values, errors, submitting, handleChange, handleSubmit } = useForm({
     initialValues: { email: '', password: '' },
     onSubmit: (values) => {
@@ -27,9 +26,13 @@ function Login() {
         try {
           if (response.status === 200) {
             console.log(response);
-            localStorage.setItem('access_token', response.data.access);
-            localStorage.setItem('refresh_token', response.data.refresh);
-            window.location.href = '/registitem';
+            const accessToken = response.data.access;
+            const refreshToken = response.data.refresh;
+
+            console.log(accessToken, refreshToken);
+            localStorage.setItem('access_token', accessToken);
+            localStorage.setItem('refresh_token', refreshToken);
+            window.location.reload();
 
             // setErpLoading(false);
           } else {
@@ -46,58 +49,6 @@ function Login() {
         // setErpLoading(false);
       });
   };
-  // const dispatch = useDispatch();
-  // const [LoginForm, setLoginForm] = useState({
-  //   email: localStorage.getItem('email') || '',
-  //   password: '',
-  // });
-  // const [IsAutoLogin, setIsAutoLogin] = useState(false);
-  // const [loading, setLoading] = useState(true);
-  // function localInfo(token) {
-  //   if (!token) {
-  //     throw new Error('no token');
-  //   }
-
-  //   return axios
-  //     .get(`${process.env.REACT_APP_URL}/local-info`, {
-  //       headers: { authorization: token },
-  //     })
-  //     .then((res) => res.data);
-  // }
-  // function localLogin(loginForm) {
-  //   return axios
-  //     .post(`${process.env.REACT_APP_URL}/local-login`, loginForm)
-  //     .then((res) => res.data);
-  // }
-  // const handleLoginButton = useCallback(() => {
-  //   const asyncLogin = async () => {
-  //     try {
-  //       const { accessToken, refreshToken } = await localLogin(LoginForm);
-
-  //       if (IsAutoLogin) {
-  //         localStorage.setItem('REFRESHTOKEN', refreshToken);
-  //       }
-
-  //       const info = await localInfo(accessToken).catch(() => null);
-
-  //       dispatch(login(accessToken));
-  //       dispatch(setUserInfo(info));
-
-  //       window.location.href = '/';
-  //     } catch (error) {
-  //       Swal.fire({
-  //         icon: 'error',
-  //         title: '로그인을 할 수 없습니다.',
-  //         text: '정보를 다시 한번 확인해 주세요.',
-  //         confirmButtonColor: 'red',
-  //       });
-  //     } finally {
-  //       setLoading(true);
-  //     }
-  //   };
-  //   setLoading(false);
-  //   asyncLogin();
-  // }, [LoginForm, IsAutoLogin, dispatch]);
   return (
     <LoginWrap>
       <LogoWrap>
@@ -125,7 +76,9 @@ function Login() {
           <span className="errorMessage">{errors.password}</span>
         )}
         <AuthButton children="Sign in" type="submit" disabled={submitting} />
-        <AddLoginMenu autoLogin={() => setIsAutoChecked(!isAutoChecked)} />
+        <AddLoginMenu
+          autoLogin={() => props.setIsAutoLogin(!props.IsAutoLogin)}
+        />
       </form>
     </LoginWrap>
   );
