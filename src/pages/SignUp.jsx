@@ -109,10 +109,6 @@ export default function SignupPage({ history }) {
 
   return (
     <Container>
-      {/* <IntroDiv>똑똑한 셀러들이 찾는 아이템 분석 플랫폼</IntroDiv> */}
-      {/* <Link to="/">
-        <img src={SellhaLogo} alt="셀러하이" width="230px" />
-      </Link> */}
       <TitleDiv>회원 가입</TitleDiv>
       <StyledForm onFinish={handleSignupButton} form={form} scrollToFirstError>
         <StyledForm.Item
@@ -151,7 +147,9 @@ export default function SignupPage({ history }) {
                 if (!value) {
                   return Promise.reject(new Error('비밀번호를 입력해주세요'));
                 }
-
+                if (value.search(/\s/) !== -1) {
+                  return Promise.reject(new Error('공백 포함'));
+                }
                 if (!passRegExp.test(value)) {
                   return Promise.reject(
                     new Error('8~24자 영어, 숫자, 특수문자 포함')
