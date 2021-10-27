@@ -4,7 +4,6 @@ import backgroundImg from '../assets/home_bg.png';
 import { Login } from 'components/Auth/';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import $ from 'jquery';
 
 // require('../styles/home.css');
 function Home() {
@@ -64,12 +63,7 @@ function Home() {
       verifyLogin();
     }
   }, [IsAutoLogin]);
-  const test = () => {
-    const form = $('#formDLImageDisc')[0];
-    console.log(form);
-    const formData = new FormData(form);
-    console.log(formData);
-  };
+
   return (
     <Container>
       <BackgroundImage isLogined={isLogined} />
