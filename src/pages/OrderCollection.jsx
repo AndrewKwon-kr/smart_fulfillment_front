@@ -51,11 +51,16 @@ function OrderCollection() {
     console.log('transformOrder_before');
     await axios.get(url).then((response) => {
       console.log('transformOrder_after');
-      if (response.data.result) {
+      const result = response.data.result;
+
+      if (result.isSabangnet && !result.mappingOverlap) {
         setProgressStep(2);
         gatherSabangnetOrder();
-      } else {
+      } else if (!result.isSabangnet && !result.mappingOverlap) {
         setStep(2);
+      } else if (result.mappingOverlap) {
+        alert('이미 오전/오후에 수집이 완료된 주문서입니다.');
+        closeOrderModal();
       }
     });
   };
