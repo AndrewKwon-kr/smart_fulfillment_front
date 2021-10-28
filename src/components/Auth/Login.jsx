@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import logo from 'assets/logo.png';
 import useForm from 'lib/useForm';
 import validate from 'lib/validate';
-import axios from 'axios';
+// import axios from 'axios';
+import { createJwt } from '../../http-api';
 // import Swal from 'sweetalert2';
 // import { useDispatch } from 'react-redux';
 // import { login, setUserInfo } from 'redux/user';
@@ -17,37 +18,48 @@ function Login(props) {
     },
     validate,
   });
-  const getLoginData = (row) => {
-    const url = `${process.env.REACT_APP_URL}/auth/jwt/create/`;
+  const getLoginData = async (row) => {
+    const response = await createJwt(row);
+    try {
+      const accessToken = response.access;
+      const refreshToken = response.refresh;
 
-    axios
-      .post(url, row)
-      .then((response) => {
-        try {
-          if (response.status === 200) {
-            console.log(response);
-            const accessToken = response.data.access;
-            const refreshToken = response.data.refresh;
+      localStorage.setItem('access_token', accessToken);
+      localStorage.setItem('refresh_token', refreshToken);
+      window.location.reload();
+    } catch (err) {
+      alert(err);
+    }
+    // const url = `${process.env.REACT_APP_URL}/auth/jwt/create/`;
 
-            console.log(accessToken, refreshToken);
-            localStorage.setItem('access_token', accessToken);
-            localStorage.setItem('refresh_token', refreshToken);
-            window.location.reload();
+    // axios
+    //   .post(url, row)
+    //   .then((response) => {
+    //     try {
+    //       if (response.status === 200) {
+    //         console.log(response);
+    //         const accessToken = response.data.access;
+    //         const refreshToken = response.data.refresh;
 
-            // setErpLoading(false);
-          } else {
-            console.log(response.status);
-            alert('데이터를 등록해주세요');
-            // setErpLoading(false);
-          }
-        } catch (err) {
-          alert('데이터를 불러올 수 없습니다.');
-        }
-      })
-      .catch(() => {
-        alert('비밀번호 또는 이메일이 틀렸습니다.');
-        // setErpLoading(false);
-      });
+    //         console.log(accessToken, refreshToken);
+    //         localStorage.setItem('access_token', accessToken);
+    //         localStorage.setItem('refresh_token', refreshToken);
+    //         window.location.reload();
+
+    //         // setErpLoading(false);
+    //       } else {
+    //         console.log(response.status);
+    //         alert('데이터를 등록해주세요');
+    //         // setErpLoading(false);
+    //       }
+    //     } catch (err) {
+    //       alert('데이터를 불러올 수 없습니다.');
+    //     }
+    //   })
+    //   .catch(() => {
+    //     alert('비밀번호 또는 이메일이 틀렸습니다.');
+    //     // setErpLoading(false);
+    //   });
   };
   return (
     <LoginWrap>

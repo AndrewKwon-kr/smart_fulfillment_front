@@ -2,23 +2,12 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import backgroundImg from '../assets/home_bg.png';
 import { Login } from 'components/Auth/';
-import axios from 'axios';
 import Swal from 'sweetalert2';
+import { checkVerify, checkRefresh } from '../http-api';
 
-// require('../styles/home.css');
 function Home() {
   const isLogined = localStorage.getItem('access_token');
   const [IsAutoLogin, setIsAutoLogin] = useState(false);
-  function checkVerify(token) {
-    return axios
-      .post(`${process.env.REACT_APP_URL}/auth/jwt/verify/`, token)
-      .then((res) => res);
-  }
-  function checkRefresh(token) {
-    return axios
-      .post(`${process.env.REACT_APP_URL}/auth/jwt/refresh/`, token)
-      .then((res) => res);
-  }
 
   useEffect(() => {
     const accessToken = { token: localStorage.getItem('access_token') };
@@ -70,12 +59,6 @@ function Home() {
       {!isLogined && (
         <Login IsAutoLogin={IsAutoLogin} setIsAutoLogin={setIsAutoLogin} />
       )}
-      <form id="formDLImageDisc">
-        <div style={{ width: 500, height: 50 }}>
-          <input type="file" id="upFile" placeholder="file" name="file" />
-        </div>
-      </form>
-      <button onClick={() => test()}>확인</button>
     </Container>
   );
 }

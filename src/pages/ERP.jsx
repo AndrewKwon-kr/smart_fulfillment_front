@@ -53,12 +53,6 @@ function ERP() {
     }
   };
 
-  // const getErpData = async () => {
-  //   const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
-  //   // const ret = await axios.get(url);
-  //   return await axios.get(url);
-  // };
-
   const getErpData = () => {
     const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
 

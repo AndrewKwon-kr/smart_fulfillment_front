@@ -1,10 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-
-// import SellhaLogo from '../assets/logo.png';
 import { Input, Button } from 'antd';
-import axios from 'axios';
+import { sendFindPassword } from '../http-api';
 
 export default function FindPassword() {
   const [Form, setForm] = useState({
@@ -19,12 +17,6 @@ export default function FindPassword() {
       )
       .catch(() => alert('비밀번호 찾기 실패'));
   }, [Form]);
-
-  function sendFindPassword(name, email) {
-    return axios
-      .post(`${process.env.REACT_APP_URL}/send-find-password`, { name, email })
-      .then((res) => res.data);
-  }
 
   return (
     <Container>

@@ -6,7 +6,11 @@ import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 import { Button, Checkbox, Form, Input } from 'antd';
 
-import axios from 'axios';
+import {
+  checkDuplicateEmail,
+  checkDuplicatePhone,
+  localSignup,
+} from '../http-api';
 
 const popUpOptions =
   'top=10, left=10, width=500, height=600, status=no, menubar=no, toolbar=no, resizable=no';
@@ -45,29 +49,6 @@ const theme = {
 
 export default function SignupPage({ history }) {
   const [form] = Form.useForm();
-  function checkDuplicateEmail(email) {
-    console.log(email);
-    return axios
-      .post(`${process.env.REACT_APP_URL}/auth/duplicate-email/`, {
-        params: { email },
-      })
-      .then(({ data }) => !!data.isDuplicated);
-  }
-
-  function checkDuplicatePhone(phone) {
-    return axios
-      .post(`${process.env.REACT_APP_URL}/auth/duplicate-phone/`, {
-        params: { phone },
-      })
-      .then(({ data }) => !!data.isDuplicated);
-  }
-
-  // member
-  function localSignup(signupForm) {
-    return axios
-      .post(`${process.env.REACT_APP_URL}/auth/users/`, signupForm)
-      .then((res) => res.status);
-  }
 
   const handleSignupButton = (values) => {
     const asyncSignup = async () => {
