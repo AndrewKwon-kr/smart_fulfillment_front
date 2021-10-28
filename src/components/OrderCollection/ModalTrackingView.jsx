@@ -5,12 +5,9 @@ import { Button } from 'antd';
 
 function ModalTrackingView(props) {
   const [checkedOne, setCheckedOne] = useState(false);
-  const [checkedTwo, setCheckedTwo] = useState(false);
   const clickCheckedIcon = (type) => {
     if (type === 'one') {
       setCheckedOne(!checkedOne);
-    } else if (type === 'two') {
-      setCheckedTwo(!checkedTwo);
     }
   };
   return (
@@ -43,7 +40,7 @@ function ModalTrackingView(props) {
             </ContentWrapper>
             <TransformButton
               onClick={props.uploadExcel}
-              disabled={checkedOne}
+              disabled={!checkedOne}
               // disabled={!(checkedOne && checkedTwo)}
             >
               업로드
