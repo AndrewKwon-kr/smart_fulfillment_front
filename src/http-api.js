@@ -10,13 +10,13 @@ export { HOST };
 
 export async function checkDuplicateEmail(email) {
   console.log(email);
-  const { data } = await axios.post(`${HOST}/auth/duplicate-email/`, {
+  const { data } = await axios.get(`${HOST}/auth/duplicate-email/`, {
     params: { email },
   });
   return !!data.isDuplicated;
 }
 export async function checkDuplicatePhone(phone) {
-  const { data } = await axios.post(`${HOST}/auth/duplicate-phone/`, {
+  const { data } = await axios.get(`${HOST}/auth/duplicate-phone/`, {
     params: { phone },
   });
   return !!data.isDuplicated;
