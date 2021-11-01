@@ -77,18 +77,17 @@ function EventRegistration() {
   const [selectedRows, setSelectedRow] = useState();
   const [selectedRowLoading, setSelectedRowLoading] = useState(false);
 
-  const getMainItemData = () => {
+  const getMainItemData = async () => {
     const url = `https://api2fulfillment.sellha.kr/itemgroup/items/`;
 
-    axios
+    await axios
       .get(url)
       .then((response) => {
         try {
           if (response.data.result.length !== 0) {
             setMainItemsData(response.data.result);
-
-            setStepStatus(stepStatus + 1);
             setStepOneLoading(false);
+            openModal('main');
           } else {
             console.log(response.status);
             // setLoading(false);
@@ -102,10 +101,10 @@ function EventRegistration() {
         // setLoading(false);
       });
   };
-  const getFreebieData = () => {
+  const getFreebieData = async () => {
     const url = `https://api2fulfillment.sellha.kr/freebiegroup/freebies/`;
 
-    axios
+    await axios
       .get(url)
       .then((response) => {
         try {
@@ -126,16 +125,17 @@ function EventRegistration() {
         // setLoading(false);
       });
   };
-  const getFreebieErpData = () => {
+  const getFreebieErpData = async () => {
     const url = `https://api2fulfillment.sellha.kr/freebiegroup/freebies/is-erp/`;
 
-    axios
+    await axios
       .get(url)
       .then((response) => {
         try {
           if (response.data.result.length !== 0) {
             console.log(response.data.result);
             setFreebieErpData(response.data.result);
+            openModal('freebie');
             // setLoading(false);
           } else {
             console.log(response.status);
@@ -150,10 +150,10 @@ function EventRegistration() {
         // setLoading(false);
       });
   };
-  const getPrintData = () => {
+  const getPrintData = async () => {
     const url = `https://api2fulfillment.sellha.kr/printgroup/prints/`;
 
-    axios
+    await axios
       .get(url)
       .then((response) => {
         try {
@@ -173,9 +173,9 @@ function EventRegistration() {
         // setLoading(false);
       });
   };
-  const getBrandData = () => {
+  const getBrandData = async () => {
     const url = `https://api2fulfillment.sellha.kr/brand/itemgroups/items1/`;
-    axios.get(url).then((response) => {
+    await axios.get(url).then((response) => {
       setBrandData(response.data.result);
     });
   };
@@ -248,11 +248,12 @@ function EventRegistration() {
       setTimeout(() => {
         setStepOneLoading(false);
       }, 4000);
-      getMainItemData();
-      getFreebieData();
-      getPrintData();
-      getBrandData();
-      getFreebieErpData();
+      setStepStatus(stepStatus + 1);
+      // getMainItemData();
+      // getFreebieData();
+      // getPrintData();
+      // getBrandData();
+      // getFreebieErpData();
     } else if (stepStatus === 4) {
       postEventData();
       enterLoading();
@@ -607,7 +608,7 @@ function EventRegistration() {
                 </ReloadButton>
               </LabelWrapper>
               <ItemWrapper>
-                {brandData.length !== mainItems.length ? (
+                {brandData.length !== mainItems.length &&
                   mainItems &&
                   mainItems.map((item, index) => (
                     <Item key={index}>
@@ -619,20 +620,22 @@ function EventRegistration() {
                         onClick={() => removeItem(index, 'main')}
                       />
                     </Item>
-                  ))
-                ) : (
-                  <Item>
-                    전체 브랜드
-                    <BsIcons.BsTrash
-                      color="#a9a9a9"
-                      style={{ float: 'right', cursor: 'pointer' }}
-                      onClick={() => removeItem(1, 'all')}
-                    />
-                  </Item>
-                )}
+                  ))}
+                {mainItems.length !== 0 &&
+                  brandData.length === mainItems.length && (
+                    <Item>
+                      전체 브랜드
+                      <BsIcons.BsTrash
+                        color="#a9a9a9"
+                        style={{ float: 'right', cursor: 'pointer' }}
+                        onClick={() => removeItem(1, 'all')}
+                      />
+                    </Item>
+                  )}
                 <AddItem
                   onClick={() => {
-                    openModal('main');
+                    getMainItemData();
+                    getBrandData();
                   }}
                 >
                   + 아이템 추가하기
@@ -691,7 +694,8 @@ function EventRegistration() {
                   ))}
                 <AddItem
                   onClick={() => {
-                    openModal('freebie');
+                    getFreebieData();
+                    getFreebieErpData();
                   }}
                 >
                   + 아이템 추가하기
@@ -733,6 +737,7 @@ function EventRegistration() {
                 <AddItem
                   onClick={() => {
                     openModal('print');
+                    getPrintData();
                   }}
                 >
                   + 아이템 추가하기
