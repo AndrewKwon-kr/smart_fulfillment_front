@@ -78,7 +78,7 @@ function EventRegistration() {
   const [selectedRowLoading, setSelectedRowLoading] = useState(false);
 
   const getMainItemData = () => {
-    const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
+    const url = `https://api2fulfillment.sellha.kr/itemgroup/items/`;
 
     axios
       .get(url)
@@ -103,7 +103,7 @@ function EventRegistration() {
       });
   };
   const getFreebieData = () => {
-    const url = `${process.env.REACT_APP_URL}/freebiegroup/freebies/`;
+    const url = `https://api2fulfillment.sellha.kr/freebiegroup/freebies/`;
 
     axios
       .get(url)
@@ -127,7 +127,7 @@ function EventRegistration() {
       });
   };
   const getFreebieErpData = () => {
-    const url = `${process.env.REACT_APP_URL}/freebiegroup/freebies/is-erp/`;
+    const url = `https://api2fulfillment.sellha.kr/freebiegroup/freebies/is-erp/`;
 
     axios
       .get(url)
@@ -151,7 +151,7 @@ function EventRegistration() {
       });
   };
   const getPrintData = () => {
-    const url = `${process.env.REACT_APP_URL}/printgroup/prints/`;
+    const url = `https://api2fulfillment.sellha.kr/printgroup/prints/`;
 
     axios
       .get(url)
@@ -174,13 +174,13 @@ function EventRegistration() {
       });
   };
   const getBrandData = () => {
-    const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items1/`;
+    const url = `https://api2fulfillment.sellha.kr/brand/itemgroups/items1/`;
     axios.get(url).then((response) => {
       setBrandData(response.data.result);
     });
   };
   const getImportData = () => {
-    const url = `${process.env.REACT_APP_URL}/event/`;
+    const url = `https://api2fulfillment.sellha.kr/event/`;
     setImportLoading(true);
     axios
       .get(url)
@@ -207,7 +207,7 @@ function EventRegistration() {
       });
   };
   const getEventData = () => {
-    const url = `${process.env.REACT_APP_URL}/event/${selectedRows[0].id}/`;
+    const url = `https://api2fulfillment.sellha.kr/event/${selectedRows[0].id}/`;
     setSelectedRowLoading(true);
     axios
       .get(url)
@@ -412,7 +412,7 @@ function EventRegistration() {
     eventData.channels = channelData;
     // console.log(eventData);
 
-    const url = `${process.env.REACT_APP_URL}/event/`;
+    const url = `https://api2fulfillment.sellha.kr/event/`;
     const data = {
       groupId: 1,
       data: eventData,

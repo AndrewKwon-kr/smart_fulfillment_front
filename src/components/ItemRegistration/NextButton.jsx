@@ -26,7 +26,7 @@ function NextButton({ clickedFreebie, clickedERP }) {
     } else window.location.href = '/erp';
   }
   function getBrandData() {
-    const url = `${process.env.REACT_APP_URL}/brand/`;
+    const url = `https://api2fulfillment.sellha.kr/brand/`;
 
     axios.get(url).then((response) => {
       if (response.data.length === 0) {

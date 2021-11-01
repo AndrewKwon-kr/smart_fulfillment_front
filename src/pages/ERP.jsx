@@ -23,7 +23,7 @@ function ERP() {
     console.log(row);
     console.log('create---> ', row);
     setLoading(true);
-    const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items/`;
+    const url = `https://api2fulfillment.sellha.kr/brand/itemgroups/items/`;
     const data = {
       messageType: 'create',
       groupId: 1,
@@ -39,7 +39,7 @@ function ERP() {
   };
   const updateErpData = (row) => {
     console.log('update ---> ', row);
-    const url = `${process.env.REACT_APP_URL}/brand/itemgroups/items/`;
+    const url = `https://api2fulfillment.sellha.kr/brand/itemgroups/items/`;
     const data = {
       messageType: 'update',
       groupId: 1,
@@ -54,7 +54,7 @@ function ERP() {
   };
 
   const getErpData = () => {
-    const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
+    const url = `https://api2fulfillment.sellha.kr/itemgroup/items/`;
 
     axios
       .get(url)
@@ -86,7 +86,7 @@ function ERP() {
       });
   };
   const getBrandData = () => {
-    const url = `${process.env.REACT_APP_URL}/brand/`;
+    const url = `https://api2fulfillment.sellha.kr/brand/`;
     axios.get(url).then((response) => {
       setBrandData(response.data);
     });
@@ -108,7 +108,7 @@ function ERP() {
   };
   const complete = () => {
     enterLoading();
-    const url = `${process.env.REACT_APP_URL}/itemgroup/imagestest/`;
+    const url = `https://api2fulfillment.sellha.kr/itemgroup/imagestest/`;
     const data = {
       groupId: 1,
       data: sendData,

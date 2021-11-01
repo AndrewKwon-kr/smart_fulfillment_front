@@ -19,7 +19,7 @@ function ModalOrderView(props) {
     validate: validateSabangnet,
   });
   const postSabangnetData = (row) => {
-    const url = `${process.env.REACT_APP_URL}/order/sabangnet/`;
+    const url = `https://api2fulfillment.sellha.kr/order/sabangnet/`;
     console.log(row);
     axios
       .post(url, row)

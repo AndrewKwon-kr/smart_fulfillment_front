@@ -30,7 +30,7 @@ function Login(props) {
     } catch (err) {
       alert(err);
     }
-    // const url = `${process.env.REACT_APP_URL}/auth/jwt/create/`;
+    // const url = `https://api2fulfillment.sellha.kr/auth/jwt/create/`;
 
     // axios
     //   .post(url, row)

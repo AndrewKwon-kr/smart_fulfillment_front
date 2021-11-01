@@ -45,7 +45,7 @@ function OrderCollection() {
   };
 
   const checkSabangnetOrder = async () => {
-    const url = `${process.env.REACT_APP_URL}/1/order/check-sabangnet/`;
+    const url = `https://api2fulfillment.sellha.kr/1/order/check-sabangnet/`;
     setStep(1);
     setProgressStep(1);
     console.log('transformOrder_before');
@@ -65,7 +65,7 @@ function OrderCollection() {
     });
   };
   const gatherSabangnetOrder = async () => {
-    const url = `${process.env.REACT_APP_URL}/1/order/gather-sabangnet/`;
+    const url = `https://api2fulfillment.sellha.kr/1/order/gather-sabangnet/`;
     console.log('gatherSabangnetOrder_before');
     await axios.get(url).then((response) => {
       console.log('gatherSabangnetOrder_after');
@@ -75,7 +75,7 @@ function OrderCollection() {
   };
 
   const eventMapping = async () => {
-    const url = `${process.env.REACT_APP_URL}/order/map-event/`;
+    const url = `https://api2fulfillment.sellha.kr/order/map-event/`;
     console.log('eventMapping_before');
     await axios.get(url).then((response) => {
       console.log('eventMapping_after');
@@ -86,7 +86,7 @@ function OrderCollection() {
   };
 
   const getEventData = () => {
-    const url = `${process.env.REACT_APP_URL}/1/event/limited/`;
+    const url = `https://api2fulfillment.sellha.kr/1/event/limited/`;
 
     axios
       .get(url)
@@ -178,7 +178,7 @@ function OrderCollection() {
     return false;
   };
   const postTrackingMap = async (excelData) => {
-    const url = `${process.env.REACT_APP_URL}/1/order/tracking-map/`;
+    const url = `https://api2fulfillment.sellha.kr/1/order/tracking-map/`;
     // const data = {
     //   groupId: 1,
     //   data: excelData,

@@ -25,7 +25,7 @@ function CompleteButton(props) {
   const updateData = (row, category) => {
     props.enterLoading();
 
-    const url = `${process.env.REACT_APP_URL}/${
+    const url = `https://api2fulfillment.sellha.kr/${
       category.split('/')[0] +
       '/' +
       props.dataKey +
@@ -61,7 +61,7 @@ function CompleteButton(props) {
   };
   const createData = (row, category) => {
     props.enterLoading();
-    const url = `${process.env.REACT_APP_URL}/${category}/`;
+    const url = `https://api2fulfillment.sellha.kr/${category}/`;
     const data = {
       groupId: 1,
       data: row,

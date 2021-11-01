@@ -29,7 +29,7 @@ function ItemInquiry() {
   const [erpLoading, setErpLoading] = useState(true);
 
   const getFreebieData = () => {
-    const url = `${process.env.REACT_APP_URL}/freebiegroup/freebies/`;
+    const url = `https://api2fulfillment.sellha.kr/freebiegroup/freebies/`;
     axios
       .get(url)
       .then((response) => {
@@ -56,7 +56,7 @@ function ItemInquiry() {
       });
   };
   const getPrintData = () => {
-    const url = `${process.env.REACT_APP_URL}/printgroup/prints/`;
+    const url = `https://api2fulfillment.sellha.kr/printgroup/prints/`;
     axios.get(url).then((response) =>
       setPrintData(
         response.data.result.map((data) => {
@@ -66,7 +66,7 @@ function ItemInquiry() {
     );
   };
   const getErpDatas = () => {
-    const url = `${process.env.REACT_APP_URL}/itemgroup/items/`;
+    const url = `https://api2fulfillment.sellha.kr/itemgroup/items/`;
     axios
       .get(url)
       .then((response) => {
@@ -89,7 +89,7 @@ function ItemInquiry() {
       });
   };
   const getBrandData = () => {
-    const url = `${process.env.REACT_APP_URL}/brand/`;
+    const url = `https://api2fulfillment.sellha.kr/brand/`;
     axios.get(url).then((response) => {
       setBrandData(response.data);
     });

@@ -108,7 +108,7 @@ function MyInfo({ Info, asyncInfo, user }) {
     }
 
     return axios
-      .post(`${process.env.REACT_APP_URL}/team`, body, {
+      .post(`https://api2fulfillment.sellha.kr/team`, body, {
         headers: { authorization: token },
       })
       .then((res) => res.data);
@@ -121,7 +121,7 @@ function MyInfo({ Info, asyncInfo, user }) {
     }
 
     return axios
-      .post(`${process.env.REACT_APP_URL}/request-join-team`, body, {
+      .post(`https://api2fulfillment.sellha.kr/request-join-team`, body, {
         headers: { authorization: token },
       })
       .then((res) => res.data);
@@ -132,9 +132,12 @@ function MyInfo({ Info, asyncInfo, user }) {
     }
 
     return axios
-      .delete(`${process.env.REACT_APP_URL}/team/${teamId}/user/${userId}`, {
-        headers: { authorization: token },
-      })
+      .delete(
+        `https://api2fulfillment.sellha.kr/team/${teamId}/user/${userId}`,
+        {
+          headers: { authorization: token },
+        }
+      )
       .then((res) => res.data);
   }
 

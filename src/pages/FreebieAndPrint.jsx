@@ -61,7 +61,7 @@ function FreebieAndPrint() {
 
   useEffect(() => {
     const getData = () => {
-      const url = `${process.env.REACT_APP_URL}/brand/`;
+      const url = `https://api2fulfillment.sellha.kr/brand/`;
       axios.get(url).then((response) => {
         setGetData(response.data);
       });
@@ -257,7 +257,7 @@ function FreebieAndPrint() {
   };
 
   const getFreebieData = () => {
-    const url = `${process.env.REACT_APP_URL}/freebiegroup/freebies/`;
+    const url = `https://api2fulfillment.sellha.kr/freebiegroup/freebies/`;
     const res = axios
       .get(url)
       .then((response) => {
@@ -282,7 +282,7 @@ function FreebieAndPrint() {
     return res;
   };
   const getPrintData = () => {
-    const url = `${process.env.REACT_APP_URL}/printgroup/prints/`;
+    const url = `https://api2fulfillment.sellha.kr/printgroup/prints/`;
     const res = axios
       .get(url)
       .then((response) => {
