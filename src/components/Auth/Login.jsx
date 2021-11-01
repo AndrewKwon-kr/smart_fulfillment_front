@@ -9,6 +9,7 @@ import { createJwt } from '../../http-api';
 // import Swal from 'sweetalert2';
 // import { useDispatch } from 'react-redux';
 // import { login, setUserInfo } from 'redux/user';
+import Swal from 'sweetalert2';
 
 function Login(props) {
   const { values, errors, submitting, handleChange, handleSubmit } = useForm({
@@ -19,47 +20,21 @@ function Login(props) {
     validate,
   });
   const getLoginData = async (row) => {
-    const response = await createJwt(row);
     try {
-      const accessToken = response.access;
-      const refreshToken = response.refresh;
+      const response = await createJwt(row);
+      const accessToken = response.data.access;
+      const refreshToken = response.data.refresh;
 
       localStorage.setItem('access_token', accessToken);
       localStorage.setItem('refresh_token', refreshToken);
       window.location.reload();
     } catch (err) {
-      alert(err);
+      Swal.fire({
+        icon: 'error',
+        title: '로그인을 할 수 없습니다.',
+        text: '정보를 다시 한번 확인해 주세요.',
+      });
     }
-    // const url = `https://api2fulfillment.sellha.kr/auth/jwt/create/`;
-
-    // axios
-    //   .post(url, row)
-    //   .then((response) => {
-    //     try {
-    //       if (response.status === 200) {
-    //         console.log(response);
-    //         const accessToken = response.data.access;
-    //         const refreshToken = response.data.refresh;
-
-    //         console.log(accessToken, refreshToken);
-    //         localStorage.setItem('access_token', accessToken);
-    //         localStorage.setItem('refresh_token', refreshToken);
-    //         window.location.reload();
-
-    //         // setErpLoading(false);
-    //       } else {
-    //         console.log(response.status);
-    //         alert('데이터를 등록해주세요');
-    //         // setErpLoading(false);
-    //       }
-    //     } catch (err) {
-    //       alert('데이터를 불러올 수 없습니다.');
-    //     }
-    //   })
-    //   .catch(() => {
-    //     alert('비밀번호 또는 이메일이 틀렸습니다.');
-    //     // setErpLoading(false);
-    //   });
   };
   return (
     <LoginWrap>

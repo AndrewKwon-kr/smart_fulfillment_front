@@ -37,7 +37,5 @@ export async function sendFindPassword(name, email) {
     .then((res) => res.data);
 }
 export async function createJwt(signupForm) {
-  return axios
-    .post(`${HOST}/auth/jwt/create/`, signupForm)
-    .then((res) => res.data);
+  return axios.post(`${HOST}/auth/jwt/create/`, signupForm);
 }
