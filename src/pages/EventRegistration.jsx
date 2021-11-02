@@ -18,8 +18,10 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
 import axios from 'axios';
-import { Button } from 'antd';
+import { Button, Spin } from 'antd';
 import swal from 'sweetalert';
+import { LoadingOutlined } from '@ant-design/icons';
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 function EventRegistration() {
   const [title, setTitle] = useState('');
@@ -29,6 +31,10 @@ function EventRegistration() {
   const [countMainItem, setCountMainItem] = useState(0);
   const [countFreebie, setCountFreebie] = useState(0);
   const [countPrint, setCountPrint] = useState(0);
+
+  const [mainLoading, setMainLoading] = useState(false);
+  const [freebieLoading, setFreebieLoading] = useState(false);
+  const [printLoading, setPrintLoading] = useState(false);
 
   const [mainItemModalVisible, setMainItemModalVisible] = useState(false);
   const [freebieModalVisible, setFreebieModalVisible] = useState(false);
@@ -80,6 +86,7 @@ function EventRegistration() {
   const getMainItemData = async () => {
     const url = `https://api2fulfillment.sellha.kr/itemgroup/items/`;
 
+    setMainLoading(true);
     await axios
       .get(url)
       .then((response) => {
@@ -87,23 +94,26 @@ function EventRegistration() {
           if (response.data.result.length !== 0) {
             setMainItemsData(response.data.result);
             setStepOneLoading(false);
+            setMainLoading(false);
             openModal('main');
           } else {
             console.log(response.status);
-            // setLoading(false);
+            setMainLoading(false);
           }
         } catch (err) {
           alert('데이터를 불러올 수 없습니다.');
+          setMainLoading(false);
         }
       })
       .catch(() => {
         alert('error');
-        // setLoading(false);
+        setMainLoading(false);
       });
   };
   const getFreebieData = async () => {
     const url = `https://api2fulfillment.sellha.kr/freebiegroup/freebies/`;
 
+    setFreebieLoading(true);
     await axios
       .get(url)
       .then((response) => {
@@ -111,10 +121,8 @@ function EventRegistration() {
           if (response.data.result.length !== 0) {
             console.log(response.data.result);
             setFreebiesData(response.data.result);
-            // setLoading(false);
           } else {
             console.log(response.status);
-            // setLoading(false);
           }
         } catch (err) {
           alert('데이터를 불러올 수 없습니다.');
@@ -122,12 +130,11 @@ function EventRegistration() {
       })
       .catch(() => {
         alert('error');
-        // setLoading(false);
       });
   };
   const getFreebieErpData = async () => {
     const url = `https://api2fulfillment.sellha.kr/freebiegroup/freebies/is-erp/`;
-
+    setFreebieLoading(true);
     await axios
       .get(url)
       .then((response) => {
@@ -136,41 +143,44 @@ function EventRegistration() {
             console.log(response.data.result);
             setFreebieErpData(response.data.result);
             openModal('freebie');
-            // setLoading(false);
+            setFreebieLoading(false);
           } else {
             console.log(response.status);
-            // setLoading(false);
+            setFreebieLoading(false);
           }
         } catch (err) {
+          setFreebieLoading(false);
           alert('데이터를 불러올 수 없습니다.');
         }
       })
       .catch(() => {
         alert('error');
-        // setLoading(false);
+        setFreebieLoading(false);
       });
   };
   const getPrintData = async () => {
     const url = `https://api2fulfillment.sellha.kr/printgroup/prints/`;
 
+    setPrintLoading(true);
     await axios
       .get(url)
       .then((response) => {
         try {
           if (response.data.result.length !== 0) {
             setPrintsData(response.data.result);
-            // setLoading(false);
+            setPrintLoading(false);
           } else {
             console.log(response.status);
-            // setLoading(false);
+            setPrintLoading(false);
           }
         } catch (err) {
           alert('데이터를 불러올 수 없습니다.');
+          setPrintLoading(false);
         }
       })
       .catch(() => {
         alert('error');
-        // setLoading(false);
+        setPrintLoading(false);
       });
   };
   const getBrandData = async () => {
@@ -182,6 +192,7 @@ function EventRegistration() {
   const getImportData = () => {
     const url = `https://api2fulfillment.sellha.kr/event/`;
     setImportLoading(true);
+    setMainLoading(true);
     axios
       .get(url)
       .then((response) => {
@@ -190,19 +201,23 @@ function EventRegistration() {
             console.log(response.data.result);
             setEventData(response.data.result);
             setImportLoading(false);
+            setMainLoading(false);
             openModal('import');
           } else {
             console.log(response.status);
             setImportLoading(false);
+            setMainLoading(false);
             alert('데이터를 등록해주세요');
           }
         } catch (err) {
           setImportLoading(false);
+          setMainLoading(false);
           alert('데이터를 불러올 수 없습니다.');
         }
       })
       .catch(() => {
         setImportLoading(false);
+        setMainLoading(false);
         alert('error');
       });
   };
@@ -247,13 +262,8 @@ function EventRegistration() {
       setStepOneLoading(true);
       setTimeout(() => {
         setStepOneLoading(false);
-      }, 4000);
+      }, 2000);
       setStepStatus(stepStatus + 1);
-      // getMainItemData();
-      // getFreebieData();
-      // getPrintData();
-      // getBrandData();
-      // getFreebieErpData();
     } else if (stepStatus === 4) {
       postEventData();
       enterLoading();
@@ -638,7 +648,11 @@ function EventRegistration() {
                     getBrandData();
                   }}
                 >
-                  + 아이템 추가하기
+                  {mainLoading ? (
+                    <Spin indicator={antIcon} />
+                  ) : (
+                    '+ 아이템 추가하기'
+                  )}
                 </AddItem>
               </ItemWrapper>
               {mainItemModalVisible && (
@@ -698,7 +712,11 @@ function EventRegistration() {
                     getFreebieErpData();
                   }}
                 >
-                  + 아이템 추가하기
+                  {freebieLoading ? (
+                    <Spin indicator={antIcon} />
+                  ) : (
+                    '+ 아이템 추가하기'
+                  )}
                 </AddItem>
               </ItemWrapper>
               {freebieModalVisible && (
@@ -1129,8 +1147,8 @@ const ItemWrapper = styled.ul`
 `;
 const AddItem = styled.li`
   width: 100%;
-  height: 40px;
-  line-height: 40px;
+  height: 60px;
+  line-height: 60px;
   border-radius: 5px;
   background-color: #c6d3ff;
   color: #7f7f7f;
@@ -1140,7 +1158,7 @@ const AddItem = styled.li`
 `;
 const Item = styled.li`
   width: 100%;
-  /* height: 40px; */
+  height: 60px;
   /* line-height: 40px; */
   display: flex;
   justify-content: space-between;

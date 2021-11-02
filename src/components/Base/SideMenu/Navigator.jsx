@@ -86,7 +86,7 @@ const Logo = styled.img`
   width: 166px;
   height: 73px;
   position: absolute;
-  left: 50%;
+  left: 45%;
   top: 0;
 `;
 const Menubars = styled(Link)`

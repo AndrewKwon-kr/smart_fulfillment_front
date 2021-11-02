@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
@@ -49,8 +49,10 @@ const theme = {
 
 export default function SignupPage({ history }) {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
 
   const handleSignupButton = (values) => {
+    setLoading(true);
     const asyncSignup = async () => {
       try {
         const isSignedUp = await localSignup({
@@ -257,8 +259,8 @@ export default function SignupPage({ history }) {
         </CheckBoxDiv>
 
         <StyledForm.Item>
-          <SignupButton type="default" htmlType="submit">
-            회원 가입
+          <SignupButton type="default" htmlType="submit" loading={loading}>
+            {loading ? '' : '회원가입'}
           </SignupButton>
         </StyledForm.Item>
       </StyledForm>

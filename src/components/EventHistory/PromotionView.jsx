@@ -29,7 +29,8 @@ function PromotionView(props) {
             <Date>
               <ClockIcon />
               {event.startDate.substring(0, 10).split('-').join('. ')} ~{' '}
-              {event.endDate
+              {event.endDate.substring(0, 10).split('-').join('. ') !==
+              '9999. 12. 31'
                 ? event.endDate.substring(0, 10).split('-').join('. ')
                 : '제한없음'}
             </Date>

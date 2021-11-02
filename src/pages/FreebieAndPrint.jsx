@@ -369,7 +369,7 @@ function FreebieAndPrint() {
             />
           </InputWrap>
           <InputWrap>
-            <Label>브랜드</Label>
+            <Label>브랜드 (품목그룹 1)</Label>
             <MultiSelect
               options={brandOptions}
               value={brandValues}

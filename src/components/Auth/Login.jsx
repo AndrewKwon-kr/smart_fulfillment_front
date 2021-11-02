@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { InputWithLabel, AuthButton, AddLoginMenu } from '.';
 import styled from 'styled-components';
 import logo from 'assets/logo.png';
 import useForm from 'lib/useForm';
 import validate from 'lib/validate';
-// import axios from 'axios';
 import { createJwt } from '../../http-api';
-// import Swal from 'sweetalert2';
-// import { useDispatch } from 'react-redux';
-// import { login, setUserInfo } from 'redux/user';
 import Swal from 'sweetalert2';
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 function Login(props) {
+  const [loginLoading, setLoginLoading] = useState(false);
   const { values, errors, submitting, handleChange, handleSubmit } = useForm({
     initialValues: { email: '', password: '' },
     onSubmit: (values) => {
@@ -20,6 +20,7 @@ function Login(props) {
     validate,
   });
   const getLoginData = async (row) => {
+    setLoginLoading(true);
     try {
       const response = await createJwt(row);
       const accessToken = response.data.access;
@@ -62,7 +63,14 @@ function Login(props) {
         {errors.password && (
           <span className="errorMessage">{errors.password}</span>
         )}
-        <AuthButton children="Sign in" type="submit" disabled={submitting} />
+        {loginLoading ? (
+          <SpinnerWrap>
+            <Spinner size="large" indicator={antIcon} />
+          </SpinnerWrap>
+        ) : (
+          <AuthButton children="로그인" type="submit" disabled={submitting} />
+        )}
+
         <AddLoginMenu
           autoLogin={() => props.setIsAutoLogin(!props.IsAutoLogin)}
         />
@@ -90,6 +98,13 @@ const LogoWrap = styled.div`
 `;
 const Logo = styled.img`
   width: 70%;
+`;
+const Spinner = styled(Spin)`
+  margin: 0 auto;
+`;
+const SpinnerWrap = styled.div`
+  margin-top: 1rem;
+  display: flex;
 `;
 
 export default Login;

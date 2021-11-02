@@ -97,7 +97,6 @@ function OrderCollection() {
             setEventData(response.data.result);
             setLoading(false);
           } else if (response.data.result.length === 0) {
-            swal('등록된 이벤트가 없습니다.');
             setLoading(false);
           }
         } catch (err) {

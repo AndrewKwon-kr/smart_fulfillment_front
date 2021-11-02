@@ -4,4 +4,3 @@ export { default as InputWithLabel } from './InputWithLabel';
 export { default as AuthButton } from './AuthButton';
 export { default as AddLoginMenu } from './AddLoginMenu';
 export { default as Login } from './Login';
-export { default as Register } from './Register';

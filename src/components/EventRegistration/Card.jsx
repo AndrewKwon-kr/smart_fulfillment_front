@@ -36,7 +36,7 @@ const CardContent = styled.div`
   cursor: pointer;
   margin-bottom: 15px;
   font-weight: bold;
-
+  height: 60px;
   align-items: center;
 `;
 
