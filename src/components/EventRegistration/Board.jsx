@@ -8,7 +8,7 @@ function Board(props) {
 
     const card = document.getElementById(cardId);
     if (card) {
-      card.style.display = 'block';
+      card.style.display = 'flex';
 
       e.target.appendChild(card);
     }
@@ -19,17 +19,6 @@ function Board(props) {
       )[0];
 
       if (cardId !== 'all') {
-        // props.setSelectedItems(
-        //   props.groupList
-        //     .filter((group) => group.key === Number(cardId))
-        //     .map((group) => {
-        //       return {
-        //         ...group,
-        //         items: group.itemgroups,
-        //         id: group.key,
-        //       };
-        //     })
-        // );
         props.setFilteredGroupItem(
           props.groupList
             .filter((group) => group.key === Number(cardId))[0]
