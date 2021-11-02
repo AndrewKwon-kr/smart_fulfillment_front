@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import swal from 'sweetalert';
+import { Link } from 'react-router-dom';
 
 const BorderedButton = styled.button`
   all: unset;
@@ -20,30 +21,48 @@ const BorderedButton = styled.button`
 `;
 
 function NextButton({ clickedFreebie, clickedERP }) {
-  function onClick(clickedFreebie) {
-    if (clickedFreebie) {
-      getBrandData();
-    } else window.location.href = '/erp';
+  const [pageUrl, setPageUrl] = useState('');
+
+  async function onClick() {
+    await checkUrl(clickedFreebie);
+    document.getElementById('nextPage').click();
   }
-  function getBrandData() {
+
+  async function getBrandData() {
     const url = `https://api2fulfillment.sellha.kr/brand/`;
 
-    axios.get(url).then((response) => {
-      if (response.data.length === 0) {
-        swal('[ERP 등록제품] 단계를 먼저 해주세요');
-        return false;
-      } else {
-        window.location.href = '/freebie';
-      }
-    });
+    const result = await axios.get(url);
+
+    if (result.data.length === 0) {
+      swal('[ERP 등록제품] 단계를 먼저 해주세요');
+    } else {
+      setPageUrl('/freebie');
+    }
   }
+
+  const checkUrl = async (clickedFreebie) => {
+    if (clickedFreebie) {
+      await getBrandData();
+      console.log(pageUrl);
+    } else {
+      setPageUrl('/erp');
+      console.log(pageUrl);
+      // window.location.href = '/erp';
+    }
+  };
+
   return (
-    <BorderedButton
-      disabled={!(clickedFreebie || clickedERP)}
-      onClick={() => onClick(clickedFreebie)}
-    >
-      다음 단계로
-    </BorderedButton>
+    <>
+      <BorderedButton
+        disabled={!(clickedFreebie || clickedERP)}
+        onClick={() => onClick(clickedFreebie)}
+      >
+        다음 단계로
+      </BorderedButton>
+      <Link to={pageUrl}>
+        <div style={{ display: 'none' }} id="nextPage"></div>
+      </Link>
+    </>
   );
 }
 

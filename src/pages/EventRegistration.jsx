@@ -758,7 +758,11 @@ function EventRegistration() {
                     getPrintData();
                   }}
                 >
-                  + 아이템 추가하기
+                  {printLoading ? (
+                    <Spin indicator={antIcon} />
+                  ) : (
+                    '+ 아이템 추가하기'
+                  )}
                 </AddItem>
               </ItemWrapper>
               {printModalVisible && (

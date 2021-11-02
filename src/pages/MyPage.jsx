@@ -9,12 +9,6 @@ export default function MyPage() {
   const [Info, setInfo] = useState({});
 
   // const { token } = user;
-  const info = {
-    id: 0,
-    userName: '권혁진',
-    phone: '010-2628-0813',
-    email: 'gurwls0813@naver.com',
-  };
   const user = {
     id: 0,
     teamName: 'IT',
@@ -22,30 +16,27 @@ export default function MyPage() {
     teamId: 0,
   };
 
-  // const asyncInfo = async () => {
-  //   try {
-  //     // const info = await localInfo(token);
-  //     const info = {
-  //       id: 0,
-  //       userName: '권혁진',
-  //       phone: '010-2628-0813',
-  //       email: 'gurwls0813@naver.com',
-  //       teamName: 'IT',
-  //       teamCode: 'HJD038CED',
-  //       teamId: 0,
-  //     };
-  //     setInfo(info);
-  //   } catch (error) {
-  //     setInfo({});
-  //   }
-  // };
-  const asyncInfo = () => {
-    setInfo(info);
+  const asyncInfo = async () => {
+    try {
+      // const info = await localInfo(token);
+      const info = {
+        id: 0,
+        userName: '권혁진',
+        phone: '010-2628-0813',
+        email: 'gurwls0813@naver.com',
+        teamName: 'IT',
+        teamCode: 'HJD038CED',
+        teamId: 0,
+      };
+      setInfo(info);
+    } catch (error) {
+      setInfo({});
+    }
   };
 
   useEffect(() => {
     asyncInfo();
-  });
+  }, []);
 
   return (
     <Container>
