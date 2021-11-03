@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import * as FaIcons from 'react-icons/fa';
-import * as AiIcons from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { SideBarData } from './SidebarData';
 import logo from 'assets/logo.png';
@@ -42,9 +41,9 @@ function Navigator() {
   return (
     <>
       <Navbar>
-        <Menubars to="#">
+        {/* <Menubars to="#">
           <FaIcons.FaBars onClick={showSidebar} />
-        </Menubars>
+        </Menubars> */}
         <Link to="/">
           <Logo alt="셀러비" src={logo} />
         </Link>
