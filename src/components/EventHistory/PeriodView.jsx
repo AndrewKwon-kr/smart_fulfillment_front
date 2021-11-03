@@ -5,6 +5,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import koLocale from '@fullcalendar/core/locales/ko';
 import swal from 'sweetalert';
+import styled from 'styled-components';
 
 function PeriodView(props) {
   const [eventData, setEventData] = useState([]);
@@ -33,7 +34,7 @@ function PeriodView(props) {
   }, [props.eventData]);
 
   return (
-    <div className="App">
+    <CalenderWrapper>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
@@ -53,8 +54,12 @@ function PeriodView(props) {
         eventClick={(e) => swal(e.event.title)}
         locale={koLocale}
       />
-    </div>
+    </CalenderWrapper>
   );
 }
+
+const CalenderWrapper = styled.div`
+  width: 65vw;
+`;
 
 export default PeriodView;

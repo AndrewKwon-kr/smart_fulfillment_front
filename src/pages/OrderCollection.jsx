@@ -282,8 +282,8 @@ function OrderCollection() {
 const Container = styled.div`
   position: relative;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: 7%;
+  width: 93%;
   height: calc(100% - 56px);
   text-align: center;
   /* z-index: -1; */

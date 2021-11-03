@@ -10,9 +10,19 @@ import { UserOutlined } from '@ant-design/icons';
 
 function Navigator() {
   const [sidebar, setSidebar] = useState(false);
+  const [sidebarText, setSidebarText] = useState(false);
   const isLogined = localStorage.getItem('access_token');
 
-  const showSidebar = () => setSidebar(!sidebar);
+  const showSidebar = () => {
+    setSidebar(!sidebar);
+    if (sidebar) {
+      setSidebarText(!sidebarText);
+    } else {
+      setTimeout(() => {
+        setSidebarText(!sidebarText);
+      }, 200);
+    }
+  };
   const logout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
@@ -44,12 +54,12 @@ function Navigator() {
           </Dropdown>
         )}
       </Navbar>
-      <NavMenuWrap>
+      <NavMenuWrap active={sidebar}>
         <div className={sidebar ? 'nav-menu active' : 'nav-menu'}>
           <NavMenuList>
             <NavMenu>
               <Menubars to="#">
-                <AiIcons.AiOutlineClose onClick={showSidebar} />
+                <FaIcons.FaBars onClick={showSidebar} />
               </Menubars>
             </NavMenu>
             {SideBarData.map((item, index) => {
@@ -57,7 +67,7 @@ function Navigator() {
                 <li key={index} className={item.cName}>
                   <Link to={item.path}>
                     <Icon>{item.icons}</Icon>
-                    <span>{item.title}</span>
+                    {sidebarText && <span>{item.title}</span>}
                   </Link>
                 </li>
               );
@@ -91,7 +101,7 @@ const Logo = styled.img`
 `;
 const Menubars = styled(Link)`
   margin-left: 2rem;
-  font-size: 2rem;
+  font-size: 1rem;
   background-color: #fff;
   color: #9c9c9c;
 `;
@@ -106,13 +116,13 @@ const MyInfo = styled(Avatar)`
 const NavMenuWrap = styled.nav`
   .nav-menu {
     background-color: #fff;
-    width: 250px;
+    width: 80px;
     height: 100vh;
     display: flex;
     justify-content: center;
     position: fixed;
     top: 0;
-    left: -100%;
+    left: 0;
     transition: 850ms;
     border: 1px solid #d9d9d9;
     border-top: 0;
@@ -120,7 +130,8 @@ const NavMenuWrap = styled.nav`
   }
   .nav-menu.active {
     left: 0;
-    transition: 350ms;
+    width: 200px;
+    transition: 200ms;
   }
   span {
     margin-left: 16px;
@@ -142,7 +153,7 @@ const NavMenuWrap = styled.nav`
     font-weight: bold;
     color: #9c9c9c;
     font-size: 16px;
-    width: 95%;
+    width: ${(props) => (props.active ? '95%' : '75%')};
     height: 100%;
     display: flex;
     align-items: center;

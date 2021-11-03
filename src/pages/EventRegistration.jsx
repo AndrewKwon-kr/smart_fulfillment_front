@@ -959,7 +959,7 @@ const Container = styled.div`
 const StepWrapper = styled.div`
   position: absolute;
   top: 80px;
-  left: 100px;
+  left: 200px;
   width: 100px;
   height: 400px;
   text-align: center;

@@ -89,15 +89,16 @@ function EventHistory() {
 const Container = styled.div`
   position: relative;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: 5%;
+  width: 95%;
   height: calc(100% - 56px);
   text-align: center;
 `;
 const CategoryHeader = styled.div`
   position: sticky;
   top: 0;
-  width: 100%;
+  margin-left: -10px;
+  width: calc(100% + 10px);
   height: 80px;
   text-align: start;
   border-bottom: 1px solid #d9d9d9;
@@ -119,7 +120,7 @@ const Category = styled.div`
   border-bottom: ${(props) =>
     props.clickedCategory ? '3px solid #228be6' : 'none'};
   &.first {
-    margin-left: 120px;
+    margin-left: 200px;
   }
   &:hover {
     color: #228be6;
