@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import backgroundImg from '../assets/home_bg.png';
+import dashboardImage from '../assets/dashboard.png';
 import { Login } from 'components/Auth/';
 import Swal from 'sweetalert2';
 import { checkVerify, checkRefresh } from '../http-api';
@@ -21,7 +22,7 @@ function Home() {
           localStorage.setItem('refresh_token', refreshToken);
         }
         if (res.status === 200) {
-          console.log(res);
+          // console.log(res);
         }
       } catch (error) {
         console.log(error.response);
@@ -55,9 +56,15 @@ function Home() {
 
   return (
     <Container>
-      <BackgroundImage isLogined={isLogined} />
-      {!isLogined && (
-        <Login IsAutoLogin={IsAutoLogin} setIsAutoLogin={setIsAutoLogin} />
+      {!isLogined ? (
+        <>
+          <BackgroundImage isLogined={isLogined} />
+          <Login IsAutoLogin={IsAutoLogin} setIsAutoLogin={setIsAutoLogin} />
+        </>
+      ) : (
+        <DashboardImageWrapper>
+          <DashboardImage />
+        </DashboardImageWrapper>
       )}
     </Container>
   );
@@ -81,6 +88,22 @@ const BackgroundImage = styled.div`
   background: url(${backgroundImg});
   background-position: center;
   background-size: cover;
+`;
+const DashboardImageWrapper = styled.div`
+  margin-left: 100px;
+  display: flex;
+  flex-direction: column;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+`;
+const DashboardImage = styled.div`
+  width: 90%;
+  height: 4000px;
+  background-image: url(${dashboardImage});
+  background-repeat: no-repeat;
+  background-size: contain;
 `;
 
 export default Home;

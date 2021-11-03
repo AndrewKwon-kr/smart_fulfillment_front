@@ -4,8 +4,14 @@ import { MainTable, BackButton, CompleteButton } from 'components/ERP';
 import excelIcon from 'assets/icon_excel.png';
 import { ExcelRenderer } from 'react-excel-renderer';
 import { Button, Upload } from 'antd';
-import axios from 'axios';
 import swal from 'sweetalert';
+import {
+  createItemgroups,
+  updateItemGroups,
+  getItemGroups,
+  getBrandData,
+  updateItemgroupsImage,
+} from '../http-api';
 
 function ERP() {
   const [rows, setRows] = useState([]);
@@ -15,80 +21,72 @@ function ERP() {
   const [sendData, setSendData] = useState([]);
   const [sendLoading, setSendLoading] = useState();
 
-  const createErpData = (row) => {
-    console.log('create---> ', row);
-    setLoading(true);
-    const url = `https://api2fulfillment.sellha.kr/brand/itemgroups/items/`;
+  const createErpData = async (row) => {
     const data = {
       messageType: 'create',
       groupId: 1,
       erpDatas: row,
     };
+    setLoading(true);
+
+    const response = await createItemgroups(data);
+
     if (row.length !== 0) {
-      axios.post(url, data).then((response) => {
-        if (response.data.code === 201) {
-          window.location.href = '/erp';
-        }
-      });
+      if (response.data.code === 201) {
+        console.log('create', response);
+        setLoading(false);
+      }
     }
   };
-  const updateErpData = (row) => {
-    console.log('update ---> ', row);
-    const url = `https://api2fulfillment.sellha.kr/brand/itemgroups/items/`;
+  const updateErpData = async (row) => {
     const data = {
       messageType: 'update',
       groupId: 1,
       erpDatas: row,
     };
-    if (row.length !== 0) {
+    setLoading(true);
 
-      axios
-        .post(url, data)
-        .then((response) => console.log(response.data.result));
+    const response = await updateItemGroups(data);
+
+    if (row.length !== 0) {
+      if (response.data.code === 201) {
+        console.log('update', response);
+        setLoading(false);
+      }
     }
   };
 
-  const getErpData = () => {
-    const url = `https://api2fulfillment.sellha.kr/itemgroup/items/`;
+  const getErpData = async () => {
+    const response = await getItemGroups();
 
-    axios
-      .get(url)
-      .then((response) => {
-        try {
-          if (response.data.result.length !== 0) {
-
-            setRows(response.data.result);
-            setLoading(false);
-          } else {
-
-            swal({
-              text: 'Excel 파일을 등록 해주세요',
-              buttons: { confirm: '등록', cancel: '취소' },
-            }).then((value) => {
-              if (value === true) {
-                document.getElementById('upload').click();
-              }
-            });
-            setLoading(false);
-          }
-        } catch (err) {
-          alert('데이터를 불러올 수 없습니다.');
-        }
-      })
-      .catch(() => {
-        alert('error');
+    try {
+      if (response.data.result.length !== 0) {
+        setRows(response.data.result);
         setLoading(false);
-      });
+      } else {
+        swal({
+          text: 'Excel 파일을 등록 해주세요',
+          buttons: { confirm: '등록', cancel: '취소' },
+        }).then((value) => {
+          if (value === true) {
+            document.getElementById('upload').click();
+          }
+        });
+        setLoading(false);
+      }
+    } catch (err) {
+      alert('데이터를 불러올 수 없습니다.');
+      setLoading(false);
+    }
   };
-  const getBrandData = () => {
-    const url = `https://api2fulfillment.sellha.kr/brand/`;
-    axios.get(url).then((response) => {
-      setBrandData(response.data);
-    });
+  const getBrandDatas = async () => {
+    const response = await getBrandData();
+
+    setBrandData(response.data);
   };
   useEffect(() => {
     getErpData();
-    getBrandData();
+    getBrandDatas();
   }, []);
 
   const uploadExcel = () => {
@@ -101,37 +99,29 @@ function ERP() {
       }
     });
   };
-  const complete = () => {
-    enterLoading();
-    const url = `https://api2fulfillment.sellha.kr/itemgroup/imagestest/`;
+  const complete = async () => {
     const data = {
       groupId: 1,
       data: sendData,
     };
-
-    axios.put(url, data).then((response) => console.log(response.data.result));
-
-    // isErpData ? createErpData(rows) : updateErpData(rows);
-    // isErpData ? updateErpData() : createErpData();
+    setSendLoading(true);
+    await updateItemgroupsImage(data);
+    enterLoading();
   };
   const enterLoading = () => {
-    setSendLoading(true);
-    setTimeout(() => {
-      setSendLoading(false);
-      swal({
-        title: '수정 완료',
-        text: '다른 아이템을 수정하시겠습니까?',
-        icon: 'success',
-        buttons: { confirm: '예', cancel: '아니오' },
-      }).then((value) => {
-        if (value) {
-          window.location.reload();
-        } else {
-          window.location.href = '/registitem';
-        }
-      });
-      // window.location.reload();
-    }, 4000);
+    setSendLoading(false);
+    swal({
+      title: '수정 완료',
+      text: '다른 아이템을 수정하시겠습니까?',
+      icon: 'success',
+      buttons: { confirm: '예', cancel: '아니오' },
+    }).then((value) => {
+      if (value) {
+        window.location.reload();
+      } else {
+        window.location.href = '/registitem';
+      }
+    });
   };
 
   const fileHandler = (fileList) => {
@@ -178,12 +168,9 @@ function ERP() {
           return newRows;
         });
         if (newRows.length === 0) {
-
           return false;
         } else {
-
           isErpData ? updateErpData(newRows) : createErpData(newRows);
-
         }
       }
     });

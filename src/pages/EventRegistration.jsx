@@ -20,6 +20,7 @@ import ko from 'date-fns/locale/ko';
 import axios from 'axios';
 import { Button, Spin } from 'antd';
 import swal from 'sweetalert';
+import { getItemGroupsBrand } from '../http-api';
 import { LoadingOutlined } from '@ant-design/icons';
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
@@ -181,10 +182,8 @@ function EventRegistration() {
       });
   };
   const getBrandData = async () => {
-    const url = `https://api2fulfillment.sellha.kr/brand/itemgroups/items1/`;
-    await axios.get(url).then((response) => {
-      setBrandData(response.data.result);
-    });
+    const response = await getItemGroupsBrand();
+    setBrandData(response.data.result);
   };
   const getImportData = () => {
     const url = `https://api2fulfillment.sellha.kr/event/`;

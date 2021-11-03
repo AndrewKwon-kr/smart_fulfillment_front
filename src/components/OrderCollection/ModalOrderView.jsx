@@ -4,8 +4,8 @@ import * as GoIcons from 'react-icons/go';
 import { Button } from 'antd';
 import { InputWithLabel } from '../Auth';
 import validateSabangnet from 'lib/validateSabangnet';
-import axios from 'axios';
 import useForm from 'lib/useForm';
+import { postSabangnetData } from '../../http-api';
 
 function ModalOrderView(props) {
   const [checkedOne, setCheckedOne] = useState(false);
@@ -14,34 +14,20 @@ function ModalOrderView(props) {
   const { values, errors, submitting, handleChange, handleSubmit } = useForm({
     initialValues: { sabangnetKey: '', sabangnetId: '', groupId: 1 },
     onSubmit: (values) => {
-      postSabangnetData(values);
+      postSabangnetDatas(values);
     },
     validate: validateSabangnet,
   });
-  const postSabangnetData = (row) => {
-    const url = `https://api2fulfillment.sellha.kr/order/sabangnet/`;
+  const postSabangnetDatas = async (row) => {
+    const response = await postSabangnetData(row);
 
-    axios
-      .post(url, row)
-      .then((response) => {
-
-        try {
-          if (response.status === 200) {
-            props.checkSabangnetOrder();
-
-            // setErpLoading(false);
-          } else {
-            alert('데이터를 등록해주세요');
-            // setErpLoading(false);
-          }
-        } catch (err) {
-          alert('데이터를 불러올 수 없습니다.');
-        }
-      })
-      .catch(() => {
-        alert('다른 에러');
-        // setErpLoading(false);
-      });
+    try {
+      if (response.status === 200) {
+        props.checkSabangnetOrder();
+      } else alert('데이터를 등록해주세요.');
+    } catch (err) {
+      alert('데이터를 불러올 수 없습니다.');
+    }
   };
 
   const clickCheckedIcon = (type) => {

@@ -397,7 +397,8 @@ function FreebieAndPrint() {
             options={options}
             dataKey={dataKey}
             loading={loading}
-            enterLoading={() => enterLoading('complete')}
+            enterLoading={() => enterLoading()}
+            setFreebieAndPrintLoading={setFreebieAndPrintLoading}
           />
         </FlexBox>
       </Wrapper>

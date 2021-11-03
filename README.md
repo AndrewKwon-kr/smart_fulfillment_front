@@ -1,6 +1,6 @@
 # Fullfilment - Front Repo
 
-주소 : [api2.fulfillment.sellha.kr](https://api2.fulfillment.sellha.kr)  
+주소 : [fulfillment.sellha.kr](https://fulfillment.sellha.kr)  
 시작일 : 2021.06  
 참여자 :
 김창수 허윤은 권혁진 박지애

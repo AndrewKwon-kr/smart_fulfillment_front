@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 import swal from 'sweetalert';
 import { Link } from 'react-router-dom';
+import { getBrandData } from 'http-api';
 
 const BorderedButton = styled.button`
   all: unset;
@@ -28,21 +28,14 @@ function NextButton({ clickedFreebie, clickedERP }) {
     document.getElementById('nextPage').click();
   }
 
-  async function getBrandData() {
-    const url = `https://api2fulfillment.sellha.kr/brand/`;
-
-    const result = await axios.get(url);
-
-    if (result.data.length === 0) {
-      swal('[ERP 등록제품] 단계를 먼저 해주세요');
-    } else {
-      setPageUrl('/freebie');
-    }
-  }
-
   const checkUrl = async (clickedFreebie) => {
     if (clickedFreebie) {
-      await getBrandData();
+      const result = await getBrandData();
+      if (result.data.length === 0) {
+        swal('[ERP 등록제품] 단계를 먼저 해주세요');
+      } else {
+        setPageUrl('/freebie');
+      }
     } else {
       setPageUrl('/erp');
     }
