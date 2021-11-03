@@ -151,7 +151,6 @@ function FreebieAndPrint() {
     event.preventDefault();
     let reader = new FileReader();
     let file = event.target.files[0];
-    console.log(file);
 
     reader.onloadend = () => {
       setOptions(

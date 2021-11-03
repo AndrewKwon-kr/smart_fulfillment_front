@@ -36,7 +36,6 @@ function ImportModalTable(props) {
       name: record.name,
     }),
   };
-  console.log(props.loading);
   return (
     <div style={{ marginTop: 20 }}>
       <Table

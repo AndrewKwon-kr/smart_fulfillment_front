@@ -20,23 +20,21 @@ function ModalOrderView(props) {
   });
   const postSabangnetData = (row) => {
     const url = `https://api2fulfillment.sellha.kr/order/sabangnet/`;
-    console.log(row);
+
     axios
       .post(url, row)
       .then((response) => {
-        console.log(response);
+
         try {
           if (response.status === 200) {
             props.checkSabangnetOrder();
 
             // setErpLoading(false);
           } else {
-            console.log(response.status);
             alert('데이터를 등록해주세요');
             // setErpLoading(false);
           }
         } catch (err) {
-          console.log(err);
           alert('데이터를 불러올 수 없습니다.');
         }
       })

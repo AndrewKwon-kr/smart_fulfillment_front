@@ -9,7 +9,6 @@ function ImportModalView(props) {
   const [searchedEvent, setSearchedEvent] = useState(props.eventData);
   const eventData = props.eventData;
 
-  console.log(props.eventData);
   const handleChange = (e) => {
     const value = e.target.value;
     setUserInput(value);

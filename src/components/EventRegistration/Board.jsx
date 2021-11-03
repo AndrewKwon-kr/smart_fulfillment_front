@@ -12,7 +12,6 @@ function Board(props) {
 
       e.target.appendChild(card);
     }
-    console.log(props.type);
     if (props.type === 'mainItemModalView_group_add') {
       const group = props.groupList.filter(
         (group) => group.key === Number(cardId)
@@ -47,7 +46,6 @@ function Board(props) {
               };
             })
         );
-        // console.log(props.groupList.shift());
       }
     }
     if (props.type === 'mainItemModalView_group_remove') {

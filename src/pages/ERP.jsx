@@ -8,19 +8,14 @@ import axios from 'axios';
 import swal from 'sweetalert';
 
 function ERP() {
-  // console.log(erpData);
   const [rows, setRows] = useState([]);
-  // const [excelRows, setExcelRows] = useState([]);
   const isErpData = false;
   const [brandData, setBrandData] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const [cols, setCols] = useState([]);
-  // const [errorMessage, setErrorMessage] = useState(null);
   const [sendData, setSendData] = useState([]);
   const [sendLoading, setSendLoading] = useState();
 
   const createErpData = (row) => {
-    console.log(row);
     console.log('create---> ', row);
     setLoading(true);
     const url = `https://api2fulfillment.sellha.kr/brand/itemgroups/items/`;
@@ -46,7 +41,7 @@ function ERP() {
       erpDatas: row,
     };
     if (row.length !== 0) {
-      console.log(row);
+
       axios
         .post(url, data)
         .then((response) => console.log(response.data.result));
@@ -61,11 +56,11 @@ function ERP() {
       .then((response) => {
         try {
           if (response.data.result.length !== 0) {
-            console.log(response.data.result);
+
             setRows(response.data.result);
             setLoading(false);
           } else {
-            console.log(response.status);
+
             swal({
               text: 'Excel 파일을 등록 해주세요',
               buttons: { confirm: '등록', cancel: '취소' },
@@ -183,21 +178,17 @@ function ERP() {
           return newRows;
         });
         if (newRows.length === 0) {
-          // setErrorMessage('No data found in file!');
 
           return false;
         } else {
-          // console.log(isErpData);
-          // setExcelRows(newRows);
+
           isErpData ? updateErpData(newRows) : createErpData(newRows);
 
-          // setErrorMessage(null);
         }
       }
     });
     return false;
   };
-  // console.log('rows --->', rows);
   return (
     <Container>
       <Wrapper>

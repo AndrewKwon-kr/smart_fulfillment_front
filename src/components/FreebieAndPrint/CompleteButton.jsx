@@ -36,17 +36,14 @@ function CompleteButton(props) {
       groupId: 1,
       data: row,
     };
-    console.log(row);
     axios
       .put(url, data)
       .then((response) => {
         try {
           if (response.data.code === 201) {
             // window.location.href = '/registitem';
-            console.log(response.data);
             // setErpLoading(false);
           } else {
-            console.log(response.status);
             alert('데이터를 등록해주세요');
             // setErpLoading(false);
           }

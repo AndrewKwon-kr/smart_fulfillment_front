@@ -22,7 +22,6 @@ function EventHistory() {
       .then((response) => {
         try {
           if (response.data.result.length !== 0) {
-            console.log(response.data.result);
             setEventData(response.data.result);
             setLoading(false);
           } else if (response.data.result.length === 0) {
@@ -30,7 +29,6 @@ function EventHistory() {
             setLoading(false);
           }
         } catch (err) {
-          console.log(err);
           alert('데이터를 불러올 수 없습니다.');
           setLoading(false);
         }

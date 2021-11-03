@@ -32,7 +32,6 @@ function ErpFilterModalView(props) {
   );
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      // props.setSelectedRow(selectedRows);
       console.log('selectedRows: ', selectedRows);
       console.log(selectedRowKeys);
       setDefaultRowKeys(selectedRowKeys);
@@ -69,11 +68,9 @@ function ErpFilterModalView(props) {
         (item) => item.id !== props.filteredErpItem[0].groupId
       )
     );
-    console.log(props.filteredErpItem[0]);
     props.close();
   };
-  // console.log(props.filteredMainItem);
-  // console.log(defaultRowKeys);
+
   return (
     <Modal>
       <ModalContainer>

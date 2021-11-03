@@ -30,7 +30,7 @@ function ImportTable(props) {
       name: record.name,
     }),
   };
-  console.log(props.loading);
+
   return (
     <div>
       <Table

@@ -97,7 +97,6 @@ function EventRegistration() {
             setMainLoading(false);
             openModal('main');
           } else {
-            console.log(response.status);
             setMainLoading(false);
           }
         } catch (err) {
@@ -119,7 +118,6 @@ function EventRegistration() {
       .then((response) => {
         try {
           if (response.data.result.length !== 0) {
-            console.log(response.data.result);
             setFreebiesData(response.data.result);
           } else {
             console.log(response.status);
@@ -140,7 +138,6 @@ function EventRegistration() {
       .then((response) => {
         try {
           if (response.data.result.length !== 0) {
-            console.log(response.data.result);
             setFreebieErpData(response.data.result);
             openModal('freebie');
             setFreebieLoading(false);
@@ -198,7 +195,6 @@ function EventRegistration() {
       .then((response) => {
         try {
           if (response.data.result) {
-            console.log(response.data.result);
             setEventData(response.data.result);
             setImportLoading(false);
             setMainLoading(false);
@@ -232,7 +228,6 @@ function EventRegistration() {
             setSelectedRowLoading(false);
 
             closeModal('import');
-            console.log(response.data.result);
             const data = response.data.result;
             importData(data);
           } else {
@@ -421,7 +416,6 @@ function EventRegistration() {
     eventData.start = startDate;
     eventData.end = endDate;
     eventData.channels = channelData;
-    // console.log(eventData);
 
     const url = `https://api2fulfillment.sellha.kr/event/`;
     const data = {
@@ -435,12 +429,9 @@ function EventRegistration() {
         try {
           if (response.data.code === 201) {
             // window.location.href = '/registitem';
-            console.log(response.data);
-            // setErpLoading(false);
           } else {
             console.log(response.status);
             alert('데이터를 등록해주세요');
-            // setErpLoading(false);
           }
         } catch (err) {
           alert('데이터를 불러올 수 없습니다.');
@@ -475,13 +466,11 @@ function EventRegistration() {
     getPrintData();
     getBrandData();
     getFreebieErpData();
-    console.log(data);
     setStepStatus(stepStatus + 1);
     setTitle(data.title);
     setMainItems(data.items);
     setFreebies(data.freebies);
     setPrints(data.prints);
-    console.log(stepStatus);
   };
 
   useEffect(() => {
@@ -493,22 +482,7 @@ function EventRegistration() {
   useEffect(() => {
     setCountPrint(prints.length);
   }, [prints]);
-  // console.log('==============');
-  // console.log('타이틀 : ', title);
-  // console.log('본품 : ', mainItems);
-  // console.log('사은품 : ', freebies);
-  // console.log('인쇄물 : ', prints);
-  // console.log('최소구매개수 : ', minBuyNumber);
-  // console.log('최소구매금액', minBuyPrice);
-  // console.log('한정수량', limitNumber);
-  // console.log('startDate : ', startDate, typeof startDate);
-  // console.log('endDate : ', endDate);
-  // console.log('이벤트 채널 :', channelData);
-  // console.log('==============');
-  // console.log('증정 범위 숫자', rangeNumber);
-  // console.log('증정 범위 : ', freebieRange);
-  // console.log('증정 방식 : ', freebieType);
-  // console.log(selectedRows);
+
   return (
     <Container>
       <StepWrapper>

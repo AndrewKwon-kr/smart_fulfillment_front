@@ -45,7 +45,6 @@ function ERPMainTable(props) {
     setFilteredInfo(filters);
     localStorage.setItem('testFilter', filteredInfo);
   };
-  console.log(list);
 
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({

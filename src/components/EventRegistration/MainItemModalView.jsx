@@ -97,8 +97,6 @@ function MainItemModalView(props) {
 
   const [filteredMainItem, setFilteredMainItem] = useState([]);
   const [filteredGroupItem, setFilteredGroupItem] = useState([]);
-  console.log('보낼 정보 : ', selectedItems);
-  console.log('필터링된 아이템 : ', filteredGroupItem);
 
   return (
     <Modal>

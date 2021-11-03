@@ -43,11 +43,8 @@ function NextButton({ clickedFreebie, clickedERP }) {
   const checkUrl = async (clickedFreebie) => {
     if (clickedFreebie) {
       await getBrandData();
-      console.log(pageUrl);
     } else {
       setPageUrl('/erp');
-      console.log(pageUrl);
-      // window.location.href = '/erp';
     }
   };
 

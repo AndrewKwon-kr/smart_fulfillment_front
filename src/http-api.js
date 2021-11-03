@@ -9,7 +9,6 @@ let HOST = 'https://api2fulfillment.sellha.kr';
 export { HOST };
 
 export async function checkDuplicateEmail(email) {
-  console.log(email);
   const { data } = await axios.get(`${HOST}/auth/duplicate-email/`, {
     params: { email },
   });

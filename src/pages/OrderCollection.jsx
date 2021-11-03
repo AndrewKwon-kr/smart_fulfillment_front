@@ -48,9 +48,8 @@ function OrderCollection() {
     const url = `https://api2fulfillment.sellha.kr/1/order/check-sabangnet/`;
     setStep(1);
     setProgressStep(1);
-    console.log('transformOrder_before');
+
     await axios.get(url).then((response) => {
-      console.log('transformOrder_after');
       const result = response.data.result;
 
       if (result.isSabangnet && !result.mappingOverlap) {
@@ -66,9 +65,8 @@ function OrderCollection() {
   };
   const gatherSabangnetOrder = async () => {
     const url = `https://api2fulfillment.sellha.kr/1/order/gather-sabangnet/`;
-    console.log('gatherSabangnetOrder_before');
+
     await axios.get(url).then((response) => {
-      console.log('gatherSabangnetOrder_after');
       setProgressStep(3);
       eventMapping();
     });
@@ -76,11 +74,9 @@ function OrderCollection() {
 
   const eventMapping = async () => {
     const url = `https://api2fulfillment.sellha.kr/order/map-event/`;
-    console.log('eventMapping_before');
+
     await axios.get(url).then((response) => {
-      console.log('eventMapping_after');
       setOrderExcelData(response.data.result);
-      console.log(response.data.result);
       setProgressStep(4);
     });
   };
@@ -93,7 +89,6 @@ function OrderCollection() {
       .then((response) => {
         try {
           if (response.data.result.length !== 0) {
-            console.log(response.data.result);
             setEventData(response.data.result);
             setLoading(false);
           } else if (response.data.result.length === 0) {
@@ -142,7 +137,6 @@ function OrderCollection() {
         console.log(err);
       } else {
         let newRows = [];
-        console.log(fileObj);
         resp.rows.map((row, index) => {
           if (row && row !== 'undefined') {
             newRows.push({
@@ -165,12 +159,7 @@ function OrderCollection() {
           // setErrorMessage('No data found in file!');
           return false;
         } else {
-          // console.log(isErpData);
-          // setExcelRows(newRows);
-          console.log(newRows);
           postTrackingMap(newRows);
-          // createErpData(newRows);
-          // setErrorMessage(null);
         }
       }
     });
@@ -178,19 +167,15 @@ function OrderCollection() {
   };
   const postTrackingMap = async (excelData) => {
     const url = `https://api2fulfillment.sellha.kr/1/order/tracking-map/`;
-    // const data = {
-    //   groupId: 1,
-    //   data: excelData,
-    // };
+
     setStep(1);
-    console.log(excelData);
+
     await axios
       .post(url, excelData)
       .then((response) => {
         try {
           if (response.data.code === 201) {
             // window.location.href = '/registitem';
-            console.log(response.data);
             setTrackingExcelData(response.data.result);
             // setErpLoading(false);
             setProgressStep(3);

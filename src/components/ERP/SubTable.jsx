@@ -57,7 +57,6 @@ const Mark = styled.div`
 
 function SubTable({ record, index, sendData, setSendData }) {
   const [items, setItems] = useState(record.items);
-  // const [sendData, setSendData] = useState([]);
 
   useEffect(() => {
     console.log('sendData -------->', sendData);
