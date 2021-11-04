@@ -22,7 +22,7 @@ function Home() {
           localStorage.setItem('refresh_token', refreshToken);
         }
         if (res.status === 200) {
-          // console.log(res);
+          console.log('checkVerify', res);
         }
       } catch (error) {
         console.log(error.response);
@@ -30,12 +30,14 @@ function Home() {
           try {
             const res = await checkRefresh(refreshToken);
             if (res.status === 200) {
-              console.log('success_checkRefresh');
+              console.log('success_checkRefresh', res);
+              localStorage.setItem('access_token', res.data.access);
+              window.location.reload();
             }
           } catch (error) {
             Swal.fire({
               icon: 'error',
-              title: '세션이 만료되었습니다',
+              title: '로그인에 실패하습니다',
               text: '새로 로그인 해주세요',
               confirmButtonColor: '#228be6',
             }).then((result) => {

@@ -49,7 +49,9 @@ export default function MyPage() {
   );
 }
 
-const Container = styled.div``;
+const Container = styled.div`
+  margin-left: 150px;
+`;
 
 const Body = styled.div`
   display: flex;

@@ -199,7 +199,7 @@ function ERP() {
             onRemove={() => setRows([])}
             multiple={false}
           >
-            <button></button>
+            <button style={{ display: 'none' }}></button>
           </Upload>
         </ExcelButtonWrapper>
         <MainTable

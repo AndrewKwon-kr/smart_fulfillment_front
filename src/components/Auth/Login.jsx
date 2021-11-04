@@ -34,7 +34,7 @@ function Login(props) {
         icon: 'error',
         title: '로그인을 할 수 없습니다.',
         text: '정보를 다시 한번 확인해 주세요.',
-      });
+      }).then(() => setLoginLoading(false));
     }
   };
   return (

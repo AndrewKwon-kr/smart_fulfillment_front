@@ -232,7 +232,7 @@ function OrderCollection() {
             // onRemove={() => setRows([])}
             multiple={false}
           >
-            <button></button>
+            <button style={{ display: 'none' }}></button>
           </Upload>
           {isTrackingConfirm && (
             <TrackingExcel
