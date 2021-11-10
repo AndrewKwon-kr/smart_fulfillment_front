@@ -12,7 +12,7 @@ function Home() {
 
   useEffect(() => {
     const accessToken = { token: localStorage.getItem('access_token') };
-    const refreshToken = { token: localStorage.getItem('refresh_token') };
+    const refreshToken = { refresh: localStorage.getItem('refresh_token') };
 
     const verifyLogin = async () => {
       try {
@@ -51,7 +51,7 @@ function Home() {
         }
       }
     };
-    if (refreshToken.token && accessToken.token) {
+    if (refreshToken.refresh && accessToken.token) {
       verifyLogin();
     }
   }, [IsAutoLogin]);
