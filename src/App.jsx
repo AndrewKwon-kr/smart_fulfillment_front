@@ -13,6 +13,7 @@ import {
   ActivationAccount,
   FindPassword,
   MyPage,
+  ChannelRegistration,
 } from './pages';
 import Navigator from 'components/Base/SideMenu/Navigator';
 import './App.css';
@@ -34,6 +35,7 @@ export default function App() {
         <Route path="/activation" component={ActivationAccount} />
         <Route path="/find-pw" component={FindPassword} />
         <Route path="/my-page" component={MyPage} />
+        <Route path="/registchannel" component={ChannelRegistration} />
       </Switch>
     </BrowserRouter>
   );

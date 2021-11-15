@@ -28,6 +28,8 @@ function Login(props) {
 
       localStorage.setItem('access_token', accessToken);
       localStorage.setItem('refresh_token', refreshToken);
+      localStorage.setItem('email', values.email);
+
       window.location.reload();
     } catch (err) {
       Swal.fire({

@@ -3,6 +3,10 @@ import React, { useEffect, useState } from 'react';
 // import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import axios from 'axios';
+import useForm from 'lib/useForm';
+import { InputWithLabel } from '../components/Auth';
+import { postSabangnetData, getMyInfo } from '../http-api';
+import validateSabangnet from '../lib/validateSabangnet';
 
 export default function MyPage() {
   // const user = useSelector((state) => state.user);
@@ -14,21 +18,16 @@ export default function MyPage() {
     teamName: 'IT',
     teamCode: 'HJD038CED',
     teamId: 0,
+    sabangnetId: null,
+    sabangnetKey: null,
   };
 
   const asyncInfo = async () => {
     try {
-      // const info = await localInfo(token);
-      const info = {
-        id: 0,
-        userName: '권혁진',
-        phone: '010-2628-0813',
-        email: 'gurwls0813@naver.com',
-        teamName: 'IT',
-        teamCode: 'HJD038CED',
-        teamId: 0,
-      };
-      setInfo(info);
+      const email = { email: localStorage.getItem('email') };
+      const infoData = await getMyInfo(email);
+      console.log(infoData);
+      setInfo(infoData);
     } catch (error) {
       setInfo({});
     }
@@ -88,6 +87,31 @@ function MyInfo({ Info, asyncInfo, user }) {
 
   const [inputMode, setInputMode] = useState(0);
   const [teamInput, setTeamInput] = useState('');
+  // const [sabangnetInfo, setSabangnetInfo] = useState({
+  //   sabangnetId: user.sabangnetId,
+  //   sabangnetKey: user.sabangnetKey,
+  // });
+  const { values, errors, submitting, handleChange, handleSubmit } = useForm({
+    initialValues: { sabangnetKey: '', sabangnetId: '', groupId: 2 },
+    onSubmit: (values) => {
+      postSabangnetDatas(values);
+    },
+    validate: validateSabangnet,
+  });
+  const postSabangnetDatas = async (row) => {
+    const response = await postSabangnetData(row);
+
+    try {
+      if (response.status === 200) {
+        if (response.data.code === 201) {
+          console.log(response);
+          window.location.reload();
+        }
+      } else alert('데이터를 등록해주세요.');
+    } catch (err) {
+      alert('데이터를 불러올 수 없습니다.');
+    }
+  };
 
   const initInput = () => {
     setInputMode(0);
@@ -144,11 +168,11 @@ function MyInfo({ Info, asyncInfo, user }) {
         </LabelDiv>
         <LabelDiv>
           <NameDiv>휴대폰번호</NameDiv>
-          <UserDiv>{Info.phone}</UserDiv>
+          <UserDiv>{Info.userPhone}</UserDiv>
         </LabelDiv>
         <LabelDiv>
           <NameDiv>이메일</NameDiv>
-          <UserDiv>{Info.email}</UserDiv>
+          <UserDiv>{Info.userEmail}</UserDiv>
         </LabelDiv>
         <LabelDiv>
           <NameDiv>비밀번호</NameDiv>
@@ -252,6 +276,58 @@ function MyInfo({ Info, asyncInfo, user }) {
           </LabelDiv>
         )}
       </MyInfoContent>
+      <InfoTitle>사방넷 ID & Key</InfoTitle>
+      <MyInfoContent>
+        {Info.userGroupSabangnetId !== null ? (
+          <>
+            <LabelDiv>
+              <NameDiv>사방넷 ID</NameDiv>
+              <UserDiv>{Info.userGroupSabangnetId}</UserDiv>
+            </LabelDiv>
+            <LabelDiv>
+              <NameDiv>사방넷 Key</NameDiv>
+              <UserDiv>{Info.userGroupSabangnetKey}</UserDiv>
+            </LabelDiv>
+          </>
+        ) : (
+          <LabelDiv>
+            <form onSubmit={handleSubmit} noValidate>
+              <InputWithLabel
+                type="text"
+                label="사방넷 ID"
+                name="sabangnetId"
+                placeholder="사방넷 ID를 입력하세요"
+                value={values.sabangnetId}
+                onChange={handleChange}
+              />
+              {errors.sabangnetId && (
+                <span className="errorMessage">{errors.sabangnetId}</span>
+              )}
+              <InputWithLabel
+                type="text"
+                label="사방넷 Key"
+                name="sabangnetKey"
+                placeholder="사방넷 키를 입력하세요"
+                value={values.sabangnetKey}
+                onChange={handleChange}
+              />
+              {errors.sabangnetKey && (
+                <span className="errorMessage">{errors.sabangnetKey}</span>
+              )}
+
+              <button
+                style={{ display: 'none' }}
+                id="submit"
+                type="submit"
+                disabled={submitting}
+              ></button>
+              <CompleteButtonLabel disabled={submitting} htmlFor="submit">
+                등록
+              </CompleteButtonLabel>
+            </form>
+          </LabelDiv>
+        )}
+      </MyInfoContent>
     </MyInfoDiv>
   );
 }
@@ -275,7 +351,7 @@ const LabelDiv = styled.div`
 `;
 
 const NameDiv = styled.div`
-  width: 8em;
+  width: 10em;
 `;
 
 const UserDiv = styled.div`
@@ -286,4 +362,24 @@ const ButtonTeam = styled(Button)`
   border-radius: 10px;
   margin-top: -3px;
   margin-left: 10px;
+`;
+const CompleteButtonLabel = styled.label`
+  all: unset;
+  margin: 20px auto;
+  display: flex;
+  color: #a1a1a1;
+  background-color: #fff;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 12px;
+  justify-content: center;
+  transition: 0.2s all;
+
+  &:hover {
+    color: #228be6;
+    border-color: #228be6;
+  }
 `;

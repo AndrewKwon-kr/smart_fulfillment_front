@@ -25,16 +25,15 @@ export async function localSignup(signupForm) {
   const res = await axios.post(`${HOST}/auth/users/`, signupForm);
   return res.status;
 }
-export async function checkVerify(token) {
-  return axios.post(`${HOST}/auth/jwt/verify/`, token).then((res) => res);
+export function checkVerify(token) {
+  return axios.post(`${HOST}/auth/jwt/verify/`, token);
 }
-export async function checkRefresh(token) {
-  return axios.post(`${HOST}/auth/jwt/refresh/`, token).then((res) => res);
+export function checkRefresh(token) {
+  return axios.post(`${HOST}/auth/jwt/refresh/`, token);
 }
 export async function sendFindPassword(name, email) {
-  return axios
-    .post(`${HOST}/send-find-password`, { name, email })
-    .then((res) => res.data);
+  const res = await axios.post(`${HOST}/send-find-password/`, { name, email });
+  return res.data;
 }
 export async function createJwt(signupForm) {
   return axios.post(`${HOST}/auth/jwt/create/`, signupForm);
@@ -67,6 +66,20 @@ export async function updateFreebieAndPrintData(url, data) {
 }
 
 // Page OrderCollection
-export async function postSabangnetData(data) {
-  return axios.post(`${HOST}/order/sabangnet`, data).then((res) => res);
+export function postSabangnetData(data) {
+  return axios.post(`${HOST}/order/sabangnet/`, data);
+}
+
+// Page MyPage
+export async function getMyInfo(data) {
+  const res = await axios.post(`http://192.168.0.124:8000/auth/mypage/`, data);
+  return res.data.result;
+}
+
+// Page ChannelRegistration
+export async function getSabangnetChannelList(groupId) {
+  const res = await axios.get(
+    `http://192.168.0.124:8000/${groupId}/channel/sabangnet/`
+  );
+  return res.data.result;
 }

@@ -10,3 +10,4 @@ export { default as SignUp } from './SignUp';
 export { default as ActivationAccount } from './ActivationAccount';
 export { default as FindPassword } from './FindPassword';
 export { default as MyPage } from './MyPage';
+export { default as ChannelRegistration } from './ChannelRegistration';

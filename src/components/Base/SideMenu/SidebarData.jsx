@@ -24,6 +24,12 @@ export const SideBarData = [
     cName: 'nav-text',
   },
   {
+    title: '판매채널 등록',
+    path: '/registchannel',
+    icons: <AiIcons.AiOutlineShop />,
+    cName: 'nav-text',
+  },
+  {
     title: '이벤트 등록',
     path: '/registevent',
     icons: <MdIcons.MdEventAvailable />,

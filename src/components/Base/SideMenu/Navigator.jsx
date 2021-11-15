@@ -25,6 +25,7 @@ function Navigator() {
   const logout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+    localStorage.removeItem('email');
     window.location.reload();
   };
   const menu = (
