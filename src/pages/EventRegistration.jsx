@@ -597,22 +597,14 @@ function EventRegistration() {
                     <Item key={index}>
                       {item.image && <ItemImage src={item.image} />}
                       {item.label ?? item.name}
-                      <BsIcons.BsTrash
-                        color="#a9a9a9"
-                        style={{ float: 'right', cursor: 'pointer' }}
-                        onClick={() => removeItem(index, 'main')}
-                      />
+                      <TrashIcon onClick={() => removeItem(index, 'main')} />
                     </Item>
                   ))}
                 {mainItems.length !== 0 &&
                   brandData.length === mainItems.length && (
                     <Item>
                       전체 브랜드
-                      <BsIcons.BsTrash
-                        color="#a9a9a9"
-                        style={{ float: 'right', cursor: 'pointer' }}
-                        onClick={() => removeItem(1, 'all')}
-                      />
+                      <TrashIcon onClick={() => removeItem(1, 'all')} />
                     </Item>
                   )}
                 <AddItem
@@ -672,11 +664,7 @@ function EventRegistration() {
                     <Item key={index}>
                       {item.image && <ItemImage src={item.image} />}
                       {item.name}
-                      <BsIcons.BsTrash
-                        color="#a9a9a9"
-                        style={{ float: 'right', cursor: 'pointer' }}
-                        onClick={() => removeItem(index, 'freebie')}
-                      />
+                      <TrashIcon onClick={() => removeItem(index, 'freebie')} />
                     </Item>
                   ))}
                 <AddItem
@@ -718,11 +706,7 @@ function EventRegistration() {
                     <Item key={index}>
                       {item.image && <ItemImage src={item.image} />}
                       {item.name}
-                      <BsIcons.BsTrash
-                        color="#a9a9a9"
-                        style={{ float: 'right', cursor: 'pointer' }}
-                        onClick={() => removeItem(index, 'print')}
-                      />
+                      <TrashIcon onClick={() => removeItem(index, 'print')} />
                     </Item>
                   ))}
                 <AddItem
@@ -1268,5 +1252,12 @@ const ImportButton = styled(Button)`
   display: flex;
   padding: 1.2rem 1.7rem;
   align-items: center;
+`;
+const TrashIcon = styled(BsIcons.BsTrash)`
+  color: #a9a9a9;
+  cursor: pointer;
+  &:hover {
+    color: black;
+  }
 `;
 export default EventRegistration;

@@ -78,8 +78,24 @@ export async function getMyInfo(data) {
 
 // Page ChannelRegistration
 export async function getSabangnetChannelList(groupId) {
+  const res = await axios.get(`${HOST}/${groupId}/channel/sabangnet/`);
+  return res.data.result;
+}
+
+export function createUserChannel(groupId, data) {
+  return axios.post(`http://192.168.0.124:8000/${groupId}/channel/map/`, data);
+}
+
+export async function getUserChannel(groupId) {
   const res = await axios.get(
-    `http://192.168.0.124:8000/${groupId}/channel/sabangnet/`
+    `http://192.168.0.124:8000/${groupId}/channel/user/`
   );
   return res.data.result;
+}
+
+export function deleteUserChannel(groupId, data) {
+  return axios.delete(
+    `http://192.168.0.124:8000/${groupId}/channel/map-delete/`,
+    { data: data }
+  );
 }

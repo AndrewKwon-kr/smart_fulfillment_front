@@ -2,21 +2,46 @@ import React, { useState, useEffect } from 'react';
 import { RightOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Search } from '../components/ChannelRegistration';
-import { getSabangnetChannelList } from '../http-api';
+import {
+  getSabangnetChannelList,
+  createUserChannel,
+  getUserChannel,
+  deleteUserChannel,
+} from '../http-api';
 import { Button, Checkbox, Input, Spin, Row, Col } from 'antd';
 import * as BsIcons from 'react-icons/bs';
+import * as AiIcons from 'react-icons/ai';
+import Swal from 'sweetalert2';
 
 function ChannelRegistration() {
   const [loading, setLoading] = useState(true);
+  const [registLoading, setRegistLoading] = useState(false);
+  const [userChannelLoading, setUserChannelLoading] = useState(true);
   const [sabangnetChannels, setSabangnetChannel] = useState();
   const [mappingChannels, setMappingChannel] = useState();
   const [userInput, setUserInput] = useState('');
   const [searchedSabangnetChannel, setSearchedSabangnetChannel] =
     useState(sabangnetChannels);
-  const [searchedMappingChannel, setSearchedMappingChannel] = useState();
+  const [searchedMappingChannel, setSearchedMappingChannel] =
+    useState(mappingChannels);
 
   const [mappingName, setMappingName] = useState('');
+  const [checkAll, setCheckAll] = useState(false);
 
+  const setSabangnetChannelList = async () => {
+    setLoading(true);
+    const channelList = await getSabangnetChannelList(1);
+    setSabangnetChannel(channelList);
+    setSearchedSabangnetChannel(channelList);
+    setLoading(false);
+  };
+  const getUserChannelList = async () => {
+    setUserChannelLoading(true);
+    const channelList = await getUserChannel(1);
+    setMappingChannel(channelList);
+    setSearchedMappingChannel(channelList);
+    setUserChannelLoading(false);
+  };
   const handleChange = (e) => {
     const value = e.target.value;
     setUserInput(value);
@@ -28,7 +53,9 @@ function ChannelRegistration() {
       );
     } else {
       setSearchedMappingChannel(
-        mappingChannels.filter((channel) => channel.name.includes(userInput))
+        mappingChannels.filter((channel) =>
+          channel.userChannelName.includes(userInput)
+        )
       );
     }
   };
@@ -57,21 +84,100 @@ function ChannelRegistration() {
     setMappingName(value);
   };
 
-  const handdleRegistButton = () => {
-    const value = {
+  const handdleRegistButton = async () => {
+    setRegistLoading(true);
+    const data = {
       name: mappingName,
       list: searchedSabangnetChannel.filter((channel) => channel.checked),
     };
-    console.log(value);
+    if (data.list.length === 0) {
+      Swal.fire({
+        title: '선택된 채널이 없습니다.',
+        text: '채널을 선택해주세요.',
+      });
+    } else if (mappingName === '') {
+      Swal.fire({
+        title: '채널이름이 입력되지 않았습니다.',
+        text: '채널이름을 입력해주세요.',
+      });
+    } else if (
+      mappingChannels &&
+      mappingChannels.filter(
+        (channel) => channel.userChannelName === mappingName
+      ).length !== 0
+    ) {
+      Swal.fire({
+        title: `'${mappingName}'로 매핑된 채널이 존재합니다`,
+        text: `'${mappingName}'에 추가하시겠습니까?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '확인',
+        cancelButtonText: '취소',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          createUserChannels(data);
+        }
+      });
+    } else {
+      createUserChannels(data);
+    }
+    setRegistLoading(false);
   };
+  const createUserChannels = async (data) => {
+    const result = await createUserChannel(1, data);
+    if (result.data.code === 201) {
+      setRegistLoading(false);
+      setSabangnetChannelList();
+      getUserChannelList();
+    } else {
+      Swal.fire('오류가 발생했습니다. 다시 시도해주세요.');
+      setRegistLoading(false);
+    }
+  };
+
+  const removeItem = (sabangnetChannelId, userChannelId) => {
+    Swal.fire({
+      title: 'Delete',
+      text: '삭제하시겠습니까?',
+      icon: 'error',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '확인',
+      cancelButtonText: '취소',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setSearchedMappingChannel(
+          searchedMappingChannel.filter(
+            (channel) => channel.sabangnetChannelId !== sabangnetChannelId
+          )
+        );
+        const data = {
+          sabangnetChannelId: sabangnetChannelId,
+          userChannelId: userChannelId,
+        };
+        deleteUserChannels(data);
+      }
+    });
+  };
+  const deleteUserChannels = async (data) => {
+    const res = await deleteUserChannel(1, data);
+    if (res.data.code === 204) {
+      setSabangnetChannelList();
+      getUserChannelList();
+    }
+  };
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      document.getElementById('registBtn').click();
+    }
+  };
+
   useEffect(() => {
-    const setChannelList = async () => {
-      const channelList = await getSabangnetChannelList(1);
-      setSabangnetChannel(channelList);
-      setSearchedSabangnetChannel(channelList);
-      setLoading(false);
-    };
-    setChannelList();
+    setSabangnetChannelList();
+    getUserChannelList();
   }, []);
   useEffect(() => {
     searchedSabangnetChannel &&
@@ -80,7 +186,7 @@ function ChannelRegistration() {
           searchedSabangnetChannel.filter((channel) => channel.checked).length
       );
   }, [searchedSabangnetChannel]);
-  const [checkAll, setCheckAll] = useState(false);
+
   return (
     <Container>
       <Wrapper>
@@ -129,9 +235,16 @@ function ChannelRegistration() {
             <Line />
             <InputChannelName
               onChange={onChangeMappingName}
+              onKeyUp={handleKeyDown}
               placeholder="사방넷 채널과 매핑할 채널 이름을 입력하세요"
             />
-            <RegistButton onClick={handdleRegistButton}>등록</RegistButton>
+            <RegistButton
+              id="registBtn"
+              onClick={handdleRegistButton}
+              loading={registLoading}
+            >
+              {registLoading ? '' : '등록'}
+            </RegistButton>
           </LeftContent>
           <ButtonWrapper>
             <RightOutlined style={{ fontSize: 48, color: 'grey' }} />
@@ -141,15 +254,27 @@ function ChannelRegistration() {
             <Search handleChange={handleChange} handleClick={handleClick} />
             <Line />
             <ItemWrapper>
-              <Item>
-                {/* {item.image && <ItemImage src={item.image} />} */}
-                테스트
-                <BsIcons.BsTrash
-                  color="#a9a9a9"
-                  style={{ float: 'right', cursor: 'pointer' }}
-                  // onClick={() => removeItem(index, 'main')}
-                />
-              </Item>
+              {userChannelLoading ? (
+                <Spinner size="large" tip="데이터를 불러오는 중입니다..." />
+              ) : searchedMappingChannel ? (
+                searchedMappingChannel.map((channel) => (
+                  <Item key={channel.sabangnetChannelId}>
+                    {channel.sabangnetChannelName}
+                    <BsIcons.BsArrowRight color="#a9a9a9" />
+                    {channel.userChannelName}
+                    <TrashIcon
+                      onClick={() =>
+                        removeItem(
+                          channel.sabangnetChannelId,
+                          channel.userChannelId
+                        )
+                      }
+                    />
+                  </Item>
+                ))
+              ) : (
+                <Description>매핑된 채널이 없습니다.</Description>
+              )}
             </ItemWrapper>
           </RightContent>
         </ChannelWrapper>
@@ -272,11 +397,18 @@ const ItemWrapper = styled.ul`
   width: 100%;
   text-align: center;
   list-style: none;
+  height: 400px;
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
 `;
 
 const Item = styled.li`
   width: 100%;
-  height: 60px;
+  height: 45px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -284,10 +416,15 @@ const Item = styled.li`
   background-color: #eff3ff;
   color: #a1a1a1;
   margin-bottom: 10px;
-  border: 1px solid #f3f3f3;
+  border: 1px solid #e1e1e1;
   border-radius: 5px;
-  box-shadow: rgb(235 235 235) 3px 3px 5px;
-  text-align: center;
   padding: 10px;
+`;
+const TrashIcon = styled(AiIcons.AiOutlineClose)`
+  color: #a9a9a9;
+  cursor: pointer;
+  &:hover {
+    color: black;
+  }
 `;
 export default ChannelRegistration;
