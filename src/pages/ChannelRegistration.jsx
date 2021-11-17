@@ -49,15 +49,28 @@ function ChannelRegistration() {
   };
   const handleClick = (type) => {
     if (type === 'sabangnet') {
-      setSearchedSabangnetChannel(
-        sabangnetChannels.filter((channel) => channel.name.includes(userInput))
-      );
+      setSearchResult(sabangnetChannels, type);
     } else {
-      setSearchedMappingChannel(
-        mappingChannels.filter((channel) =>
-          channel.userChannelName.includes(userInput)
-        )
-      );
+      setSearchResult(mappingChannels, type);
+    }
+  };
+  const setSearchResult = (channels, type) => {
+    const searchResult = channels.filter((channel) => {
+      if (type === 'sabangnet') {
+        return channel.name.includes(userInput);
+      } else {
+        return channel.userChannelName.includes(userInput);
+      }
+    });
+    if (searchResult.length === 0) {
+      Swal.fire({ icon: 'warning', text: '검색결과가 없습니다.' });
+      return false;
+    } else {
+      if (type === 'sabangnet') {
+        setSearchedSabangnetChannel(searchResult);
+      } else {
+        setSearchedMappingChannel(searchResult);
+      }
     }
   };
 
@@ -238,7 +251,7 @@ function ChannelRegistration() {
                 <Spinner size="large" tip="데이터를 불러오는 중입니다..." />
               ) : (
                 <Row>
-                  {searchedSabangnetChannel.length !== 0 ? (
+                  {sabangnetChannels.length !== 0 ? (
                     searchedSabangnetChannel.map((channel) => (
                       <Col
                         key={channel.id}
@@ -287,7 +300,7 @@ function ChannelRegistration() {
             <ItemWrapper>
               {userChannelLoading ? (
                 <Spinner size="large" tip="데이터를 불러오는 중입니다..." />
-              ) : searchedMappingChannel.length !== 0 ? (
+              ) : mappingChannels.length !== 0 ? (
                 searchedMappingChannel.map((channel) => (
                   <Item key={channel.sabangnetChannelId}>
                     {channel.sabangnetChannelName}
