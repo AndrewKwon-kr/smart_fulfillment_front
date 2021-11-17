@@ -59,6 +59,12 @@ export async function updateItemgroupsImage(data) {
 export async function getItemGroupsBrand() {
   return axios.get(`${HOST}/brand/itemgroups/items1/`).then((res) => res);
 }
+export async function getEventChannel(groupId) {
+  const res = await axios.get(
+    `http://192.168.0.124:8000/${groupId}/channel/event/`
+  );
+  return res.data.result;
+}
 
 // Page FreebieAndPrint
 export async function updateFreebieAndPrintData(url, data) {
@@ -93,4 +99,10 @@ export async function getUserChannel(groupId) {
 
 export function deleteUserChannel(groupId, data) {
   return axios.delete(`${HOST}/${groupId}/channel/map-delete/`, { data: data });
+}
+
+export function registSabangnetChannel(groupId) {
+  return axios.get(
+    `http://192.168.0.124:8000/${groupId}/channel/sabangnet-call/`
+  );
 }

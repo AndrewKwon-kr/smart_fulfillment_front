@@ -7,6 +7,7 @@ import {
   createUserChannel,
   getUserChannel,
   deleteUserChannel,
+  registSabangnetChannel,
 } from '../http-api';
 import { Button, Checkbox, Input, Spin, Row, Col } from 'antd';
 import * as BsIcons from 'react-icons/bs';
@@ -169,10 +170,33 @@ function ChannelRegistration() {
       getUserChannelList();
     }
   };
-  const handleKeyDown = (event) => {
+  const handleKeyUp = (event) => {
     if (event.key === 'Enter') {
       document.getElementById('registBtn').click();
     }
+  };
+  const importChannel = async () => {
+    const res = await registSabangnetChannel(1);
+    if (res.status === 200) {
+      setSabangnetChannelList();
+      getUserChannelList();
+    }
+  };
+  const updateChannel = () => {
+    Swal.fire({
+      title: '경고',
+      text: '기존에 이벤트에 사용했던 채널의 정보가 사라질 수 있습니다.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '확인',
+      cancelButtonText: '취소',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        importChannel();
+      }
+    });
   };
 
   useEffect(() => {
@@ -191,6 +215,7 @@ function ChannelRegistration() {
     <Container>
       <Wrapper>
         <SubTitle>매핑할 판매 채널 이름 등록하기</SubTitle>
+        <UpdateButton onClick={updateChannel}>업데이트</UpdateButton>
         <br />
         <Description>
           사방넷에서 받아온 채널정보를 실제 사용할 이름으로 매핑합니다.
@@ -204,7 +229,6 @@ function ChannelRegistration() {
                 전체 선택 / 해제
               </ACheckbox>
             </AllCheckboxWrapper>
-
             <Search
               handleChange={handleChange}
               handleClick={() => handleClick('sabangnet')}
@@ -214,28 +238,35 @@ function ChannelRegistration() {
                 <Spinner size="large" tip="데이터를 불러오는 중입니다..." />
               ) : (
                 <Row>
-                  {searchedSabangnetChannel.map((channel) => (
-                    <Col
-                      key={channel.id}
-                      span={8}
-                      style={{ marginBottom: '10px' }}
-                    >
-                      <ACheckbox
-                        onChange={(e) => onChange(channel.id, e)}
-                        value={channel}
-                        checked={channel.checked}
+                  {searchedSabangnetChannel.length !== 0 ? (
+                    searchedSabangnetChannel.map((channel) => (
+                      <Col
+                        key={channel.id}
+                        span={8}
+                        style={{ marginBottom: '10px' }}
                       >
-                        {channel.name}
-                      </ACheckbox>
-                    </Col>
-                  ))}
+                        <ACheckbox
+                          onChange={(e) => onChange(channel.id, e)}
+                          value={channel}
+                          checked={channel.checked}
+                        >
+                          {channel.name}
+                        </ACheckbox>
+                      </Col>
+                    ))
+                  ) : (
+                    <Description>
+                      사방넷에서 채널을 불러와주세요{' '}
+                      <Button onClick={importChannel}>불러오기</Button>
+                    </Description>
+                  )}
                 </Row>
               )}
             </ChannelListWrapper>
             <Line />
             <InputChannelName
               onChange={onChangeMappingName}
-              onKeyUp={handleKeyDown}
+              onKeyUp={handleKeyUp}
               placeholder="사방넷 채널과 매핑할 채널 이름을 입력하세요"
             />
             <RegistButton
@@ -256,7 +287,7 @@ function ChannelRegistration() {
             <ItemWrapper>
               {userChannelLoading ? (
                 <Spinner size="large" tip="데이터를 불러오는 중입니다..." />
-              ) : searchedMappingChannel ? (
+              ) : searchedMappingChannel.length !== 0 ? (
                 searchedMappingChannel.map((channel) => (
                   <Item key={channel.sabangnetChannelId}>
                     {channel.sabangnetChannelName}
@@ -374,7 +405,9 @@ const ACheckbox = styled(Checkbox)`
     font-weight: bold;
   } */
 `;
-const Spinner = styled(Spin)``;
+const Spinner = styled(Spin)`
+  margin-top: 10px;
+`;
 const InputChannelName = styled(Input)`
   margin: 20px 0;
   border: 1px solid #d1d1d1;
@@ -384,6 +417,7 @@ const InputChannelName = styled(Input)`
 `;
 const RegistButton = styled(Button)`
   float: right;
+  width: 120px;
   color: white;
   background-color: #228be6;
   padding: 1.2rem 3rem;
@@ -426,5 +460,9 @@ const TrashIcon = styled(AiIcons.AiOutlineClose)`
   &:hover {
     color: black;
   }
+`;
+const UpdateButton = styled(Button)`
+  float: right;
+  margin-top: 40px;
 `;
 export default ChannelRegistration;

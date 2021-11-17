@@ -6,22 +6,19 @@ import {
   MainItemModalView,
   FreebieModalView,
   PrintModalView,
-  SelectChannelButton,
-  BesideStoreModalView,
   FreebieInfoModalView,
   ImportModalView,
 } from 'components/EventRegistration';
-import CompanyShopIcon from 'assets/icon_company_shop.png';
-import NaverIcon from 'assets/icon_naver.png';
-import BesideShopIcon from 'assets/icon_beside_shop.png';
+import { Search } from '../components/ChannelRegistration/';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
 import axios from 'axios';
-import { Button, Spin } from 'antd';
+import { Button, Checkbox, Spin, Row, Col } from 'antd';
 import swal from 'sweetalert';
-import { getItemGroupsBrand } from '../http-api';
+import { getItemGroupsBrand, getEventChannel } from '../http-api';
 import { LoadingOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 function EventRegistration() {
@@ -64,14 +61,6 @@ function EventRegistration() {
   const [isInfinited, setIsInfinited] = useState(false);
   registerLocale('ko', ko);
 
-  const [clickedCompanyStore, setClickedCompanyStore] = useState(false);
-  const [clickedSmartStore, setClickedSmartStore] = useState(false);
-  const [clickedBesideStore, setClickedBesideStore] = useState(false);
-  const [visibleBesideModal, setVisibleBesideModal] = useState(false);
-  const [besideStoreList, setBesideStoreList] = useState([
-    { id: 2, name: '지마켓', checked: false },
-  ]);
-
   const [freebieRange, setFreebieRange] = useState(true);
   const [freebieType, setFreebieType] = useState('');
   const [freebieInfoModalVisible, setFreebieInfoModalVisible] = useState(false);
@@ -84,6 +73,63 @@ function EventRegistration() {
   const [selectedRows, setSelectedRow] = useState();
   const [selectedRowLoading, setSelectedRowLoading] = useState(false);
 
+  const [loading, setLoading] = useState(true);
+  const [sabangnetChannels, setSabangnetChannel] = useState();
+  const [userInput, setUserInput] = useState('');
+  const [searchedSabangnetChannel, setSearchedSabangnetChannel] =
+    useState(sabangnetChannels);
+
+  const [checkAll, setCheckAll] = useState(false);
+
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setUserInput(value);
+  };
+  const onCheckAllChange = (e) => {
+    setSearchedSabangnetChannel(
+      searchedSabangnetChannel.map((channel) => {
+        return { ...channel, checked: e.target.checked ? true : false };
+      })
+    );
+    setCheckAll(e.target.checked);
+  };
+  const handleClick = (type) => {
+    if (type === 'sabangnet') {
+      setSearchedSabangnetChannel(
+        sabangnetChannels.filter((channel) => channel.name.includes(userInput))
+      );
+    }
+  };
+  const setSabangnetChannelList = async () => {
+    setLoading(true);
+    const channelList = await getEventChannel(1);
+    setSabangnetChannel(channelList);
+    setSearchedSabangnetChannel(channelList);
+    console.log(channelList);
+    setLoading(false);
+  };
+  const onChangeChannel = (id, e) => {
+    setSearchedSabangnetChannel(
+      searchedSabangnetChannel.map((channel) => {
+        if (id === channel.id) {
+          return { ...channel, checked: e.target.checked };
+        }
+        return { ...channel };
+      })
+    );
+  };
+  useEffect(() => {
+    searchedSabangnetChannel &&
+      setCheckAll(
+        searchedSabangnetChannel.length ===
+          searchedSabangnetChannel.filter((channel) => channel.checked).length
+      );
+  }, [searchedSabangnetChannel]);
+  useEffect(() => {
+    if (stepStatus === 4) {
+      setSabangnetChannelList();
+    }
+  }, [stepStatus]);
   const getMainItemData = async () => {
     const url = `https://api2fulfillment.sellha.kr/itemgroup/items/`;
 
@@ -258,6 +304,9 @@ function EventRegistration() {
         setStepOneLoading(false);
       }, 2000);
       setStepStatus(stepStatus + 1);
+    } else if (stepStatus === 3) {
+      setSabangnetChannelList();
+      setStepStatus(stepStatus + 1);
     } else if (stepStatus === 4) {
       postEventData();
       enterLoading();
@@ -349,51 +398,6 @@ function EventRegistration() {
     }
   };
 
-  const onChangeBesideStore = (e, index) => {
-    setBesideStoreList(
-      besideStoreList.map((store) => {
-        if (store.id !== index) {
-          return store;
-        } else {
-          return { ...store, checked: e.target.checked };
-        }
-      })
-    );
-  };
-  const selectedBesideStore = () => {
-    const selectedBesideStore = besideStoreList.filter(
-      (store) => store.checked === true
-    );
-    setClickedBesideStore(!clickedBesideStore);
-
-    const flag = selectedBesideStore.length !== 0;
-    setVisibleBesideModal(flag);
-  };
-  const allSelectedBesideStore = (isAllChecked) => {
-    setBesideStoreList(
-      besideStoreList.map((store) => {
-        return { ...store, checked: isAllChecked ? true : false };
-      })
-    );
-  };
-  const [channelData, setChannelData] = useState([]);
-
-  useEffect(() => {
-    const setSelectedChannels = () => {
-      let companyShop = clickedCompanyStore
-        ? [{ id: 1, name: 'malanghoney' }]
-        : [];
-      let smartStore = clickedSmartStore
-        ? [{ id: 3, name: '스마트스토어' }]
-        : [];
-      let besideStore = besideStoreList.filter(
-        (store) => store.checked === true
-      );
-      setChannelData(besideStore.concat(companyShop).concat(smartStore));
-    };
-    setSelectedChannels();
-  }, [clickedCompanyStore, clickedSmartStore, besideStoreList]);
-
   useEffect(() => {
     if (isInfinited === true) {
       setEndDate(null);
@@ -414,7 +418,9 @@ function EventRegistration() {
     eventData.initialLimitedQuantity = limitNumber;
     eventData.start = startDate;
     eventData.end = endDate;
-    eventData.channels = channelData;
+    eventData.channels = searchedSabangnetChannel.filter(
+      (channel) => channel.checked
+    );
 
     const url = `https://api2fulfillment.sellha.kr/event/`;
     const data = {
@@ -884,45 +890,56 @@ function EventRegistration() {
               이벤트를 진행할 채널을 선택해주세요 (복수선택 가능)
             </SubTitle>
             <br />
-            <SelectChannelButtonWrapper>
-              <SelectChannelButton
-                icon={CompanyShopIcon}
-                label="자사몰"
-                setChannelData={() =>
-                  setClickedCompanyStore(!clickedCompanyStore)
-                }
-                show={clickedCompanyStore}
-              />
-              <SelectChannelButton
-                icon={NaverIcon}
-                label="스마트스토어"
-                setChannelData={() => setClickedSmartStore(!clickedSmartStore)}
-                show={clickedSmartStore}
-              />
-              <SelectChannelButton
-                icon={BesideShopIcon}
-                label="그 외"
-                setChannelData={() =>
-                  setClickedBesideStore(!clickedBesideStore)
-                }
-                show={visibleBesideModal}
-              />
-              {clickedBesideStore && (
-                <BesideStoreModalView
-                  close={() => setClickedBesideStore(!clickedBesideStore)}
-                  besideStoreList={besideStoreList}
-                  onChange={onChangeBesideStore}
-                  selectedBesideStore={selectedBesideStore}
-                  allSelectedBesideStore={allSelectedBesideStore}
+            <ChannelWrapper>
+              <LeftContent>
+                <SubTitle>사방넷 채널</SubTitle>
+                <AllCheckboxWrapper>
+                  <ACheckbox onChange={onCheckAllChange} checked={checkAll}>
+                    전체 선택 / 해제
+                  </ACheckbox>
+                </AllCheckboxWrapper>
+                <Search
+                  handleChange={handleChange}
+                  handleClick={() => handleClick('sabangnet')}
                 />
-              )}
-            </SelectChannelButtonWrapper>
-            <StepButtonWrapper>
-              <StepBackButton onClick={setBackStep}>이전</StepBackButton>
-              <StepNextButton onClick={setNextStep} loading={postLoading}>
-                {postLoading ? '' : '완료'}
-              </StepNextButton>
-            </StepButtonWrapper>
+                <ChannelListWrapper loading={loading.toString()}>
+                  {loading ? (
+                    <Spinner size="large" tip="데이터를 불러오는 중입니다..." />
+                  ) : (
+                    <Row>
+                      {searchedSabangnetChannel.length !== 0 ? (
+                        searchedSabangnetChannel.map((channel) => (
+                          <Col
+                            key={channel.id}
+                            span={8}
+                            style={{ marginBottom: '10px' }}
+                          >
+                            <ACheckbox
+                              onChange={(e) => onChangeChannel(channel.id, e)}
+                              value={channel}
+                              checked={channel.checked}
+                            >
+                              {channel.name}
+                            </ACheckbox>
+                          </Col>
+                        ))
+                      ) : (
+                        <Description>
+                          매핑된 채널이 없습니다.
+                          <Link to="/">불러오기</Link>
+                        </Description>
+                      )}
+                    </Row>
+                  )}
+                </ChannelListWrapper>
+                <StepButtonWrapper>
+                  <StepBackButton onClick={setBackStep}>이전</StepBackButton>
+                  <StepNextButton onClick={setNextStep} loading={postLoading}>
+                    {postLoading ? '' : '완료'}
+                  </StepNextButton>
+                </StepButtonWrapper>
+              </LeftContent>
+            </ChannelWrapper>
           </>
         )}
       </Wrapper>
@@ -1010,11 +1027,9 @@ const Wrapper = styled.div`
   text-align: start;
   padding-bottom: 40px;
 `;
-const SubTitle = styled.div`
+const SubTitle = styled.h2`
   position: relative;
   display: inline-block;
-  font-weight: 1000;
-  font-size: 25px;
 `;
 const Description = styled.div`
   position: relative;
@@ -1259,5 +1274,54 @@ const TrashIcon = styled(BsIcons.BsTrash)`
   &:hover {
     color: black;
   }
+`;
+const ChannelWrapper = styled.div`
+  margin-top: 80px;
+  display: flex;
+  flex-direction: row;
+  height: 60vh;
+`;
+const LeftContent = styled.div`
+  border: 1px solid #d1d1d1;
+  border-radius: 15px;
+  flex: 0.6;
+  margin-right: 20px;
+  padding: 20px;
+`;
+
+const ChannelListWrapper = styled.div`
+  margin: 20px 0;
+  border: 1px solid #d1d1d1;
+  border-radius: 5px;
+  height: 50%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: ${(props) =>
+    props.loading === 'true' ? 'center' : 'flex-start'};
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #d1d1d1;
+    border-radius: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 5px;
+    box-shadow: inset 0px 0px 5px white;
+  }
+`;
+const AllCheckboxWrapper = styled.div`
+  float: right;
+  color: #e1e1e1;
+`;
+const ACheckbox = styled(Checkbox)`
+  .ant-checkbox + span {
+    color: #a1a1a1;
+  }
+`;
+const Spinner = styled(Spin)`
+  margin-top: 10px;
 `;
 export default EventRegistration;
