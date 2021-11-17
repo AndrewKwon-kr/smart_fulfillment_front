@@ -23,7 +23,7 @@ const BorderedButton = styled(Button)`
 
 function CompleteButton(props) {
   const updateData = (row, category) => {
-    props.enterLoading();
+    props.setLoading(true);
 
     const url = `https://api2fulfillment.sellha.kr/${
       category.split('/')[0] +
@@ -41,8 +41,9 @@ function CompleteButton(props) {
       .then((response) => {
         try {
           if (response.data.code === 201) {
-            // window.location.href = '/registitem';
-            // setErpLoading(false);
+            console.log(response.data);
+            props.setLoading(false);
+            props.enterLoading();
           } else {
             alert('데이터를 등록해주세요');
             // setErpLoading(false);
@@ -57,7 +58,7 @@ function CompleteButton(props) {
       });
   };
   const createData = (row, category) => {
-    props.enterLoading();
+    props.setLoading(true);
     const url = `https://api2fulfillment.sellha.kr/${category}/`;
     const data = {
       groupId: 1,
@@ -69,9 +70,9 @@ function CompleteButton(props) {
       .then((response) => {
         try {
           if (response.data.code === 201) {
-            // window.location.href = '/registitem';
             console.log(response.data);
-            // setErpLoading(false);
+            props.setLoading(false);
+            props.enterLoading();
           } else {
             console.log(response.status);
             alert('데이터를 등록해주세요');

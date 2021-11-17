@@ -20,7 +20,7 @@ const ModalContainer = styled.div`
   display: block;
   background-color: #fff;
   width: 450px;
-  height: 550px;
+  height: 650px;
   border-radius: 10px;
   overflow: scroll;
   ::-webkit-scrollbar {

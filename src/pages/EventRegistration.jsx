@@ -1239,13 +1239,6 @@ const EventInfomationText = styled.div`
   width: 100px;
   font-weight: bold;
 `;
-const SelectChannelButtonWrapper = styled.div`
-  margin-top: 150px;
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
 const ItemImage = styled.img`
   width: 36px;
   height: 36px;
