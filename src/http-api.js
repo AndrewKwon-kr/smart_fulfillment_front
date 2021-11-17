@@ -102,7 +102,5 @@ export function deleteUserChannel(groupId, data) {
 }
 
 export function registSabangnetChannel(groupId) {
-  return axios.get(
-    `http://192.168.0.124:8000/${groupId}/channel/sabangnet-call/`
-  );
+  return axios.get(`${HOST}/${groupId}/channel/sabangnet-call/`);
 }

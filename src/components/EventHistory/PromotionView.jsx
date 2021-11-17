@@ -26,7 +26,20 @@ function PromotionView(props) {
       <CardContainer>
         {filteredEventData.map((event) => (
           <EventInfomationCard key={event.id}>
-            <Title>{event.title}</Title>
+            <Title data-tip data-for={'title' + event.id}>
+              {event.title}
+            </Title>
+            <ReactTooltip
+              id={'title' + event.id}
+              aria-haspopup="true"
+              role="example"
+              place="right"
+            >
+              <p>이벤트 이름</p>
+              <ul>
+                <li key={event.id}>{event.title}</li>
+              </ul>
+            </ReactTooltip>
             <Date>
               <ClockIcon />
               {event.startDate.substring(0, 10).split('-').join('. ')} ~{' '}
@@ -191,6 +204,10 @@ const Title = styled.div`
   margin-bottom: 10px;
   font-size: 16px;
   font-weight: bold;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 const Date = styled.div`
   margin-bottom: 10px;
