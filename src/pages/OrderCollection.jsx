@@ -12,6 +12,8 @@ import LimitedEventView from '../components/EventHistory/PromotionView';
 import swal from 'sweetalert';
 import { Spin } from 'antd';
 import { ExcelRenderer } from 'react-excel-renderer';
+const HOST = 'http://192.168.0.124:8000';
+// const HOST = 'https://api2fulfillment.sellha.kr';
 
 function OrderCollection() {
   const [modalOrderVisible, setModalOrderVisible] = useState(false);
@@ -45,7 +47,7 @@ function OrderCollection() {
   };
 
   const checkSabangnetOrder = async () => {
-    const url = `https://api2fulfillment.sellha.kr/1/order/check-sabangnet/`;
+    const url = `${HOST}/1/order/check-sabangnet/`;
     setStep(1);
     setProgressStep(1);
 
@@ -64,7 +66,7 @@ function OrderCollection() {
     });
   };
   const gatherSabangnetOrder = async () => {
-    const url = `https://api2fulfillment.sellha.kr/1/order/gather-sabangnet/`;
+    const url = `${HOST}/1/order/gather-sabangnet/`;
 
     await axios.get(url).then((response) => {
       setProgressStep(3);
@@ -73,7 +75,7 @@ function OrderCollection() {
   };
 
   const eventMapping = async () => {
-    const url = `https://api2fulfillment.sellha.kr/order/map-event/`;
+    const url = `${HOST}/order/map-event/`;
 
     await axios.get(url).then((response) => {
       setOrderExcelData(response.data.result);
@@ -82,7 +84,7 @@ function OrderCollection() {
   };
 
   const getEventData = () => {
-    const url = `https://api2fulfillment.sellha.kr/1/event/limited/`;
+    const url = `${HOST}/1/event/limited/`;
 
     axios
       .get(url)
@@ -166,7 +168,7 @@ function OrderCollection() {
     return false;
   };
   const postTrackingMap = async (excelData) => {
-    const url = `https://api2fulfillment.sellha.kr/1/order/tracking-map/`;
+    const url = `${HOST}/1/order/tracking-map/`;
 
     setStep(1);
 

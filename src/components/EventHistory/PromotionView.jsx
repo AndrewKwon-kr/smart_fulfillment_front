@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import * as FiIcons from 'react-icons/fi';
 import * as GrIcons from 'react-icons/gr';
 import { PromotionSearch } from '.';
+import ReactTooltip from 'react-tooltip';
 
 function PromotionView(props) {
   const eventData = props.eventData;
@@ -18,7 +19,7 @@ function PromotionView(props) {
       eventData.filter((event) => event.title.includes(userInput))
     );
   };
-
+  console.log(eventData);
   return (
     <Wrapper>
       <PromotionSearch handleChange={handleChange} handleClick={handleClick} />
@@ -54,27 +55,95 @@ function PromotionView(props) {
                 </span>
               </div>
             </Infomation>
-            <Channel>
+            <Channel data-tip data-for={'channel' + event.id}>
               <ChannelIcon color="blue" />
+              <ReactTooltip
+                id={'channel' + event.id}
+                aria-haspopup="true"
+                role="example"
+                place="right"
+              >
+                <p>판매 채널</p>
+                <ul>
+                  {event.channels.map((channel) => (
+                    <li key={channel.id}>{channel.name}</li>
+                  ))}
+                </ul>
+              </ReactTooltip>
               {event.channels.map((channel) => channel.name).join(', ')}
             </Channel>
             <ItemInfo>
               <div className="info">
                 <span className="label">본품</span>
-                <span className="content">
+                <span className="content" data-tip data-for={'main' + event.id}>
+                  <ReactTooltip
+                    id={'main' + event.id}
+                    aria-haspopup="true"
+                    role="example"
+                    place="right"
+                  >
+                    <p>본품</p>
+                    <ul>
+                      {event.items.length !== 0
+                        ? event.items.map((item, index) => (
+                            <li key={index}>{item}</li>
+                          ))
+                        : '-'}
+                    </ul>
+                  </ReactTooltip>
                   {event.items ? event.items.map((item) => item) : '-'}
                 </span>
               </div>
               <div className="info">
                 <span className="label">사은품</span>
-                <span className="content">
+                <span
+                  className="content"
+                  data-tip
+                  data-for={'freebie' + event.id}
+                >
+                  <ReactTooltip
+                    id={'freebie' + event.id}
+                    aria-haspopup="true"
+                    role="example"
+                    place="right"
+                  >
+                    <p>사은품</p>
+                    <ul>
+                      {event.freebies.length !== 0
+                        ? event.freebies.map((item, index) => (
+                            <li key={index}>{item}</li>
+                          ))
+                        : '-'}
+                    </ul>
+                  </ReactTooltip>
                   {event.freebies ? event.freebies.map((item) => item) : '-'}
                 </span>
               </div>
               <div className="info">
                 <span className="label">인쇄물</span>
-                <span className="content">
-                  {event.prints ? event.prints.map((item) => item) : '-'}
+                <span
+                  className="content"
+                  data-tip
+                  data-for={'print' + event.id}
+                >
+                  <ReactTooltip
+                    id={'print' + event.id}
+                    aria-haspopup="true"
+                    role="example"
+                    place="right"
+                  >
+                    <p>인쇄물</p>
+                    <ul>
+                      {event.prints
+                        ? event.prints.map((item, index) => (
+                            <li key={index}>{item}</li>
+                          ))
+                        : '-'}
+                    </ul>
+                  </ReactTooltip>
+                  {event.prints.length !== 0
+                    ? event.prints.map((item) => item)
+                    : '-'}
                 </span>
               </div>
             </ItemInfo>
