@@ -60,9 +60,7 @@ export async function getItemGroupsBrand() {
   return axios.get(`${HOST}/brand/itemgroups/items1/`).then((res) => res);
 }
 export async function getEventChannel(groupId) {
-  const res = await axios.get(
-    `http://192.168.0.124:8000/${groupId}/channel/event/`
-  );
+  const res = await axios.get(`${HOST}/${groupId}/channel/event/`);
   return res.data.result;
 }
 
