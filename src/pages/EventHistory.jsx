@@ -15,8 +15,7 @@ function EventHistory() {
   const [eventData, setEventData] = useState([]);
   const [loading, setLoading] = useState(true);
   const getEventData = () => {
-    // const url = `https://api2fulfillment.sellha.kr/event/sort/`;
-    const url = `http://192.168.0.124:8000/event/sort/`;
+    const url = `https://api2fulfillment.sellha.kr/event/sort/`;
 
     axios
       .get(url)
