@@ -57,9 +57,9 @@ function ChannelRegistration() {
   const setSearchResult = (channels, type) => {
     const searchResult = channels.filter((channel) => {
       if (type === 'sabangnet') {
-        return channel.name.includes(userInput);
+        return channel.name.match(new RegExp(userInput, 'i'));
       } else {
-        return channel.userChannelName.includes(userInput);
+        return channel.userChannelName.match(new RegExp(userInput, 'i'));
       }
     });
     if (searchResult.length === 0) {
