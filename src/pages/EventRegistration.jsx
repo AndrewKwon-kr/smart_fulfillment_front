@@ -50,11 +50,11 @@ function EventRegistration() {
   const [eventData, setEventData] = useState([]);
 
   const [minBuyNumber, setMinBuyNumber] = useState(0);
-  const [minBuyNumberChecked, setMinBuyNumberChecked] = useState(false);
+  const [minBuyNumberChecked, setMinBuyNumberChecked] = useState(true);
   const [minBuyPrice, setMinBuyPrice] = useState(0);
-  const [minBuyPriceChecked, setMinBuyPriceChecked] = useState(false);
+  const [minBuyPriceChecked, setMinBuyPriceChecked] = useState(true);
   const [limitNumber, setLimitNumber] = useState(0);
-  const [limitNumberChecked, setLimitNumberChecked] = useState(false);
+  const [limitNumberChecked, setLimitNumberChecked] = useState(true);
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
@@ -880,7 +880,19 @@ function EventRegistration() {
             </CalenderWrapper>
             <StepButtonWrapper>
               <StepBackButton onClick={setBackStep}>이전</StepBackButton>
-              <StepNextButton onClick={setNextStep}>다음</StepNextButton>
+              <StepNextButton
+                onClick={setNextStep}
+                disabled={
+                  !(
+                    (minBuyNumber || minBuyNumberChecked) &&
+                    (minBuyPrice || minBuyPriceChecked) &&
+                    (limitNumber || limitNumberChecked) &&
+                    (endDate || isInfinited)
+                  )
+                }
+              >
+                다음
+              </StepNextButton>
             </StepButtonWrapper>
           </>
         )}
@@ -1269,7 +1281,7 @@ const TrashIcon = styled(BsIcons.BsTrash)`
   }
 `;
 const ChannelWrapper = styled.div`
-  margin-top: 80px;
+  margin-top: 20px;
   display: flex;
   flex-direction: row;
   height: 60vh;
