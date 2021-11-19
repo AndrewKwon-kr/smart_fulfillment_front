@@ -105,7 +105,6 @@ function EventRegistration() {
     const channelList = await getEventChannel(1);
     setSabangnetChannel(channelList);
     setSearchedSabangnetChannel(channelList);
-    console.log(channelList);
     setLoading(false);
   };
   const onChangeChannel = (id, e) => {
@@ -1230,7 +1229,7 @@ const Calender = styled(DatePicker)`
 const EventInfomationWrapper = styled.ul`
   position: absolute;
   display: ${(props) => (props.visible ? 'block' : 'none')};
-  top: -5vw;
+  top: -40px;
   left: 50vw;
   width: 25vw;
   border-radius: 5px;
