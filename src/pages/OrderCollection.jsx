@@ -12,8 +12,8 @@ import LimitedEventView from '../components/EventHistory/PromotionView';
 import swal from 'sweetalert';
 import { Spin } from 'antd';
 import { ExcelRenderer } from 'react-excel-renderer';
-const HOST = 'http://192.168.0.124:8000';
-// const HOST = 'https://api2fulfillment.sellha.kr';
+// const HOST = 'http://192.168.0.124:8000';
+const HOST = 'https://api2fulfillment.sellha.kr';
 
 function OrderCollection() {
   const [modalOrderVisible, setModalOrderVisible] = useState(false);
