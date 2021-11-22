@@ -104,7 +104,9 @@ function PromotionView(props) {
                         : '-'}
                     </ul>
                   </ReactTooltip>
-                  {event.items ? event.items.map((item) => item) : '-'}
+                  {event.items
+                    ? event.items.map((item) => item).join(', ')
+                    : '-'}
                 </span>
               </div>
               <div className="info">
@@ -129,7 +131,9 @@ function PromotionView(props) {
                         : '-'}
                     </ul>
                   </ReactTooltip>
-                  {event.freebies ? event.freebies.map((item) => item) : '-'}
+                  {event.freebies
+                    ? event.freebies.map((item) => item).join(', ')
+                    : '-'}
                 </span>
               </div>
               <div className="info">
@@ -155,7 +159,7 @@ function PromotionView(props) {
                     </ul>
                   </ReactTooltip>
                   {event.prints.length !== 0
-                    ? event.prints.map((item) => item)
+                    ? event.prints.map((item) => item).join(', ')
                     : '-'}
                 </span>
               </div>
