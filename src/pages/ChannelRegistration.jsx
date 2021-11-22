@@ -231,12 +231,12 @@ function ChannelRegistration() {
         <UpdateButton onClick={updateChannel}>업데이트</UpdateButton>
         <br />
         <Description>
-          사방넷에서 받아온 채널정보를 실제 사용할 이름으로 매핑합니다.
+          주문수집 사이트에서 받아온 채널정보를 실제 사용할 이름으로 매핑합니다.
         </Description>
         <br />
         <ChannelWrapper>
           <LeftContent>
-            <SubTitle>사방넷 채널</SubTitle>
+            <SubTitle>주문수집 사이트 채널</SubTitle>
             <AllCheckboxWrapper>
               <ACheckbox onChange={onCheckAllChange} checked={checkAll}>
                 전체 선택 / 해제
@@ -269,7 +269,7 @@ function ChannelRegistration() {
                     ))
                   ) : (
                     <Description>
-                      사방넷에서 채널을 불러와주세요{' '}
+                      주문수집 사이트에서 채널을 불러와주세요{' '}
                       <Button onClick={importChannel}>불러오기</Button>
                     </Description>
                   )}
@@ -280,7 +280,7 @@ function ChannelRegistration() {
             <InputChannelName
               onChange={onChangeMappingName}
               onKeyUp={handleKeyUp}
-              placeholder="사방넷 채널과 매핑할 채널 이름을 입력하세요"
+              placeholder="주문수집 사이트 채널과 매핑할 채널 이름을 입력하세요"
             />
             <RegistButton
               id="registBtn"
@@ -303,9 +303,12 @@ function ChannelRegistration() {
               ) : mappingChannels.length !== 0 ? (
                 searchedMappingChannel.map((channel) => (
                   <Item key={channel.sabangnetChannelId}>
-                    {channel.sabangnetChannelName}
-                    <BsIcons.BsArrowRight color="#a9a9a9" />
-                    {channel.userChannelName}
+                    <NameSection>{channel.sabangnetChannelName}</NameSection>
+                    <BsIcons.BsArrowRight
+                      color="#a9a9a9"
+                      style={{ position: 'apsolute' }}
+                    />
+                    <NameSection>{channel.userChannelName}</NameSection>
                     <TrashIcon
                       onClick={() =>
                         removeItem(
@@ -478,4 +481,8 @@ const UpdateButton = styled(Button)`
   float: right;
   margin-top: 40px;
 `;
+const NameSection = styled.div`
+  flex: 0.5;
+`;
+
 export default ChannelRegistration;

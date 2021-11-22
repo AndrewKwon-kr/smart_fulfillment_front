@@ -53,7 +53,7 @@ function ModalOrderView(props) {
                   checked={checkedOne}
                 />
                 <label onClick={() => clickCheckedIcon('one')}>
-                  사방넷에서 주문서를 수집했나요?
+                  주문수집 사이트에서 주문서를 수집했나요?
                 </label>
               </Content>
               <Content>
@@ -121,9 +121,9 @@ function ModalOrderView(props) {
           <form onSubmit={handleSubmit} noValidate>
             <InputWithLabel
               type="text"
-              label="사방넷 Key"
+              label="주문수집 사이트 Key"
               name="sabangnetKey"
-              placeholder="사방넷 키를 입력하세요"
+              placeholder="주문수집 사이트 키를 입력하세요"
               value={values.sabangnetKey}
               onChange={handleChange}
             />
@@ -132,9 +132,9 @@ function ModalOrderView(props) {
             )}
             <InputWithLabel
               type="text"
-              label="사방넷 ID"
+              label="주문수집 사이트 ID"
               name="sabangnetId"
-              placeholder="사방넷 ID를 입력하세요"
+              placeholder="주문수집 사이트 ID를 입력하세요"
               value={values.sabangnetId}
               onChange={handleChange}
             />

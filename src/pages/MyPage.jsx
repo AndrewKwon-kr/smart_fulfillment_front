@@ -276,16 +276,16 @@ function MyInfo({ Info, asyncInfo, user }) {
           </LabelDiv>
         )}
       </MyInfoContent>
-      <InfoTitle>사방넷 ID & Key</InfoTitle>
+      <InfoTitle>주문수집 사이트 ID & Key</InfoTitle>
       <MyInfoContent>
         {Info.userGroupSabangnetId !== null ? (
           <>
             <LabelDiv>
-              <NameDiv>사방넷 ID</NameDiv>
+              <NameDiv>주문수집 사이트 ID</NameDiv>
               <UserDiv>{Info.userGroupSabangnetId}</UserDiv>
             </LabelDiv>
             <LabelDiv>
-              <NameDiv>사방넷 Key</NameDiv>
+              <NameDiv>주문수집 사이트 Key</NameDiv>
               <UserDiv>{Info.userGroupSabangnetKey}</UserDiv>
             </LabelDiv>
           </>
@@ -294,9 +294,9 @@ function MyInfo({ Info, asyncInfo, user }) {
             <form onSubmit={handleSubmit} noValidate>
               <InputWithLabel
                 type="text"
-                label="사방넷 ID"
+                label="주문수집 사이트 ID"
                 name="sabangnetId"
-                placeholder="사방넷 ID를 입력하세요"
+                placeholder="주문수집 사이트 ID를 입력하세요"
                 value={values.sabangnetId}
                 onChange={handleChange}
               />
@@ -305,9 +305,9 @@ function MyInfo({ Info, asyncInfo, user }) {
               )}
               <InputWithLabel
                 type="text"
-                label="사방넷 Key"
+                label="주문수집 사이트 Key"
                 name="sabangnetKey"
-                placeholder="사방넷 키를 입력하세요"
+                placeholder="주문수집 사이트 키를 입력하세요"
                 value={values.sabangnetKey}
                 onChange={handleChange}
               />

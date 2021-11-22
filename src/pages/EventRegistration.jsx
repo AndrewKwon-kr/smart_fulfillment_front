@@ -903,7 +903,7 @@ function EventRegistration() {
             <br />
             <ChannelWrapper>
               <LeftContent>
-                <SubTitle>사방넷 채널</SubTitle>
+                <SubTitle>주문수집 사이트 채널</SubTitle>
                 <AllCheckboxWrapper>
                   <ACheckbox onChange={onCheckAllChange} checked={checkAll}>
                     전체 선택 / 해제

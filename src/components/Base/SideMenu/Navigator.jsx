@@ -36,7 +36,6 @@ function Navigator() {
       <Menu.Item key={2}>
         <Link to="/my-page/">내 정보</Link>
       </Menu.Item>
-      <Menu.Item key={3}>xx</Menu.Item>
     </Menu>
   );
   return (

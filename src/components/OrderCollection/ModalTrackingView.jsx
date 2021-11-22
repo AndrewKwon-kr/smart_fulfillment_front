@@ -65,7 +65,7 @@ function ModalTrackingView(props) {
                 </Progress>
                 <Line progressStep={props.progressStep >= 0} />
                 <Progress progressStep={props.progressStep >= 1}>
-                  ●<div className="Text">사방넷 송장 업로드</div>
+                  ●<div className="Text">주문수집 사이트 송장 업로드</div>
                 </Progress>
                 <Line progressStep={props.progressStep >= 1} />
                 <Progress progressStep={props.progressStep >= 2}>
