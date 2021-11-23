@@ -359,7 +359,7 @@ const ChannelWrapper = styled.div`
   margin-top: 20px;
   display: flex;
   flex-direction: row;
-  height: 60vh;
+  height: 600px;
 `;
 const LeftContent = styled.div`
   border: 1px solid #d1d1d1;
@@ -447,7 +447,7 @@ const ItemWrapper = styled.ul`
   width: 100%;
   text-align: center;
   list-style: none;
-  height: 400px;
+  height: 440px;
   overflow-y: scroll;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */

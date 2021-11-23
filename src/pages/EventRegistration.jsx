@@ -943,6 +943,7 @@ function EventRegistration() {
                     </Row>
                   )}
                 </ChannelListWrapper>
+                <Line />
                 <StepButtonWrapper>
                   <StepBackButton onClick={setBackStep}>이전</StepBackButton>
                   <StepNextButton onClick={setNextStep} loading={postLoading}>
@@ -1283,7 +1284,7 @@ const ChannelWrapper = styled.div`
   margin-top: 20px;
   display: flex;
   flex-direction: row;
-  height: 60vh;
+  height: 600px;
 `;
 const LeftContent = styled.div`
   border: 1px solid #d1d1d1;
@@ -1292,7 +1293,11 @@ const LeftContent = styled.div`
   margin-right: 20px;
   padding: 20px;
 `;
-
+const Line = styled.div`
+  width: calc(100% + 40px);
+  margin-left: -20px;
+  border-bottom: 1px solid #d1d1d1;
+`;
 const ChannelListWrapper = styled.div`
   margin: 20px 0;
   border: 1px solid #d1d1d1;
