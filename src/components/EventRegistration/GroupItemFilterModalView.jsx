@@ -19,7 +19,6 @@ const columns = [
 ];
 
 function GroupFilterModalView(props) {
-
   const defaultRowKeys = props.filteredGroupItem.map((item) => item.key);
 
   const rowSelection = {

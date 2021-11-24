@@ -295,6 +295,7 @@ function ChannelRegistration() {
           </ButtonWrapper>
           <RightContent>
             <SubTitle>매핑 내역</SubTitle>
+            <ChannelCount>{mappingChannels?.length}</ChannelCount>
             <Search handleChange={handleChange} handleClick={handleClick} />
             <Line />
             <ItemWrapper>
@@ -304,10 +305,7 @@ function ChannelRegistration() {
                 searchedMappingChannel.map((channel) => (
                   <Item key={channel.sabangnetChannelId}>
                     <NameSection>{channel.sabangnetChannelName}</NameSection>
-                    <BsIcons.BsArrowRight
-                      color="#a9a9a9"
-                      style={{ position: 'apsolute' }}
-                    />
+                    <BsIcons.BsArrowRight color="#a9a9a9" />
                     <NameSection>{channel.userChannelName}</NameSection>
                     <TrashIcon
                       onClick={() =>
@@ -354,6 +352,11 @@ const Description = styled.div`
   position: relative;
   display: inline-block;
   color: #a9a9a9;
+`;
+const ChannelCount = styled.div`
+  display: inline-block;
+  margin-left: 10px;
+  color: #228be6;
 `;
 const ChannelWrapper = styled.div`
   margin-top: 20px;
