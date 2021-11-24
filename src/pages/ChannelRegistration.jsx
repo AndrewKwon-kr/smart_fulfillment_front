@@ -219,8 +219,9 @@ function ChannelRegistration() {
   useEffect(() => {
     searchedSabangnetChannel &&
       setCheckAll(
-        searchedSabangnetChannel.length ===
-          searchedSabangnetChannel.filter((channel) => channel.checked).length
+        searchedSabangnetChannel.length !== 0 &&
+          searchedSabangnetChannel.length ===
+            searchedSabangnetChannel.filter((channel) => channel.checked).length
       );
   }, [searchedSabangnetChannel]);
 
@@ -269,8 +270,13 @@ function ChannelRegistration() {
                     ))
                   ) : (
                     <Description>
-                      주문수집 사이트에서 채널을 불러와주세요{' '}
-                      <Button onClick={importChannel}>불러오기</Button>
+                      주문수집 사이트에서 채널을 불러와주세요
+                      <Button
+                        onClick={importChannel}
+                        style={{ marginLeft: '20px' }}
+                      >
+                        불러오기
+                      </Button>
                     </Description>
                   )}
                 </Row>
